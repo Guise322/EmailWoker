@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "p4rL+7kMVeYzk6ef+kyuPrAmeOr2qqBTp1CCJjSQ9P7XAceBNxf2LWrIGig+iAQ5BlZhpv4w/crgH/kq3wH84g==",
+  "dgSpecHash": "890qkhtjYLJFG78vhFn54cdZ33qQhxuaL/zt6ElX88Esq5XFTx8q3ouMFsobIxIXzf68oez1gtS/wpnpxlUJxA==",
   "success": true,
   "projectFilePath": "/home/dmitry/code/IpByEmail/IpByEmail.csproj",
   "expectedPackageFiles": [
+    "/home/dmitry/.nuget/packages/mailkit/2.11.1/mailkit.2.11.1.nupkg.sha512",
     "/home/dmitry/.nuget/packages/microsoft.extensions.configuration/5.0.0/microsoft.extensions.configuration.5.0.0.nupkg.sha512",
     "/home/dmitry/.nuget/packages/microsoft.extensions.configuration.abstractions/5.0.0/microsoft.extensions.configuration.abstractions.5.0.0.nupkg.sha512",
     "/home/dmitry/.nuget/packages/microsoft.extensions.configuration.binder/5.0.0/microsoft.extensions.configuration.binder.5.0.0.nupkg.sha512",
@@ -31,9 +32,16 @@
     "/home/dmitry/.nuget/packages/microsoft.extensions.primitives/5.0.0/microsoft.extensions.primitives.5.0.0.nupkg.sha512",
     "/home/dmitry/.nuget/packages/microsoft.netcore.platforms/5.0.0/microsoft.netcore.platforms.5.0.0.nupkg.sha512",
     "/home/dmitry/.nuget/packages/microsoft.win32.registry/5.0.0/microsoft.win32.registry.5.0.0.nupkg.sha512",
+    "/home/dmitry/.nuget/packages/mimekit/2.11.0/mimekit.2.11.0.nupkg.sha512",
+    "/home/dmitry/.nuget/packages/portable.bouncycastle/1.8.10/portable.bouncycastle.1.8.10.nupkg.sha512",
+    "/home/dmitry/.nuget/packages/system.buffers/4.5.1/system.buffers.4.5.1.nupkg.sha512",
     "/home/dmitry/.nuget/packages/system.diagnostics.eventlog/5.0.0/system.diagnostics.eventlog.5.0.0.nupkg.sha512",
+    "/home/dmitry/.nuget/packages/system.reflection.typeextensions/4.4.0/system.reflection.typeextensions.4.4.0.nupkg.sha512",
     "/home/dmitry/.nuget/packages/system.security.accesscontrol/5.0.0/system.security.accesscontrol.5.0.0.nupkg.sha512",
-    "/home/dmitry/.nuget/packages/system.security.principal.windows/5.0.0/system.security.principal.windows.5.0.0.nupkg.sha512"
+    "/home/dmitry/.nuget/packages/system.security.cryptography.cng/4.7.0/system.security.cryptography.cng.4.7.0.nupkg.sha512",
+    "/home/dmitry/.nuget/packages/system.security.cryptography.pkcs/4.7.0/system.security.cryptography.pkcs.4.7.0.nupkg.sha512",
+    "/home/dmitry/.nuget/packages/system.security.principal.windows/5.0.0/system.security.principal.windows.5.0.0.nupkg.sha512",
+    "/home/dmitry/.nuget/packages/system.text.encoding.codepages/4.4.0/system.text.encoding.codepages.4.4.0.nupkg.sha512"
   ],
   "logs": []
 }
