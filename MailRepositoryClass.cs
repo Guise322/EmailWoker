@@ -1,8 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Linq;
 using MailKit;
 using MailKit.Net.Imap;
+using MailKit.Net.Smtp;
 using MailKit.Search;
 using MimeKit;
 
@@ -10,51 +14,82 @@ namespace IpByEmail.MailRepository
 {
 public class MailRepositoryClass// : IMailRepository
 {
-    private readonly string mailServer, login, password;
-    private readonly int port;
-    private readonly bool ssl;
+    private readonly string _mailServer, _login, _password;
+    private readonly int _port;
+    private readonly bool _ssl;
 
+    private readonly string _myEmail = "guise322@yandex.ru";
     public MailRepositoryClass(string mailServer, int port, bool ssl, string login, string password)
     {
-        this.mailServer = mailServer;
-        this.port = port;
-        this.ssl = ssl;
-        this.login = login;
-        this.password = password;
+        this._mailServer = mailServer;
+        this._port = port;
+        this._ssl = ssl;
+        this._login = login;
+        this._password = password;
     }
 
     public IEnumerable<string> GetUnreadMails()
     {
-        var messages = new List<string>();
+        var subjects = new List<string>();
 
         using (var client = new ImapClient())
         {
-            client.Connect(mailServer, port, ssl);
+            client.Connect(_mailServer, _port, _ssl);
 
             // Note: since we don't have an OAuth2 token, disable
             // the XOAUTH2 authentication mechanism.
             client.AuthenticationMechanisms.Remove("XOAUTH2");
 
-            client.Authenticate(login, password);
+            client.Authenticate(_login, _password);
 
             // The Inbox folder is always available on all IMAP servers...
             var inbox = client.Inbox;
-            inbox.Open(FolderAccess.ReadOnly);
+            inbox.Open(FolderAccess.ReadWrite);
             var results = inbox.Search(SearchOptions.All, SearchQuery.Not(SearchQuery.Seen));
-            foreach (var uniqueId in results.UniqueIds)
+            
+            foreach(var uniqueId in results.UniqueIds)
             {
-                var message = inbox.GetMessage(uniqueId);
+                MimeMessage message = inbox.GetMessage(uniqueId);
+                string rawEmailFrom = message.From.ToString();
+                int start = rawEmailFrom.IndexOf('<');
 
-                messages.Add(message.HtmlBody);
+                if (start > 0)
+                    rawEmailFrom = rawEmailFrom.Remove(0, start + 1);
 
-                //Mark message as read
-                //inbox.AddFlags(uniqueId, MessageFlags.Seen, true);
+                int end = rawEmailFrom.IndexOf('>');
+
+                string emailFrom;
+                if (end > 0)
+                    emailFrom = rawEmailFrom.Remove(end);
+                else
+                    emailFrom = rawEmailFrom;
+                    
+                emailFrom = emailFrom.ToLower();
+
+                if (emailFrom == _myEmail)
+                {
+                    subjects.Add(message.Subject);
+                }
+                else
+                {
+                    //Mark message as read
+                    inbox.AddFlags(uniqueId, MessageFlags.Seen, true);
+                }
             }
 
             client.Disconnect(true);
         }
+        return subjects;
+    }
 
-        return messages;
+    private void SendMessageBySmtp()
+    {
+     int smtpPort = 465;
+
+     using (var client = new SmtpClient())
+     {
+         
+     }   
     }
 
     public IEnumerable<string> GetAllMails()
@@ -63,13 +98,13 @@ public class MailRepositoryClass// : IMailRepository
 
         using (var client = new ImapClient())
         {
-            client.Connect(mailServer, port, ssl);
+            client.Connect(_mailServer, _port, _ssl);
 
             // Note: since we don't have an OAuth2 token, disable
             // the XOAUTH2 authentication mechanism.
             client.AuthenticationMechanisms.Remove("XOAUTH2");
 
-            client.Authenticate(login, password);
+            client.Authenticate(_login, _password);
 
             // The Inbox folder is always available on all IMAP servers...
             var inbox = client.Inbox;
@@ -78,8 +113,6 @@ public class MailRepositoryClass// : IMailRepository
             foreach (var uniqueId in results.UniqueIds)
             {
                 var message = inbox.GetMessage(uniqueId);
-
-                messages.Add(message.HtmlBody);
 
                 //Mark message as read
                 //inbox.AddFlags(uniqueId, MessageFlags.Seen, true);
