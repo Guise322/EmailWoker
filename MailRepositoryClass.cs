@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
+using System.IO;
+using System.Net.NetworkInformation;
+using System.Net;
 using MailKit;
 using MailKit.Net.Imap;
 using MailKit.Net.Smtp;
@@ -52,22 +55,16 @@ public class MailRepositoryClass// : IMailRepository
                 MimeMessage message = inbox.GetMessage(uniqueId);
                 string rawEmailFrom = message.From.ToString();
                 int start = rawEmailFrom.IndexOf('<');
-
-                if (start > 0)
-                    rawEmailFrom = rawEmailFrom.Remove(0, start + 1);
-
                 int end = rawEmailFrom.IndexOf('>');
 
                 string emailFrom;
-                if (end > 0)
-                    emailFrom = rawEmailFrom.Remove(end);
-                else
-                    emailFrom = rawEmailFrom;
-                    
-                emailFrom = emailFrom.ToLower();
+                
+                if (start > 0) emailFrom = rawEmailFrom.Substring(start + 1, end - start - 1);
+                else emailFrom = rawEmailFrom;
 
                 if (emailFrom == _myEmail)
                 {
+                    SendAnswerBySmtp();
                     subjects.Add(message.Subject);
                 }
                 else
@@ -82,14 +79,52 @@ public class MailRepositoryClass// : IMailRepository
         return subjects;
     }
 
-    private void SendMessageBySmtp()
+    private void SendAnswerBySmtp()
     {
      int smtpPort = 465;
 
      using (var client = new SmtpClient())
      {
-         
-     }   
+        if (NetworkInterface.GetIsNetworkAvailable())
+        {
+            string myIP = GetPublicIPAddress();
+
+            client.Connect(_mailServer,smtpPort, _ssl);
+            client.Authenticate(_login, _password);
+
+            var answerMessage = new MimeMessage();
+            answerMessage.From.Add(new MailboxAddress("Worker", _login));
+            answerMessage.To.Add(new MailboxAddress("Dmitry", _myEmail));
+            answerMessage.Subject = "Ip By Email Project";
+            answerMessage.Body = new TextPart(MimeKit.Text.TextFormat.Plain)
+            {
+                Text = string.Format("The current IP of the computer is {0}", myIP)
+            };
+        
+            client.Send(answerMessage);
+
+            client.Disconnect(true);
+        }
+        else throw new Exception("No connection to the Internet!");
+        
+        }   
+    }
+
+    private string GetPublicIPAddress()  
+    {  
+        string address;  
+        WebRequest request = WebRequest.Create("http://checkip.dyndns.org/");  
+        using (WebResponse response = request.GetResponse())  
+        using (StreamReader stream = new StreamReader(response.GetResponseStream()))  
+        {  
+            address = stream.ReadToEnd();  
+        }  
+  
+        int first = address.IndexOf("Address: ") + 9;  
+        int last = address.LastIndexOf("</body>");  
+        address = address.Substring(first, last - first);  
+  
+        return address;  
     }
 
     public IEnumerable<string> GetAllMails()
