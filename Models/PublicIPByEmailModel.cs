@@ -12,24 +12,30 @@ using MailKit.Net.Imap;
 using MailKit.Net.Smtp;
 using MailKit.Search;
 using MimeKit;
+using IpByEmail.Shared;
 
-namespace IPByEmail.Models
+namespace IpByEmail.Models
 {
     public class PublicIPByEmailModel : IEmailModel
     {
-        private ImapClient _client = new ImapClient();
+        private ImapClient _client;
 
-        private readonly string _mailServer, _login, _password;
-        private readonly int _port;
-        private readonly bool _ssl;
-        private readonly string _myEmail = "guise322@yandex.ru";
-        public PublicIPByEmailModel(string mailServer, int port, bool ssl, string login, string password)
+        private string _mailServer, _login, _password;
+        private int _port;
+        private bool _ssl;
+        private string _myEmail = "guise322@yandex.ru";
+        public PublicIPByEmailModel()
         {
-            this._mailServer = mailServer;
-            this._port = port;
-            this._ssl = ssl;
-            this._login = login;
-            this._password = password;
+            this._client = new ImapClient();
+        }
+
+        public void GetEmailCredentials(EmailCredentials credentials)
+        {
+            this._mailServer = credentials.MailServer;
+            this._port = credentials.Port;
+            this._ssl = credentials.Ssl;
+            this._login = credentials.Login;
+            this._password = credentials.Password;
         }
 
         public SearchResults GetUnseenMessagesFromInbox()
