@@ -1,15 +1,27 @@
 using System;
-using IPByEmail.Models;
+using IpByEmail.Models;
+using IpByEmail.Shared;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.IO;
 
-namespace IPByEmail.Controllers
+namespace IpByEmail.Controllers
 {
     public class EmailWorkerController
     {
         IEmailModel _model;
+        
+        public EmailWorkerController()
+        {
+            _model = new PublicIPByEmailModel();
+        }
+
         public void PublicIPProcess()
         {
-            _model = new PublicIPByEmailModel("imap.gmail.com", 993,
-                true, "dimsonartex@gmail.com", "17890714");
+            string jsonString = File.ReadAllText("EmailCredentials.json");
+            EmailCredentials credentials = JsonSerializer.Deserialize<EmailCredentials>(jsonString);
+            
+            _model.GetEmailCredentials(credentials);
 
             bool requestIsGot = _model.ProcessResults(_model.GetUnseenMessagesFromInbox());
 
