@@ -5,9 +5,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using IpByEmail.Controllers;
+using EmailWorker.Controllers;
 
-namespace IpByEmail
+namespace EmailWorker
 {
     public class Worker : BackgroundService
     {

@@ -1,11 +1,11 @@
 using System;
-using IpByEmail.Models;
-using IpByEmail.Shared;
+using EmailWorker.Models;
+using EmailWorker.Shared;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.IO;
 
-namespace IpByEmail.Controllers
+namespace EmailWorker.Controllers
 {
     public class EmailWorkerController
     {
@@ -13,7 +13,7 @@ namespace IpByEmail.Controllers
         
         public EmailWorkerController()
         {
-            _model = new PublicIPByEmailModel();
+            _model = new GetPublicIPByEmailModel();
         }
 
         public void PublicIPProcess()
