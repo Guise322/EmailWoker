@@ -1,6 +1,6 @@
 using System;
 
-namespace IpByEmail.Shared
+namespace EmailWorker.Shared
 {
     public class EmailCredentials
     {

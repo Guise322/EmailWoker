@@ -12,11 +12,11 @@ using MailKit.Net.Imap;
 using MailKit.Net.Smtp;
 using MailKit.Search;
 using MimeKit;
-using IpByEmail.Shared;
+using EmailWorker.Shared;
 
-namespace IpByEmail.Models
+namespace EmailWorker.Models
 {
-    public class PublicIPByEmailModel : IEmailModel
+    public class GetPublicIPByEmailModel : IEmailModel
     {
         private ImapClient _client;
 
@@ -24,7 +24,7 @@ namespace IpByEmail.Models
         private int _port;
         private bool _ssl;
         private string _myEmail = "guise322@yandex.ru";
-        public PublicIPByEmailModel()
+        public GetPublicIPByEmailModel()
         {
             this._client = new ImapClient();
         }
