@@ -1632,11 +1632,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/dmitry/code/IpByEmail/IpByEmail.csproj",
-      "projectName": "IpByEmail",
-      "projectPath": "/home/dmitry/code/IpByEmail/IpByEmail.csproj",
+      "projectUniqueName": "/home/dmitry/code/EmailWorker/EmailWorker.csproj",
+      "projectName": "EmailWorker",
+      "projectPath": "/home/dmitry/code/EmailWorker/EmailWorker.csproj",
       "packagesPath": "/home/dmitry/.nuget/packages/",
-      "outputPath": "/home/dmitry/code/IpByEmail/obj/",
+      "outputPath": "/home/dmitry/code/EmailWorker/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/dmitry/.nuget/NuGet/NuGet.Config"
@@ -1687,7 +1687,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/5.0.202/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/5.0.203/RuntimeIdentifierGraph.json"
       }
     }
   }

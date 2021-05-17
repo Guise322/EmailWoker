@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "890qkhtjYLJFG78vhFn54cdZ33qQhxuaL/zt6ElX88Esq5XFTx8q3ouMFsobIxIXzf68oez1gtS/wpnpxlUJxA==",
+  "dgSpecHash": "/RCkeBXq/Vf4esO5yAfYSk+YkPWq2kLb3H0JcADc25w4qXVyTh2q4NuHGGGwBUZauZj/YzIWtV+pRvyWSn37tg==",
   "success": true,
-  "projectFilePath": "/home/dmitry/code/IpByEmail/IpByEmail.csproj",
+  "projectFilePath": "/home/dmitry/code/EmailWorker/EmailWorker.csproj",
   "expectedPackageFiles": [
     "/home/dmitry/.nuget/packages/mailkit/2.11.1/mailkit.2.11.1.nupkg.sha512",
     "/home/dmitry/.nuget/packages/microsoft.extensions.configuration/5.0.0/microsoft.extensions.configuration.5.0.0.nupkg.sha512",
