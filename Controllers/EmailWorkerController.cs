@@ -4,6 +4,7 @@ using EmailWorker.Shared;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.IO;
+using System.Collections.Generic;
 
 namespace EmailWorker.Controllers
 {
@@ -18,14 +19,21 @@ namespace EmailWorker.Controllers
 
         public void PublicIPProcess()
         {
+            // Create and add a converter which will use the string representation instead of the numeric value.
+            var stringEnumConverter = new System.Text.Json.Serialization.JsonStringEnumConverter();
+            JsonSerializerOptions opts = new JsonSerializerOptions();
+            opts.Converters.Add(stringEnumConverter);
+
             string jsonString = File.ReadAllText("EmailCredentials.json");
-            EmailCredentials credentials = JsonSerializer.Deserialize<EmailCredentials>(jsonString);
+            List<EmailCredentials> credentialsList = JsonSerializer.Deserialize<List<EmailCredentials>>(jsonString, opts);
             
-            _model.GetEmailCredentials(credentials);
+            //To do: implement handling of a list of emails.
+
+            /*_model.GetEmailCredentials(credentialsList);
 
             bool requestIsGot = _model.ProcessResults(_model.GetUnseenMessagesFromInbox());
 
-            if (requestIsGot) _model.SendAnswerBySmtp();
+            if (requestIsGot) _model.SendAnswerBySmtp();*/
         }
     }
 }
