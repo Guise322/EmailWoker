@@ -1,14 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Linq;
 using System.IO;
-using System.Net.NetworkInformation;
 using System.Net;
 using MailKit;
-using MailKit.Net.Imap;
 using MailKit.Net.Smtp;
 using MailKit.Search;
 using MimeKit;
@@ -16,38 +9,9 @@ using EmailWorker.Shared;
 
 namespace EmailWorker.Models
 {
-    public class GetPublicIPByEmailModel : IEmailModel
+    public class GetPublicIPByEmailModel : EmailWorkBase
     {
-        private ImapClient _client;
-
-        private string _mailServer, _login, _password;
-        private int _port;
-        private bool _ssl;
-        private string _myEmail = "guise322@yandex.ru";
-        public GetPublicIPByEmailModel()
-        {
-            this._client = new ImapClient();
-        }
-
-        public void GetEmailCredentials(EmailCredentials credentials)
-        {
-            this._mailServer = credentials.MailServer;
-            this._port = credentials.Port;
-            this._ssl = credentials.Ssl;
-            this._login = credentials.Login;
-            this._password = credentials.Password;
-        }
-
-        public SearchResults GetUnseenMessagesFromInbox()
-        {
-            _client.Connect(_mailServer, _port, _ssl);
-            _client.AuthenticationMechanisms.Remove("XOAUTH2");
-            _client.Authenticate(_login, _password);
-            _client.Inbox.Open(FolderAccess.ReadWrite);
-            return _client.Inbox.Search(SearchOptions.All, SearchQuery.Not(SearchQuery.Seen));
-        }
-
-        public bool ProcessResults(SearchResults results)
+        public override bool ProcessResults(SearchResults results)
         {
             foreach (var uniqueId in results.UniqueIds)
             {
@@ -58,12 +22,19 @@ namespace EmailWorker.Models
 
                 string emailFrom;
 
-                if (start > 0) emailFrom = rawEmailFrom.Substring(start + 1, end - start - 1);
-                else emailFrom = rawEmailFrom;
+                if (start > 0) 
+                {
+                    emailFrom = rawEmailFrom.Substring(start + 1, end - start - 1);
+                }
+                else 
+                {
+                    emailFrom = rawEmailFrom;
+                }
 
                 if (emailFrom == _myEmail)
                 {
                     _client.Inbox.AddFlags(uniqueId, MessageFlags.Seen, true);
+                    _client.Disconnect(true);
                     return true;
                     //SendAnswerBySmtp();
                 }
@@ -74,37 +45,32 @@ namespace EmailWorker.Models
                 }
             }
             _client.Disconnect(true);
-            
             return false;
         }
 
-        public void SendAnswerBySmtp()
+        public override void SendAnswerBySmtp()
         {
             int smtpPort = 465;
 
             using (var client = new SmtpClient())
-            {
-                if (NetworkInterface.GetIsNetworkAvailable())
+            {   
+                string myIP = GetPublicIPAddress();
+
+                client.Connect(_mailServer, smtpPort, _ssl);
+                client.Authenticate(_login, _password);
+
+                var answerMessage = new MimeMessage();
+                answerMessage.From.Add(new MailboxAddress("Worker", _login));
+                answerMessage.To.Add(new MailboxAddress("Dmitry", _myEmail));
+                answerMessage.Subject = "Ip By Email Project";
+                answerMessage.Body = new TextPart(MimeKit.Text.TextFormat.Plain)
                 {
-                    string myIP = GetPublicIPAddress();
+                    Text = string.Format("The current IP of the computer is {0}", myIP)
+                };
 
-                    client.Connect(_mailServer, smtpPort, _ssl);
-                    client.Authenticate(_login, _password);
+                client.Send(answerMessage);
 
-                    var answerMessage = new MimeMessage();
-                    answerMessage.From.Add(new MailboxAddress("Worker", _login));
-                    answerMessage.To.Add(new MailboxAddress("Dmitry", _myEmail));
-                    answerMessage.Subject = "Ip By Email Project";
-                    answerMessage.Body = new TextPart(MimeKit.Text.TextFormat.Plain)
-                    {
-                        Text = string.Format("The current IP of the computer is {0}", myIP)
-                    };
-
-                    client.Send(answerMessage);
-
-                    client.Disconnect(true);
-                }
-                else throw new Exception("No connection to the Internet!");
+                client.Disconnect(true);
             }
         }
 
@@ -125,7 +91,7 @@ namespace EmailWorker.Models
             return address;
         }
 
-        public IEnumerable<string> GetAllMails()
+        /*public IEnumerable<string> GetAllMails()
         {
             var messages = new List<string>();
 
@@ -155,6 +121,6 @@ namespace EmailWorker.Models
             }
 
             return messages;
-        }
+        }*/
     }
 }
