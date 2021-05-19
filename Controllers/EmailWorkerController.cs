@@ -29,7 +29,7 @@ namespace EmailWorker.Controllers
             
             //To do: implement handling of a list of emails.
 
-            /*_model.GetEmailCredentials(credentialsList);
+            /*_model.GetEmailCredentials(credentials);
 
             bool requestIsGot = _model.ProcessResults(_model.GetUnseenMessagesFromInbox());
 
