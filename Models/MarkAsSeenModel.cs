@@ -24,10 +24,8 @@ namespace EmailWorker.Models
                 _client.Disconnect(true);
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
         public override void SendAnswerBySmtp()
         {
@@ -39,19 +37,25 @@ namespace EmailWorker.Models
                 client.Connect(_mailServer, smtpPort, _ssl);
                 client.Authenticate(_login, _password);
 
-                var answerMessage = new MimeMessage();
-                answerMessage.From.Add(new MailboxAddress("Worker", _login));
-                answerMessage.To.Add(new MailboxAddress("Dmitry", _myEmail));
-                answerMessage.Subject = "The count of seen messages";
-                answerMessage.Body = new TextPart(MimeKit.Text.TextFormat.Plain)
-                {
-                    Text = string.Format("The count of seen messages equals {0}", UnseenEmailsCount)
-                };
+                MimeMessage answerMessage = BuildMessage();
 
                 client.Send(answerMessage);
 
                 client.Disconnect(true);
             }
+        }
+
+        public override MimeMessage BuildMessage()
+        {
+            var message = new MimeMessage();
+            answerMessage.From.Add(new MailboxAddress("Worker", _login));
+            answerMessage.To.Add(new MailboxAddress("Dmitry", _myEmail));
+            answerMessage.Subject = "The count of messages marked as seen";
+            answerMessage.Body = new TextPart(MimeKit.Text.TextFormat.Plain)
+            {
+                Text = string.Format("The count of seen messages equals {0}", UnseenEmailsCount)
+            };
+            return message;
         }
     }
 }
