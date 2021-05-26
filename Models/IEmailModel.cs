@@ -10,4 +10,5 @@ public interface IEmailModel
     void GetEmailCredentials(EmailCredentials credentials);
     bool ProcessResults(SearchResults results);
     void SendAnswerBySmtp();
+    void BuildMessage();
 }

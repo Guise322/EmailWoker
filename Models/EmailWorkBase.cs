@@ -7,10 +7,10 @@ namespace EmailWorker.Models
 {
     public abstract class EmailWorkBase : IEmailModel
     {
+        protected readonly string _myEmail = "guise322@yandex.ru";
         protected string _mailServer, _login, _password;
         protected int _port;
         protected bool _ssl;
-        protected string _myEmail = "guise322@yandex.ru";
         protected ImapClient _client;
         public EmailWorkBase()
         {
@@ -34,5 +34,6 @@ namespace EmailWorker.Models
         }
         public abstract bool ProcessResults(SearchResults results);
         public abstract void SendAnswerBySmtp();
+        public abstract MimeMessage BuildMessage();
     }
 }

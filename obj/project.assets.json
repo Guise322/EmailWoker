@@ -1627,19 +1627,19 @@
     ]
   },
   "packageFolders": {
-    "/home/dmitry/.nuget/packages/": {}
+    "C:\\Users\\userHP\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/dmitry/code/EmailWorker/EmailWorker.csproj",
+      "projectUniqueName": "D:\\Code\\EmailWorker\\EmailWorker.csproj",
       "projectName": "EmailWorker",
-      "projectPath": "/home/dmitry/code/EmailWorker/EmailWorker.csproj",
-      "packagesPath": "/home/dmitry/.nuget/packages/",
-      "outputPath": "/home/dmitry/code/EmailWorker/obj/",
+      "projectPath": "D:\\Code\\EmailWorker\\EmailWorker.csproj",
+      "packagesPath": "C:\\Users\\userHP\\.nuget\\packages\\",
+      "outputPath": "D:\\Code\\EmailWorker\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/dmitry/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\userHP\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
@@ -1687,7 +1687,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/5.0.203/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.203\\RuntimeIdentifierGraph.json"
       }
     }
   }
