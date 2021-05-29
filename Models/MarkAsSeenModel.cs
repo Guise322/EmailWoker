@@ -37,7 +37,7 @@ namespace EmailWorker.Models
                 client.Connect(_mailServer, smtpPort, _ssl);
                 client.Authenticate(_login, _password);
 
-                MimeMessage answerMessage = BuildMessage();
+                MimeMessage answerMessage = BuildAnswerMessage();
 
                 client.Send(answerMessage);
 
@@ -45,13 +45,13 @@ namespace EmailWorker.Models
             }
         }
 
-        public override MimeMessage BuildMessage()
+        public override MimeMessage BuildAnswerMessage()
         {
             var message = new MimeMessage();
-            answerMessage.From.Add(new MailboxAddress("Worker", _login));
-            answerMessage.To.Add(new MailboxAddress("Dmitry", _myEmail));
-            answerMessage.Subject = "The count of messages marked as seen";
-            answerMessage.Body = new TextPart(MimeKit.Text.TextFormat.Plain)
+            message.From.Add(new MailboxAddress("Worker", _login));
+            message.To.Add(new MailboxAddress("Dmitry", _myEmail));
+            message.Subject = "The count of messages marked as seen";
+            message.Body = new TextPart(MimeKit.Text.TextFormat.Plain)
             {
                 Text = string.Format("The count of seen messages equals {0}", UnseenEmailsCount)
             };

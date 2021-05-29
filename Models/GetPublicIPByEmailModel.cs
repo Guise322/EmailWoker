@@ -26,7 +26,6 @@ namespace EmailWorker.Models
                     _client.Disconnect(true);
                     return true;
                 }
-
                 //Mark message as read
                 _client.Inbox.AddFlags(uniqueId, MessageFlags.Seen, true);
             }
@@ -34,38 +33,35 @@ namespace EmailWorker.Models
             return false;
         }
 
-        public override void SendAnswerBySmtp()
+        private string _myIP;
+        public override void SendAnswerBySmtp(MimeMessage message)
         {
             int smtpPort = 465;
-
+            
             using (var client = new SmtpClient())
             {   
-                string myIP = GetPublicIPAddress();
+                _myIP = GetPublicIPAddress();
 
                 client.Connect(_mailServer, smtpPort, _ssl);
                 client.Authenticate(_login, _password);
 
-                MimeMessage answerMessage = BuildMessage();
-
-                client.Send(answerMessage);
+                client.Send(message);
 
                 client.Disconnect(true);
             }
         }
-
-        public override MimeMessage BuildMessage()
+        public override MimeMessage BuildAnswerMessage()
         {
             var message = new MimeMessage();
-            answerMessage.From.Add(new MailboxAddress("Worker", _login));
-            answerMessage.To.Add(new MailboxAddress("Dmitry", _myEmail));
-            answerMessage.Subject = "Ip By Email Project";
-            answerMessage.Body = new TextPart(MimeKit.Text.TextFormat.Plain)
+            message.From.Add(new MailboxAddress("Worker", _login));
+            message.To.Add(new MailboxAddress("Dmitry", _myEmail));
+            message.Subject = "Ip By Email Project";
+            message.Body = new TextPart(MimeKit.Text.TextFormat.Plain)
             {
-                Text = string.Format("The current IP of the computer is {0}", myIP)
+                Text = string.Format("The current IP of the computer is {0}", _myIP)
             };
             return message;
         }
-
         private string ExtractEmailFrom(string rawString)
         {
             int first = rawString.IndexOf('<');

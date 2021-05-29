@@ -3,12 +3,14 @@ using MailKit;
 using MailKit.Net.Imap;
 using MailKit.Search;
 using EmailWorker.Shared;
+using MimeKit;
 
 public interface IEmailModel
 {
     SearchResults GetUnseenMessagesFromInbox();
-    void GetEmailCredentials(EmailCredentials credentials);
+    void SeedEmailCredentials(EmailCredentials credentials);
     bool ProcessResults(SearchResults results);
-    void SendAnswerBySmtp();
-    void BuildMessage();
+    void SendAnswerBySmtp(MimeMessage message);
+    MimeMessage BuildAnswerMessage();
+    void DoProcess();
 }

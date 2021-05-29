@@ -24,7 +24,7 @@ namespace EmailWorker
             {
                 try
                 {
-                    _controller.PublicIPProcess();
+                    _controller.ProcessEmails();
                 }
                 catch (System.Exception e)
                 {

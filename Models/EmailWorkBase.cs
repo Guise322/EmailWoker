@@ -2,6 +2,7 @@ using MailKit;
 using MailKit.Net.Imap;
 using MailKit.Search;
 using EmailWorker.Shared;
+using MimeKit;
 
 namespace EmailWorker.Models
 {
@@ -14,15 +15,15 @@ namespace EmailWorker.Models
         protected ImapClient _client;
         public EmailWorkBase()
         {
-            this._client = new ImapClient();
+            _client = new ImapClient();
         }
-        public void GetEmailCredentials(EmailCredentials credentials)
+        public void SeedEmailCredentials(EmailCredentials credentialsToken)
         {
-            this._mailServer = credentials.MailServer;
-            this._port = credentials.Port;
-            this._ssl = credentials.Ssl;
-            this._login = credentials.Login;
-            this._password = credentials.Password;
+            _mailServer = credentialsToken.MailServer;
+            _port = credentialsToken.Port;
+            _ssl = credentialsToken.Ssl;
+            _login = credentialsToken.Login;
+            _password = credentialsToken.Password;
         }
         public SearchResults GetUnseenMessagesFromInbox()
         {
@@ -33,7 +34,16 @@ namespace EmailWorker.Models
             return _client.Inbox.Search(SearchOptions.All, SearchQuery.Not(SearchQuery.Seen));
         }
         public abstract bool ProcessResults(SearchResults results);
-        public abstract void SendAnswerBySmtp();
-        public abstract MimeMessage BuildMessage();
+        public abstract void SendAnswerBySmtp(MimeMessage message);
+        public abstract MimeMessage BuildAnswerMessage();
+        public void DoProcess()
+        {
+            SearchResults results = GetUnseenMessagesFromInbox();
+            if (ProcessResults(results))
+            {
+                MimeMessage message = BuildAnswerMessage();
+                SendAnswerBySmtp(message);
+            }
+        }
     }
 }
