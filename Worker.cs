@@ -26,7 +26,7 @@ namespace EmailWorker
                 {
                     _controller.ProcessEmails();
                 }
-                catch (System.Exception e)
+                catch (Exception e)
                 {
                     if(e != null)
                         _logger.LogError(e.Message);

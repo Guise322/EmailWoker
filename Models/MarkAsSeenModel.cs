@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Net;
+using EmailWorker.Shared;
 using MailKit;
 using MailKit.Net.Smtp;
 using MailKit.Search;
@@ -10,6 +11,10 @@ namespace EmailWorker.Models
 {
     public class MarkAsSeen : EmailWorkBase
     {
+        public MarkAsSeen(EmailCredentials emailCredentials) : base(emailCredentials)
+        {
+
+        }
         private int UnseenEmailsCount = 0;
         public override bool ProcessResults(SearchResults results)
         {
@@ -27,24 +32,20 @@ namespace EmailWorker.Models
 
             return false;
         }
-        public override void SendAnswerBySmtp()
+        public override void SendAnswerBySmtp(MimeMessage message)
         {
             int smtpPort = 465;
 
             using (var client = new SmtpClient())
-            {   
-
+            {
                 client.Connect(_mailServer, smtpPort, _ssl);
                 client.Authenticate(_login, _password);
 
-                MimeMessage answerMessage = BuildAnswerMessage();
-
-                client.Send(answerMessage);
+                client.Send(message);
 
                 client.Disconnect(true);
             }
         }
-
         public override MimeMessage BuildAnswerMessage()
         {
             var message = new MimeMessage();

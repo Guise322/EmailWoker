@@ -11,6 +11,10 @@ namespace EmailWorker.Models
 {
     public class GetPublicIPByEmailModel : EmailWorkBase
     {
+        public GetPublicIPByEmailModel(EmailCredentials emailCredentials) : base(emailCredentials)
+        {
+
+        }
         public override bool ProcessResults(SearchResults results)
         {
             foreach (var uniqueId in results.UniqueIds)

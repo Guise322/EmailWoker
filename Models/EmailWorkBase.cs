@@ -13,17 +13,15 @@ namespace EmailWorker.Models
         protected int _port;
         protected bool _ssl;
         protected ImapClient _client;
-        public EmailWorkBase()
+        public EmailWorkBase(EmailCredentials emailCredentials)
         {
             _client = new ImapClient();
-        }
-        public void SeedEmailCredentials(EmailCredentials credentialsToken)
-        {
-            _mailServer = credentialsToken.MailServer;
-            _port = credentialsToken.Port;
-            _ssl = credentialsToken.Ssl;
-            _login = credentialsToken.Login;
-            _password = credentialsToken.Password;
+
+            _mailServer = emailCredentials.MailServer;
+            _port = emailCredentials.Port;
+            _ssl = emailCredentials.Ssl;
+            _login = emailCredentials.Login;
+            _password = emailCredentials.Password;
         }
         public SearchResults GetUnseenMessagesFromInbox()
         {
@@ -36,7 +34,7 @@ namespace EmailWorker.Models
         public abstract bool ProcessResults(SearchResults results);
         public abstract void SendAnswerBySmtp(MimeMessage message);
         public abstract MimeMessage BuildAnswerMessage();
-        public void DoProcess()
+        public void ProcessEmailbox()
         {
             SearchResults results = GetUnseenMessagesFromInbox();
             if (ProcessResults(results))
