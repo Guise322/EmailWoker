@@ -8,9 +8,8 @@ using MimeKit;
 public interface IEmailModel
 {
     SearchResults GetUnseenMessagesFromInbox();
-    void SeedEmailCredentials(EmailCredentials credentials);
     bool ProcessResults(SearchResults results);
     void SendAnswerBySmtp(MimeMessage message);
     MimeMessage BuildAnswerMessage();
-    void DoProcess();
+    void ProcessEmailbox();
 }

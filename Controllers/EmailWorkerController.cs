@@ -5,29 +5,48 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.IO;
 using System.Collections.Generic;
+using MailKit.Search;
 
 namespace EmailWorker.Controllers
 {
     public class EmailWorkerController
     {
-        IEmailModel _model;
-        
         public EmailWorkerController()
         {
-            _model = new GetPublicIPByEmailModel();
-        }
 
+        }
         public void ProcessEmails()
         {
-            List<EmailCredentials> credentialsList = GetEmailCredentials();
-            _model.SeedEmailCredentials(credentialsList[0]);
-            _model.DoProcess();
-            //to do: implement the functioning of several models and credentials
+            List<IEmailModel> modelsList = GetEmailModels();
+            foreach (var item in modelsList)
+            {
+                item.ProcessEmailbox();
+            }
         }
-        private List<EmailCredentials> GetEmailCredentials()
+        private List<IEmailModel> GetEmailModels()
+        {
+            List<EmailCredentials> emailCredentialsList = GetEmailCredentials();
+            List<IEmailModel> modelsList = new();
+            foreach (var item in emailCredentialsList)
+            {
+                switch (item.DedicatedWork)
+                {
+                    case DedicatedWorks.SearchRequest:
+                        modelsList.Add(new GetPublicIPByEmailModel(item));
+                        break;
+                    case DedicatedWorks.MarkAsSeen:
+                        modelsList.Add(new MarkAsSeen(item));
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return modelsList;
+        }
+    private List<EmailCredentials> GetEmailCredentials()
         {
             // Create and add a converter which will use the string representation instead of the numeric value.
-            var stringEnumConverter = new System.Text.Json.Serialization.JsonStringEnumConverter();
+            var stringEnumConverter = new JsonStringEnumConverter();
             JsonSerializerOptions opts = new();
             opts.Converters.Add(stringEnumConverter);
 
