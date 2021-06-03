@@ -2,10 +2,10 @@
   "version": 3,
   "targets": {
     "net5.0": {
-      "MailKit/2.11.1": {
+      "MailKit/2.12.0": {
         "type": "package",
         "dependencies": {
-          "MimeKit": "2.11.0"
+          "MimeKit": "2.12.0"
         },
         "compile": {
           "lib/net50/MailKit.dll": {}
@@ -402,7 +402,7 @@
           }
         }
       },
-      "MimeKit/2.11.0": {
+      "MimeKit/2.12.0": {
         "type": "package",
         "dependencies": {
           "Portable.BouncyCastle": "1.8.10",
@@ -557,10 +557,10 @@
     }
   },
   "libraries": {
-    "MailKit/2.11.1": {
-      "sha512": "Z/MjVOicmCCLMgOQ3pr7MKQ9fsIrMt5qA2qqTO7Uux7Q6y4pYQFV4HBeJcc/oTjNxngiLzFlUoF9oSuQdFD/ig==",
+    "MailKit/2.12.0": {
+      "sha512": "YGjG1rHqTiyPZO3J/gWcBI1tOIMmSEALiEjf5i2YCUDkR4F+AEOyx/hNMP/99vPmpB6rxUdh/budN/tb3CcbCw==",
       "type": "package",
-      "path": "mailkit/2.11.1",
+      "path": "mailkit/2.12.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -583,7 +583,10 @@
         "lib/netstandard2.0/MailKit.dll",
         "lib/netstandard2.0/MailKit.pdb",
         "lib/netstandard2.0/MailKit.xml",
-        "mailkit.2.11.1.nupkg.sha512",
+        "lib/netstandard2.1/MailKit.dll",
+        "lib/netstandard2.1/MailKit.pdb",
+        "lib/netstandard2.1/MailKit.xml",
+        "mailkit.2.12.0.nupkg.sha512",
         "mailkit.nuspec"
       ]
     },
@@ -1171,10 +1174,10 @@
         "version.txt"
       ]
     },
-    "MimeKit/2.11.0": {
-      "sha512": "xZGy3hLMxbw0ks82N/NjVYsW7Qb4pMEPtoJ+kcoJw566KVF2RJh2+kl0rdmzitghgf7FpxPGJmCNgIh+iciBmg==",
+    "MimeKit/2.12.0": {
+      "sha512": "OB0sU/wk/Z0w8JBdtfdSme/trw0J7yWLivz+j/dO8KvfqQICkHL7oZVBRitFTlsTD68U62RNoUzrQ7zEiNtEoA==",
       "type": "package",
-      "path": "mimekit/2.11.0",
+      "path": "mimekit/2.12.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1200,7 +1203,7 @@
         "lib/netstandard2.1/MimeKit.dll",
         "lib/netstandard2.1/MimeKit.pdb",
         "lib/netstandard2.1/MimeKit.xml",
-        "mimekit.2.11.0.nupkg.sha512",
+        "mimekit.2.12.0.nupkg.sha512",
         "mimekit.nuspec"
       ]
     },
@@ -1622,31 +1625,29 @@
   },
   "projectFileDependencyGroups": {
     "net5.0": [
-      "MailKit >= 2.11.1",
+      "MailKit >= 2.12.0",
       "Microsoft.Extensions.Hosting >= 5.0.0"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\userHP\\.nuget\\packages\\": {}
+    "/home/dmitry/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Code\\EmailWorker\\EmailWorker.csproj",
+      "projectUniqueName": "/home/dmitry/code/EmailWorker/EmailWorker.csproj",
       "projectName": "EmailWorker",
-      "projectPath": "D:\\Code\\EmailWorker\\EmailWorker.csproj",
-      "packagesPath": "C:\\Users\\userHP\\.nuget\\packages\\",
-      "outputPath": "D:\\Code\\EmailWorker\\obj\\",
+      "projectPath": "/home/dmitry/code/EmailWorker/EmailWorker.csproj",
+      "packagesPath": "/home/dmitry/.nuget/packages/",
+      "outputPath": "/home/dmitry/code/EmailWorker/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\userHP\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/home/dmitry/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -1667,7 +1668,7 @@
         "dependencies": {
           "MailKit": {
             "target": "Package",
-            "version": "[2.11.1, )"
+            "version": "[2.12.0, )"
           },
           "Microsoft.Extensions.Hosting": {
             "target": "Package",
@@ -1689,7 +1690,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.300\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/5.0.300/RuntimeIdentifierGraph.json"
       }
     }
   }

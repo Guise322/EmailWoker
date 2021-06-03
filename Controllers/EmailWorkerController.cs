@@ -46,7 +46,7 @@ namespace EmailWorker.Controllers
     private List<EmailCredentials> GetEmailCredentials()
         {
             // Create and add a converter which will use the string representation instead of the numeric value.
-            var stringEnumConverter = new JsonStringEnumConverter();
+            JsonStringEnumConverter stringEnumConverter = new();
             JsonSerializerOptions opts = new();
             opts.Converters.Add(stringEnumConverter);
 
