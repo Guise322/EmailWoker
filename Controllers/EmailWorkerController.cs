@@ -26,9 +26,11 @@ namespace EmailWorker.Controllers
         private List<IEmailModel> GetEmailModels()
         {
             List<EmailCredentials> emailCredentialsList = GetEmailCredentials();
+
             List<IEmailModel> modelsList = new();
             foreach (var item in emailCredentialsList)
             {
+                EmailBoxes checkResult = CheckEmailBox(item);
                 switch (item.DedicatedWork)
                 {
                     case DedicatedWorks.SearchRequest:
@@ -43,7 +45,7 @@ namespace EmailWorker.Controllers
             }
             return modelsList;
         }
-    private List<EmailCredentials> GetEmailCredentials()
+        private List<EmailCredentials> GetEmailCredentials()
         {
             // Create and add a converter which will use the string representation instead of the numeric value.
             JsonStringEnumConverter stringEnumConverter = new();
@@ -52,6 +54,18 @@ namespace EmailWorker.Controllers
 
             string jsonString = File.ReadAllText("EmailCredentials.json");
             return JsonSerializer.Deserialize<List<EmailCredentials>>(jsonString, opts);
+        }
+        private EmailBoxes CheckEmailBox(EmailCredentials emailCredentials)
+        {
+            if(emailCredentials.Login.Contains("ya"))
+            {
+                return EmailBoxes.Yandex;
+            }
+            if (emailCredentials.Login.Contains("gmail"))
+            {
+                return EmailBoxes.Google;
+            }
+            return EmailBoxes.Another;
         }
     }
 }
