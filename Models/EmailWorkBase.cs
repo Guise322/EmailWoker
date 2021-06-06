@@ -3,6 +3,7 @@ using MailKit.Net.Imap;
 using MailKit.Search;
 using EmailWorker.Shared;
 using MimeKit;
+using System.Collections.Generic;
 
 namespace EmailWorker.Models
 {
@@ -28,6 +29,11 @@ namespace EmailWorker.Models
             _client.Connect(_mailServer, _port, _ssl);
             _client.AuthenticationMechanisms.Remove("XOAUTH2");
             _client.Authenticate(_login, _password);
+
+            FolderNamespaceCollection folderNamespaces = _client.PersonalNamespaces;
+            IList<IMailFolder> mailStores = _client.GetFolders(folderNamespaces[0],false);
+            mailStores[2].Open(FolderAccess.ReadWrite);
+            
             _client.Inbox.Open(FolderAccess.ReadWrite);
             return _client.Inbox.Search(SearchOptions.All, SearchQuery.Not(SearchQuery.Seen));
         }
