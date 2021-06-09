@@ -4,50 +4,33 @@ using MailKit.Search;
 using EmailWorker.Shared;
 using MimeKit;
 using System.Collections.Generic;
+using EmailWorker.Models.Interfaces;
 
 namespace EmailWorker.Models
 {
-    public abstract class EmailWorkBase : IEmailModel
+    public abstract class EmailWorkBase : IEmailWorkModel
     {
-        protected readonly string _myEmail = "guise322@yandex.ru";
-        protected string _mailServer, _login, _password;
-        protected int _port;
-        protected bool _ssl;
-        protected ImapClient _client;
-        public EmailWorkBase(EmailCredentials emailCredentials)
+        protected MimeMessage Message;
+        protected bool RequestIsGot = false;
+        private IEmailBoxWorkModel emailBoxWork;
+        protected readonly string MyEmail = "guise322@yandex.ru";
+        protected readonly EmailCredentials EmailCredentials;
+        protected readonly ImapClient Client;
+        public EmailWorkBase(EmailCredentials emailCredentials, IEmailBoxWorkModel emailBoxWork)
         {
-            _client = new ImapClient();
-
-            _mailServer = emailCredentials.MailServer;
-            _port = emailCredentials.Port;
-            _ssl = emailCredentials.Ssl;
-            _login = emailCredentials.Login;
-            _password = emailCredentials.Password;
+            Client = new ImapClient();
+            EmailCredentials = emailCredentials;
+            this.emailBoxWork = emailBoxWork;
         }
-        public SearchResults GetUnseenMessagesFromInbox()
-        {
-            _client.Connect(_mailServer, _port, _ssl);
-            _client.AuthenticationMechanisms.Remove("XOAUTH2");
-            _client.Authenticate(_login, _password);
-
-            FolderNamespaceCollection folderNamespaces = _client.PersonalNamespaces;
-            IList<IMailFolder> mailStores = _client.GetFolders(folderNamespaces[0],false);
-            mailStores[2].Open(FolderAccess.ReadWrite);
-            
-            _client.Inbox.Open(FolderAccess.ReadWrite);
-            return _client.Inbox.Search(SearchOptions.All, SearchQuery.Not(SearchQuery.Seen));
-        }
-        public abstract bool ProcessResults(SearchResults results);
-        public abstract void SendAnswerBySmtp(MimeMessage message);
-        public abstract MimeMessage BuildAnswerMessage();
+        public IList<object> GetUnseenMessagesIDsFromInbox() =>
+            emailBoxWork.GetUnseenMessagesFromInbox(Client);
+        public abstract IEmailWorkModel ProcessResults(IList<object> messagesIDs);
+        public abstract void SendAnswerBySmtp();
+        public abstract IEmailWorkModel BuildAnswerMessage();
         public void ProcessEmailbox()
         {
-            SearchResults results = GetUnseenMessagesFromInbox();
-            if (ProcessResults(results))
-            {
-                MimeMessage message = BuildAnswerMessage();
-                SendAnswerBySmtp(message);
-            }
+            IList<object> messagesIDs = GetUnseenMessagesIDsFromInbox();
+            ProcessResults(messagesIDs).BuildAnswerMessage().SendAnswerBySmtp();
         }
     }
 }

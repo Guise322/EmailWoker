@@ -5,39 +5,30 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.IO;
 using System.Collections.Generic;
+using EmailWorker.Models.Interfaces;
 using MailKit.Search;
 
 namespace EmailWorker.Controllers
 {
-    public class EmailWorkerController
+    public static class EmailWorkerController
     {
-        public EmailWorkerController()
+        public static void ProcessEmails()
         {
-
+            GetEmailModels().ForEach(model => model.ProcessEmailbox());
         }
-        public void ProcessEmails()
+        private static List<IEmailWorkModel> GetEmailModels()
         {
-            List<IEmailModel> modelsList = GetEmailModels();
-            foreach (var item in modelsList)
-            {
-                item.ProcessEmailbox();
-            }
-        }
-        private List<IEmailModel> GetEmailModels()
-        {
-            List<EmailCredentials> emailCredentialsList = GetEmailCredentials();
+            List<IEmailWorkModel> modelsList = new();
 
-            List<IEmailModel> modelsList = new();
-            foreach (var item in emailCredentialsList)
+            foreach (var item in GetEmailCredentials())
             {
-                EmailBoxes checkResult = CheckEmailBox(item);
                 switch (item.DedicatedWork)
                 {
                     case DedicatedWorks.SearchRequest:
-                        modelsList.Add(new GetPublicIPByEmailModel(item));
+                        modelsList.Add(BuildEmailWorkModel<GetPublicIPByEmailModel>(item));
                         break;
                     case DedicatedWorks.MarkAsSeen:
-                        modelsList.Add(new MarkAsSeen(item));
+                        modelsList.Add(BuildEmailWorkModel<MarkAsSeen>(item)); 
                         break;
                     default:
                         break;
@@ -45,27 +36,33 @@ namespace EmailWorker.Controllers
             }
             return modelsList;
         }
-        private List<EmailCredentials> GetEmailCredentials()
+        private static IEmailWorkModel BuildEmailWorkModel<T>(EmailCredentials emailCredentials)
+            where T : IEmailWorkModel
+        {
+            EmailBoxes emailBox = CheckEmailBox(emailCredentials);
+            IEmailBoxWorkModel emailBoxWork = GetEmailBoxWorkModel(emailBox, emailCredentials);
+            IEmailWorkModel workModel = (T)Activator.CreateInstance(typeof(T), emailCredentials, emailBoxWork);
+            return workModel;
+        }
+        private static List<EmailCredentials> GetEmailCredentials()
         {
             // Create and add a converter which will use the string representation instead of the numeric value.
             JsonStringEnumConverter stringEnumConverter = new();
             JsonSerializerOptions opts = new();
             opts.Converters.Add(stringEnumConverter);
-
             string jsonString = File.ReadAllText("EmailCredentials.json");
             return JsonSerializer.Deserialize<List<EmailCredentials>>(jsonString, opts);
         }
-        private EmailBoxes CheckEmailBox(EmailCredentials emailCredentials)
+        private static EmailBoxes CheckEmailBox(EmailCredentials emailCredentials) =>
+            (emailCredentials.Login.Contains("ya")
+                || emailCredentials.Login.Contains("yandex")
+            ) ? EmailBoxes.Yandex : EmailBoxes.Google;
+        private static IEmailBoxWorkModel GetEmailBoxWorkModel(EmailBoxes emailBoxes,
+            EmailCredentials emailCredentials) => emailBoxes switch
         {
-            if(emailCredentials.Login.Contains("ya"))
-            {
-                return EmailBoxes.Yandex;
-            }
-            if (emailCredentials.Login.Contains("gmail"))
-            {
-                return EmailBoxes.Google;
-            }
-            return EmailBoxes.Another;
-        }
-    }
+            EmailBoxes.Yandex => new YandexMailBoxWorkModel(emailCredentials),
+            EmailBoxes.Google => new GMailBoxWorkModel(emailCredentials),
+            _ => null,
+        };
+    }    
 }
