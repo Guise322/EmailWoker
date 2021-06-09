@@ -12,7 +12,7 @@ namespace EmailWorker
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
-        private EmailWorkerController _controller = new EmailWorkerController();
+        
         public Worker(ILogger<Worker> logger)
         {
             _logger = logger;
@@ -24,7 +24,7 @@ namespace EmailWorker
             {
                 try
                 {
-                    _controller.ProcessEmails();
+                    EmailWorkerController.ProcessEmails();
                 }
                 catch (Exception e)
                 {

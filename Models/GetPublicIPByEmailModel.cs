@@ -6,65 +6,77 @@ using MailKit.Net.Smtp;
 using MailKit.Search;
 using MimeKit;
 using EmailWorker.Shared;
+using System.Collections.Generic;
+using EmailWorker.Models.Interfaces;
 
 namespace EmailWorker.Models
 {
     public class GetPublicIPByEmailModel : EmailWorkBase
     {
-        public GetPublicIPByEmailModel(EmailCredentials emailCredentials) : base(emailCredentials)
+        public GetPublicIPByEmailModel(EmailCredentials emailCredentials,
+            IEmailBoxWorkModel emailBoxWork) : base(emailCredentials, emailBoxWork)
         {
 
         }
-        public override bool ProcessResults(SearchResults results)
+        public override IEmailWorkModel ProcessResults(IList<object> messagesIDs)
         {
-            foreach (var uniqueId in results.UniqueIds)
+            bool isUniqueId = messagesIDs is IList<UniqueId>;
+
+            foreach (var item in messagesIDs)
             {
-                MimeMessage message = _client.Inbox.GetMessage(uniqueId);
+                MimeMessage message = isUniqueId ?
+                    Client.Inbox.GetMessage((UniqueId)item) : Client.Inbox.GetMessage((int)item);
                 string rawEmailFrom = message.From.ToString();
                 
                 string emailFrom = ExtractEmailFrom(rawEmailFrom);
 
-                if (emailFrom == _myEmail)
+                if (emailFrom == MyEmail)
                 {
-                    _client.Inbox.AddFlags(uniqueId, MessageFlags.Seen, true);
-                    _client.Disconnect(true);
-                    return true;
+                    RequestIsGot = true;
+                    return this;
                 }
-                //Mark message as read
-                _client.Inbox.AddFlags(uniqueId, MessageFlags.Seen, true);
+                if (isUniqueId)
+                {
+                    Client.Inbox.AddFlags((UniqueId)item, MessageFlags.Seen, true);
+                }
+                else
+                {
+                    Client.Inbox.AddFlags((int)item, MessageFlags.Seen, true);
+                }
             }
-            _client.Disconnect(true);
-            return false;
+            Client.Disconnect(true);
+            return this;
         }
 
-        private string _myIP;
-        public override void SendAnswerBySmtp(MimeMessage message)
+        private string myIP;
+        public override void SendAnswerBySmtp()
         {
             int smtpPort = 465;
             
             using (var client = new SmtpClient())
             {   
-                _myIP = GetPublicIPAddress();
+                myIP = GetPublicIPAddress();
 
-                client.Connect(_mailServer, smtpPort, _ssl);
-                client.Authenticate(_login, _password);
+                client.Connect(EmailCredentials.MailServer, smtpPort, EmailCredentials.Ssl);
+                client.Authenticate(EmailCredentials.Login, EmailCredentials.Password);
 
-                client.Send(message);
+                client.Send(Message);
 
                 client.Disconnect(true);
             }
         }
-        public override MimeMessage BuildAnswerMessage()
+        public override IEmailWorkModel BuildAnswerMessage()
         {
-            var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("Worker", _login));
-            message.To.Add(new MailboxAddress("Dmitry", _myEmail));
+            MimeMessage message = new();
+            message.From.Add(new MailboxAddress("Worker", EmailCredentials.Login));
+            message.To.Add(new MailboxAddress("Dmitry", MyEmail));
             message.Subject = "Ip By Email Project";
             message.Body = new TextPart(MimeKit.Text.TextFormat.Plain)
             {
-                Text = string.Format("The current IP of the computer is {0}", _myIP)
+                Text = string.Format("The current IP of the computer is {0}", myIP)
             };
-            return message;
+            Message = message;
+            return this;
         }
         private string ExtractEmailFrom(string rawString)
         {
@@ -73,7 +85,7 @@ namespace EmailWorker.Models
 
             string emailFrom;
 
-            if (first !> 0) 
+            if (first !> 0)
             {
                 emailFrom = rawString;
                 return emailFrom;    
