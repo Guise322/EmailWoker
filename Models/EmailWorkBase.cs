@@ -5,6 +5,7 @@ using EmailWorker.Shared;
 using MimeKit;
 using System.Collections.Generic;
 using EmailWorker.Models.Interfaces;
+using System.Threading.Tasks;
 
 namespace EmailWorker.Models
 {
@@ -22,14 +23,14 @@ namespace EmailWorker.Models
             EmailCredentials = emailCredentials;
             this.emailBoxWork = emailBoxWork;
         }
-        public IList<object> GetUnseenMessagesIDsFromInbox() =>
-            emailBoxWork.GetUnseenMessagesFromInbox(Client);
+        public Task<IList<object>> GetUnseenMessagesIDsFromInboxAsync() =>
+            emailBoxWork.GetUnseenMessagesFromInboxAsync(Client);
         public abstract IEmailWorkModel ProcessResults(IList<object> messagesIDs);
         public abstract void SendAnswerBySmtp();
         public abstract IEmailWorkModel BuildAnswerMessage();
-        public void ProcessEmailbox()
+        public async Task ProcessEmailboxAsync()
         {
-            IList<object> messagesIDs = GetUnseenMessagesIDsFromInbox();
+            IList<object> messagesIDs = await GetUnseenMessagesIDsFromInboxAsync();
             ProcessResults(messagesIDs).BuildAnswerMessage().SendAnswerBySmtp();
         }
     }

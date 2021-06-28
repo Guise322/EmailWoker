@@ -5,15 +5,16 @@ using MailKit.Search;
 using EmailWorker.Shared;
 using MimeKit;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace EmailWorker.Models.Interfaces
 {
     public interface IEmailWorkModel
     {
-        IList<object> GetUnseenMessagesIDsFromInbox();
+        Task<IList<object>> GetUnseenMessagesIDsFromInboxAsync();
         IEmailWorkModel ProcessResults(IList<object> messagesIDs);
         IEmailWorkModel BuildAnswerMessage();
         void SendAnswerBySmtp();        
-        void ProcessEmailbox();
+        Task ProcessEmailboxAsync();
     }   
 }

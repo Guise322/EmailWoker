@@ -7,14 +7,19 @@ using System.IO;
 using System.Collections.Generic;
 using EmailWorker.Models.Interfaces;
 using MailKit.Search;
+using System.Threading.Tasks;
 
 namespace EmailWorker.Controllers
 {
-    public static class EmailWorkerController
+    public class EmailWorkerController
     {
-        public static void ProcessEmails()
+        public async static Task ProcessEmailsAsync()
         {
-            GetEmailModels().ForEach(model => model.ProcessEmailbox());
+            List<IEmailWorkModel> models = GetEmailModels();
+            foreach (var model in models)
+            {
+                await model.ProcessEmailboxAsync();
+            }
         }
         private static List<IEmailWorkModel> GetEmailModels()
         {
