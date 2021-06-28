@@ -24,7 +24,7 @@ namespace EmailWorker
             {
                 try
                 {
-                    EmailWorkerController.ProcessEmails();
+                    await EmailWorkerController.ProcessEmailsAsync();
                 }
                 catch (Exception e)
                 {
