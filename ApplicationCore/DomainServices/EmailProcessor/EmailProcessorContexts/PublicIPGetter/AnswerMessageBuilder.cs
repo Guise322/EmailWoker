@@ -6,10 +6,9 @@ namespace EmailWorker.ApplicationCore.DomainServices.EmailProcessor.EmailProcess
 {
     public class AnswerMessageBuilder
     {
-        public static MimeMessage BuildAnswerMessage(MimeMessage messageWithFromTo, IPublicIPGetter ipGetter)
+        public static MimeMessage BuildAnswerMessage(MimeMessage messageWithFromTo, string myIP)
         {
             messageWithFromTo.Subject = "Ip By Email Project";
-            string myIP = ipGetter.GetPublicIP();
             messageWithFromTo.Body = new TextPart(MimeKit.Text.TextFormat.Plain)
             {
                 Text = string.Format("The current IP of the computer is {0}", myIP)

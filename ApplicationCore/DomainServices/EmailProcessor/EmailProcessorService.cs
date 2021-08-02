@@ -16,7 +16,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.EmailProcessor
             EmailCredentials emailCredentials,
             IEmailProcessorServiceContext serviceContext,
             string myEmail
-            )
+        )
         {
             EmailCredentials = emailCredentials;
             ServiceContext = serviceContext;
