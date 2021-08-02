@@ -7,25 +7,14 @@ namespace EmailWorker.ApplicationCore.DomainServices.EmailProcessor.EmailProcess
 {
     public class MessagesProcessor
     {
-        public static List<object> ProcessMessages(
+        public static List<object> ProcessMessage(
             List<object> messages,
-            string emailAddress,
-            IMessageGetter messageGetter
-        )
+            string emailAddress)
         {
-            bool isUniqueId = messages is IList<UniqueId>;
+            
             foreach (var item in messages)
             {
-                MimeMessage message = isUniqueId ? messageGetter.GetMessage((UniqueId)item) :
-                    messageGetter.GetMessage((int)item);
-                string rawEmailFrom = message.From.ToString();
-
-                string emailFrom = EmailExtractor.ExtractEmail(rawEmailFrom);
-
-                if (emailFrom == emailAddress)
-                {
-                    return new List<object>(1) { item };
-                }
+                
             }
             
             return null;
