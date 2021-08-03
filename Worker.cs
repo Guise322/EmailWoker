@@ -1,21 +1,21 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using EmailWorker.Controllers;
+using EmailWorker.ApplicationCore.Interfaces;
 
 namespace EmailWorker
 {
     public class Worker : BackgroundService
     {
-        private readonly ILogger<Worker> _logger;
+        private readonly ILogger<Worker> logger;
+        private readonly IEmailBoxProcessorService emailBoxProcessorService;
         
-        public Worker(ILogger<Worker> logger)
+        public Worker(ILogger<Worker> logger, IEmailBoxProcessorService emailBoxProcessorService)
         {
-            _logger = logger;
+            this.logger = logger;
+            this.emailBoxProcessorService = emailBoxProcessorService;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -24,16 +24,16 @@ namespace EmailWorker
             {
                 try
                 {
-                    await EmailWorkerController.ProcessEmailsAsync();
+                    await emailBoxProcessorService.ProcessEmailBoxAsync();
                 }
                 catch (Exception e)
                 {
                     if(e != null)
-                        _logger.LogError(e.Message);
+                        logger.LogError(e.Message);
                     else
-                        _logger.LogInformation("Worker is over for an error at {time}", DateTimeOffset.Now);
+                        logger.LogInformation("Worker is over for an error at {time}", DateTimeOffset.Now);
                 }
-                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+                logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
                 await Task.Delay(1000, stoppingToken);
             }
         }
