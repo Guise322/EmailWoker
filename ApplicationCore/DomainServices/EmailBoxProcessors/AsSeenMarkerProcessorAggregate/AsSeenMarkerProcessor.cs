@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using EmailWorker.ApplicationCore.Entities;
 using EmailWorker.ApplicationCore.Interfaces;
-using EmailWorker.ApplicationCore.Interfaces.ProcessedMessageHandlers;
+using EmailWorker.ApplicationCore.Interfaces.HandlersOfProcessedMessages;
 using EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxProcessorAggregate;
 using MimeKit;
 
@@ -11,13 +11,13 @@ namespace EmailWorker.ApplicationCore.DomainServices.EmailBoxProcessors.AsSeenMa
     public class AsSeenMarkerProcessor : IAsSeenMarkerProcessor
     {
         private IAnswerSender AnswerSender { get; set; }
-        private IUnseenMessagesGetter UnseenMessagesGetter { get; set; }
-        private IAsSeenMarkerMessageHandler ProcessedMessagesHandler { get; set; }
+        private IGetterOfUnseenMessages UnseenMessagesGetter { get; set; }
+        private IHandlerOfAsSeenMarkerMessages ProcessedMessagesHandler { get; set; }
         private IClientConnector ClientConnector { get; set; }
         public AsSeenMarkerProcessor(
             IAnswerSender answerSender,
-            IUnseenMessagesGetter unseenMessagesGetter,
-            IAsSeenMarkerMessageHandler processedMessagesHandler,
+            IGetterOfUnseenMessages unseenMessagesGetter,
+            IHandlerOfAsSeenMarkerMessages processedMessagesHandler,
             IClientConnector clientConnector) => 
             (AnswerSender, UnseenMessagesGetter, ProcessedMessagesHandler, ClientConnector) = 
             (answerSender, unseenMessagesGetter, processedMessagesHandler, clientConnector);

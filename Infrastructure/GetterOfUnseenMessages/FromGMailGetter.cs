@@ -5,7 +5,7 @@ using MailKit;
 using MailKit.Net.Imap;
 using MailKit.Search;
 
-namespace EmailWorker.Infrastructure.EmailProcessor.UnseenMessagesGetter
+namespace EmailWorker.Infrastructure.EmailProcessor.GetterOfUnseenMessages
 {
     public class FromGmailGetter : IGetter
     {

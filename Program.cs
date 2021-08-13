@@ -1,9 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using EmailWorker.ApplicationCore.Interfaces;
+using EmailWorker.Infrastructure.EmailProcessor;
+using EmailWorker.Infrastructure.EmailProcessor.HandlersOfProcessedMessages;
+using EmailWorker.Infrastructure.EmailProcessor.GetterOfUnseenMessages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using EmailWorker.ApplicationCore.Interfaces.HandlersOfProcessedMessages;
 
 namespace EmailWorker
 {
@@ -18,7 +19,16 @@ namespace EmailWorker
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddHostedService<Worker>();
+                    services.AddHostedService<Worker>()
+                        .AddTransient<IAnswerSender, AnswerSender>()
+                        .AddTransient<IGetterOfUnseenMessages, InboxGetter>()
+                        .AddTransient<IHandlerOfAsSeenMarkerMessages, HandlerOfAsSeenMarkerMessages>()
+                        .AddTransient<IClientConnector, ClientConnector>()
+
+                        .AddTransient<IHandlerOfPublicIPGetterMessages, HandlerOfPublicIpGetterMessages>()
+                        .AddTransient<IMessageGetter, MessageGetter>()
+                        
+                        ;
                 });
     }
 }

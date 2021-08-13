@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using EmailWorker.ApplicationCore.DomainServices.EmailBoxProcessors.AsSeenMarkerAggregate;
 using EmailWorker.ApplicationCore.Interfaces;
-using EmailWorker.ApplicationCore.Interfaces.ProcessedMessageHandlers;
+using EmailWorker.ApplicationCore.Interfaces.HandlersOfProcessedMessages;
 using EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxProcessorAggregate;
 using MailKit;
 using MimeKit;
@@ -11,23 +11,21 @@ namespace EmailWorker.ApplicationCore.DomainServices.EmailBoxProcessors.PublicIP
     public class PublicIPGetterProcessor : AsSeenMarkerProcessor, IPublicIPGetterProcessor
     {
         private IMessageGetter MessageGetter { get; set; }
-        private IPublicIPGetterMessageHandler PublicIPGetterMessagesHandler
+        private IHandlerOfPublicIPGetterMessages PublicIPGetterMessagesHandler
             { get; set; }
-        private string SearchedEmail { get; }
+        private string SearchedEmail { get; } = "guise322@ya.ru";
         public PublicIPGetterProcessor(
-            string searchedEmail,
             IMessageGetter messageGetter,
             IAnswerSender answerSender,
-            IUnseenMessagesGetter unseenMessagesGetter,
-            IPublicIPGetterMessageHandler processedMessagesHandler,
+            IGetterOfUnseenMessages unseenMessagesGetter,
+            IHandlerOfPublicIPGetterMessages handlerOfProcessedMessages,
             IClientConnector clientConnector) :
             base(
                 answerSender,
                 unseenMessagesGetter,
-                processedMessagesHandler,
+                handlerOfProcessedMessages,
                 clientConnector) =>
-            (SearchedEmail, MessageGetter) =
-            (searchedEmail, messageGetter);
+            MessageGetter = messageGetter;
         public override List<object> ProcessMessages(List<object> messages)
         {
             bool isUniqueId = messages is IList<UniqueId>;

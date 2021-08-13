@@ -4,7 +4,7 @@ using EmailWorker.ApplicationCore.Entities;
 
 namespace EmailWorker.ApplicationCore.Interfaces
 {
-    public interface IUnseenMessagesGetter
+    public interface IGetterOfUnseenMessages
     {
         Task<List<object>> GetUnseenMessagesAsync(EmailCredentials emailCredentials);
     }

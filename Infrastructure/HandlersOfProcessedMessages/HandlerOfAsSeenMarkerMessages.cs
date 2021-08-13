@@ -1,14 +1,14 @@
 using System.Collections.Generic;
-using EmailWorker.ApplicationCore.Interfaces.ProcessedMessageHandlers;
+using EmailWorker.ApplicationCore.Interfaces.HandlersOfProcessedMessages;
 using MailKit;
 using MailKit.Net.Imap;
 
-namespace EmailWorker.Infrastructure.EmailProcessor.ProcessedMessagesHandlers
+namespace EmailWorker.Infrastructure.EmailProcessor.HandlersOfProcessedMessages
 {
-    public class AsSeenMarkerMessagesHandler : IAsSeenMarkerMessageHandler
+    public class HandlerOfAsSeenMarkerMessages : IHandlerOfAsSeenMarkerMessages
     {
         private ImapClient Client { get; }
-        public AsSeenMarkerMessagesHandler(ImapClient client)
+        public HandlerOfAsSeenMarkerMessages(ImapClient client)
         {
             Client = client;
         }

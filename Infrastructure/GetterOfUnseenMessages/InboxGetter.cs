@@ -4,9 +4,9 @@ using EmailWorker.ApplicationCore.Entities;
 using EmailWorker.ApplicationCore.Interfaces;
 using MailKit.Net.Imap;
 
-namespace EmailWorker.Infrastructure.EmailProcessor.UnseenMessagesGetter
+namespace EmailWorker.Infrastructure.EmailProcessor.GetterOfUnseenMessages
 {
-    public class InboxGetter : IUnseenMessagesGetter
+    public class InboxGetter : IGetterOfUnseenMessages
     {
         private ImapClient Client { get; }
         public InboxGetter(ImapClient client)
