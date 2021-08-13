@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace EmailWorker.Infrastructure.EmailProcessor.UnseenMessagesGetter
+namespace EmailWorker.Infrastructure.EmailProcessor.GetterOfUnseenMessages
 {
     public interface IGetter
     {

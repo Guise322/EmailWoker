@@ -4,7 +4,7 @@ using EmailWorker.ApplicationCore.Entities;
 using MailKit;
 using MailKit.Net.Imap;
 
-namespace EmailWorker.Infrastructure.EmailProcessor.UnseenMessagesGetter
+namespace EmailWorker.Infrastructure.EmailProcessor.GetterOfUnseenMessages
 {
     public class FromYandexGetter : IGetter
     {

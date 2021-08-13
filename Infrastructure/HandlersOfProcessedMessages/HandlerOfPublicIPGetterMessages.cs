@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using EmailWorker.ApplicationCore.Interfaces.ProcessedMessageHandlers;
+using EmailWorker.ApplicationCore.Interfaces.HandlersOfProcessedMessages;
 
-namespace EmailWorker.Infrastructure.EmailProcessor.ProcessedMessagesHandlers
+namespace EmailWorker.Infrastructure.EmailProcessor.HandlersOfProcessedMessages
 {
-    public class PublicIpGetterMessagesHandler : IProcessedMessageHandler
+    public class HandlerOfPublicIpGetterMessages : IHandlerOfPublicIPGetterMessages
     {
         public (string emailText, string emailSubject) HandleProcessedMessages(
             List<object> messages)
