@@ -2,13 +2,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using EmailWorker.ApplicationCore.Interfaces.HandlersOfProcessedMessages;
+using MailKit;
 
-namespace EmailWorker.Infrastructure.EmailProcessor.HandlersOfProcessedMessages
+namespace EmailWorker.Infrastructure.HandlersOfProcessedMessages
 {
     public class HandlerOfPublicIpGetterMessages : IHandlerOfPublicIPGetterMessages
     {
         public (string emailText, string emailSubject) HandleProcessedMessages(
-            List<object> messages)
+            IList<UniqueId> messages)
         {
             if (messages == null)
             {

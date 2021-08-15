@@ -4,6 +4,7 @@ using EmailWorker.ApplicationCore.Entities;
 using EmailWorker.ApplicationCore.Interfaces;
 using EmailWorker.ApplicationCore.Interfaces.HandlersOfProcessedMessages;
 using EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxProcessorAggregate;
+using MailKit;
 using MimeKit;
 
 namespace EmailWorker.ApplicationCore.DomainServices.EmailBoxProcessors.AsSeenMarkerAggregate
@@ -22,18 +23,18 @@ namespace EmailWorker.ApplicationCore.DomainServices.EmailBoxProcessors.AsSeenMa
             (AnswerSender, UnseenMessagesGetter, ProcessedMessagesHandler, ClientConnector) = 
             (answerSender, unseenMessagesGetter, processedMessagesHandler, clientConnector);
 
-        public async Task<List<object>> GetUnseenMessagesAsync(EmailCredentials emailCredentials)
+        public async Task<IList<UniqueId>> GetUnseenMessagesAsync(EmailCredentials emailCredentials)
         {
             ClientConnector.ConnectClient(emailCredentials);
-            List<object> messages = await UnseenMessagesGetter
+            IList<UniqueId> messages = await UnseenMessagesGetter
                 .GetUnseenMessagesAsync(emailCredentials);
             ClientConnector.DisconnectClient();
             return messages;
         }
-        public virtual List<object> ProcessMessages(List<object> messages) =>
+        public virtual IList<UniqueId> ProcessMessages(IList<UniqueId> messages) =>
             MessagesProcessor.ProcessMessages(messages);
         public virtual (string emailText, string emailSubject) HandleProcessedMessages(
-            List<object> messages)
+            IList<UniqueId> messages)
         {
             return ProcessedMessagesHandler.HandleProcessedMessages(messages);
         }

@@ -1,10 +1,14 @@
 using EmailWorker.ApplicationCore.Interfaces;
-using EmailWorker.Infrastructure.EmailProcessor;
-using EmailWorker.Infrastructure.EmailProcessor.HandlersOfProcessedMessages;
-using EmailWorker.Infrastructure.EmailProcessor.GetterOfUnseenMessages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using EmailWorker.ApplicationCore.Interfaces.HandlersOfProcessedMessages;
+using EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxProcessorAggregate;
+using EmailWorker.ApplicationCore.DomainServices.EmailBoxProcessors.AsSeenMarkerAggregate;
+using EmailWorker.ApplicationCore.DomainServices.EmailBoxProcessors.PublicIPGetterAggregate;
+using MailKit.Net.Imap;
+using EmailWorker.ApplicationCore.DomainServices.EmailBoxProcessorService;
+using EmailWorker.Infrastructure;
+using EmailWorker.Infrastructure.HandlersOfProcessedMessages;
 
 namespace EmailWorker
 {
@@ -20,15 +24,20 @@ namespace EmailWorker
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<Worker>()
-                        .AddTransient<IAnswerSender, AnswerSender>()
-                        .AddTransient<IGetterOfUnseenMessages, InboxGetter>()
-                        .AddTransient<IHandlerOfAsSeenMarkerMessages, HandlerOfAsSeenMarkerMessages>()
-                        .AddTransient<IClientConnector, ClientConnector>()
+                        .AddTransient<IEmailBoxProcessorService, EmailBoxProcessorService>() 
 
-                        .AddTransient<IHandlerOfPublicIPGetterMessages, HandlerOfPublicIpGetterMessages>()
-                        .AddTransient<IMessageGetter, MessageGetter>()
+                        .AddScoped<IAnswerSender, AnswerSender>()
+                        .AddScoped<IGetterOfUnseenMessages, GetterOfUnseenMessages>()
+                        .AddScoped<IHandlerOfAsSeenMarkerMessages, HandlerOfAsSeenMarkerMessages>()
+                        .AddScoped<IClientConnector, ClientConnector>()
+
+                        .AddScoped<IHandlerOfPublicIPGetterMessages, HandlerOfPublicIpGetterMessages>()
+                        .AddScoped<IMessageGetter, MessageGetter>()
                         
-                        ;
+                        .AddScoped<IAsSeenMarkerProcessor, AsSeenMarkerProcessor>()
+                        .AddScoped<IPublicIPGetterProcessor, PublicIPGetterProcessor>()
+                        
+                        .AddScoped<ImapClient>();
                 });
     }
 }

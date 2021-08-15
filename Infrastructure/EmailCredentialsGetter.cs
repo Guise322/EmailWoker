@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using EmailWorker.ApplicationCore.Entities;
 
-namespace EmailWorker.Infrastructure.EmailProcessor
+namespace EmailWorker.Infrastructure
 {
     public class EmailCredentialsGetter
     {

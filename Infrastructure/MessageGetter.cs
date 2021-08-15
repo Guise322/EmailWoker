@@ -3,7 +3,7 @@ using MailKit;
 using MailKit.Net.Imap;
 using MimeKit;
 
-namespace EmailWorker.Infrastructure.EmailProcessor
+namespace EmailWorker.Infrastructure
 {
     public class MessageGetter : IMessageGetter
     {
@@ -12,10 +12,9 @@ namespace EmailWorker.Infrastructure.EmailProcessor
         {
             Client = client;
         }
-        public MimeMessage GetMessage(object id)
+        public MimeMessage GetMessage(UniqueId id)
         {
-            return (id is UniqueId uniqueID) ? Client.Inbox.GetMessage(uniqueID) : 
-                Client.Inbox.GetMessage((int)id);
+            return Client.Inbox.GetMessage(id);
         }
     }
 }

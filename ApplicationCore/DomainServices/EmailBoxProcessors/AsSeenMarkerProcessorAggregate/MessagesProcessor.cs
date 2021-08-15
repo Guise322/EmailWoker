@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using MailKit;
 
 namespace EmailWorker.ApplicationCore.DomainServices.EmailBoxProcessors.AsSeenMarkerAggregate
 {
     public class MessagesProcessor
     {
-        public static List<object> ProcessMessages(List<object> messages)
+        public static IList<UniqueId> ProcessMessages(IList<UniqueId> messages)
         {
             int emailsOnRequest = 5;
 
@@ -13,7 +14,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.EmailBoxProcessors.AsSeenMa
                 return null;
             }
 
-            List<object> processedMessages = new();
+            List<UniqueId> processedMessages = new();
             for (int i = 0; i < emailsOnRequest; i++)
             {
                 processedMessages.Add(messages[i]);

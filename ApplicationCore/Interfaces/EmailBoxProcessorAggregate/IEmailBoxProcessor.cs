@@ -1,15 +1,16 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using EmailWorker.ApplicationCore.Entities;
+using MailKit;
 using MimeKit;
 
 namespace EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxProcessorAggregate
 {
     public interface IEmailBoxProcessor
     {
-        Task<List<object>> GetUnseenMessagesAsync(EmailCredentials emailCredentials);
-        List<object> ProcessMessages(List<object> messages);
-        (string emailText, string emailSubject) HandleProcessedMessages(List<object> messages);
+        Task<IList<UniqueId>> GetUnseenMessagesAsync(EmailCredentials emailCredentials);
+        IList<UniqueId> ProcessMessages(IList<UniqueId> messages);
+        (string emailText, string emailSubject) HandleProcessedMessages(IList<UniqueId> messages);
         MimeMessage BuildAnswerMessage(
             EmailCredentials emailCredentials,
             string myEmail,

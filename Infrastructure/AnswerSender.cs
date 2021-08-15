@@ -3,7 +3,7 @@ using EmailWorker.ApplicationCore.Interfaces;
 using MailKit.Net.Smtp;
 using MimeKit;
 
-namespace EmailWorker.Infrastructure.EmailProcessor
+namespace EmailWorker.Infrastructure
 {
     public class AnswerSender : IAnswerSender
     {
