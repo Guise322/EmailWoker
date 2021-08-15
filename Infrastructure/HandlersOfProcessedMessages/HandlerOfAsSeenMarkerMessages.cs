@@ -3,7 +3,7 @@ using EmailWorker.ApplicationCore.Interfaces.HandlersOfProcessedMessages;
 using MailKit;
 using MailKit.Net.Imap;
 
-namespace EmailWorker.Infrastructure.EmailProcessor.HandlersOfProcessedMessages
+namespace EmailWorker.Infrastructure.HandlersOfProcessedMessages
 {
     public class HandlerOfAsSeenMarkerMessages : IHandlerOfAsSeenMarkerMessages
     {
@@ -13,26 +13,16 @@ namespace EmailWorker.Infrastructure.EmailProcessor.HandlersOfProcessedMessages
             Client = client;
         }
         public (string emailText, string emailSubject) HandleProcessedMessages(
-            List<object> messages)
+            IList<UniqueId> messages)
         {
             int emailsOnRequest = 5;
-            if (messages[0] is UniqueId)
+            
+            for (int i = 0; i < emailsOnRequest; i++)
             {
-                for (int i = 0; i < emailsOnRequest; i++)
-                {
-                    Client.Inbox.AddFlags((UniqueId)messages[i],
-                        MessageFlags.Seen, true);
-                }
+                Client.Inbox.AddFlags(messages[i],
+                    MessageFlags.Seen, true);
             }
-            else
-            {
-                for (int i = 0; i < emailsOnRequest; i++)
-                {
-                    Client.Inbox.AddFlags((int)messages[i],
-                        MessageFlags.Seen, true);   
-                }
-            }
-
+        
             return (messages.Count.ToString(), "The count of messages marked as seen");
         }
     }

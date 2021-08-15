@@ -4,7 +4,8 @@ using EmailWorker.ApplicationCore.Entities;
 using EmailWorker.ApplicationCore.Enums;
 using EmailWorker.ApplicationCore.Interfaces;
 using EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxProcessorAggregate;
-using EmailWorker.Infrastructure.EmailProcessor;
+using EmailWorker.Infrastructure;
+using MailKit;
 using Microsoft.Extensions.DependencyInjection;
 using MimeKit;
 
@@ -34,8 +35,8 @@ namespace EmailWorker.ApplicationCore.DomainServices.EmailBoxProcessorService
                     _ => null
                 };
 
-                List<object> unseenMessages = await emailBoxProcessor.GetUnseenMessagesAsync(emailCredentials);
-                List<object> processedMessages = emailBoxProcessor.ProcessMessages(unseenMessages);
+                IList<UniqueId> unseenMessages = await emailBoxProcessor.GetUnseenMessagesAsync(emailCredentials);
+                IList<UniqueId> processedMessages = emailBoxProcessor.ProcessMessages(unseenMessages);
                 if (processedMessages != null)
                 {
                     (string emailText, string emailSubject) = 
@@ -49,7 +50,6 @@ namespace EmailWorker.ApplicationCore.DomainServices.EmailBoxProcessorService
                     emailBoxProcessor.SendAnswerBySmtp(answerMessage, emailCredentials);
                 }
             }
-
         }
     }    
 }

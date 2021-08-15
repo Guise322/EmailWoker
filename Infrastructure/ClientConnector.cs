@@ -3,7 +3,7 @@ using EmailWorker.ApplicationCore.Entities;
 using EmailWorker.ApplicationCore.Interfaces;
 using MailKit.Net.Imap;
 
-namespace EmailWorker.Infrastructure.EmailProcessor
+namespace EmailWorker.Infrastructure
 {
     public class ClientConnector : IClientConnector
     {

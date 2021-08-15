@@ -26,26 +26,24 @@ namespace EmailWorker.ApplicationCore.DomainServices.EmailBoxProcessors.PublicIP
                 handlerOfProcessedMessages,
                 clientConnector) =>
             MessageGetter = messageGetter;
-        public override List<object> ProcessMessages(List<object> messages)
+        public override IList<UniqueId> ProcessMessages(IList<UniqueId> messages)
         {
-            bool isUniqueId = messages is IList<UniqueId>;
             foreach (var message in messages)
             {
-                MimeMessage messageFromBox = isUniqueId ? MessageGetter.GetMessage((UniqueId)message) :
-                    MessageGetter.GetMessage((int)message);
+                MimeMessage messageFromBox = MessageGetter.GetMessage(message);
                 string rawEmailFrom = messageFromBox.From.ToString();
 
                 string emailFrom = EmailExtractor.ExtractEmail(rawEmailFrom);
 
                 if (emailFrom == SearchedEmail)
                 {
-                    return new List<object>(1) { message };
+                    return new List<UniqueId>(1) { message };
                 }
             }
             return null;
         }
         public override (string emailText, string emailSubject) HandleProcessedMessages(
-            List<object> messages)
+            IList<UniqueId> messages)
         {
             return PublicIPGetterMessagesHandler.HandleProcessedMessages(messages);
         }
