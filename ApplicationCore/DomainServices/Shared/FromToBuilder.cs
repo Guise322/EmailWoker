@@ -1,7 +1,7 @@
 using EmailWorker.ApplicationCore.Entities;
 using MimeKit;
 
-namespace EmailWorker.ApplicationCore.DomainServices.EmailBoxProcessors.Shared
+namespace EmailWorker.ApplicationCore.DomainServices.Shared
 {
     public class FromToBuilder
     {

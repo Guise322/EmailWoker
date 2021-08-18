@@ -2,8 +2,8 @@ using System.Threading.Tasks;
 
 namespace EmailWorker.ApplicationCore.Interfaces
 {
-    public interface IEmailBoxProcessorService
+    public interface IEntryPointService
     {
-        Task ProcessEmailBoxAsync();
+        Task ExecuteAsync();
     }   
 }

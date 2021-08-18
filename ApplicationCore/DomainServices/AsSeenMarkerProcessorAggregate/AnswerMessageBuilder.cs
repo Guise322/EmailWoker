@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using EmailWorker.ApplicationCore.DomainServices.EmailBoxProcessors.Shared;
+using EmailWorker.ApplicationCore.DomainServices.Shared;
 using EmailWorker.ApplicationCore.Entities;
 using MimeKit;
 
-namespace EmailWorker.ApplicationCore.DomainServices.EmailBoxProcessors.AsSeenMarkerAggregate
+namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerAggregate
 {
     public class AnswerMessageBuilder
     {
