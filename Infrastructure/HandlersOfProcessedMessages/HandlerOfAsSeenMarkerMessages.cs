@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using EmailWorker.ApplicationCore.Interfaces.HandlersOfProcessedMessages;
 using MailKit;
 using MailKit.Net.Imap;
@@ -15,12 +17,9 @@ namespace EmailWorker.Infrastructure.HandlersOfProcessedMessages
         public (string emailText, string emailSubject) HandleProcessedMessages(
             IList<UniqueId> messages)
         {
-            int emailsOnRequest = 5;
-            
-            for (int i = 0; i < emailsOnRequest; i++)
+            foreach (var message in messages)
             {
-                Client.Inbox.AddFlags(messages[i],
-                    MessageFlags.Seen, true);
+                Client.Inbox.AddFlags(message, MessageFlags.Seen, true);
             }
         
             return (messages.Count.ToString(), "The count of messages marked as seen");

@@ -1,9 +1,9 @@
-using EmailWorker.ApplicationCore.DomainServices.EmailBoxProcessors.Shared;
+using EmailWorker.ApplicationCore.DomainServices.Shared;
 using EmailWorker.ApplicationCore.Entities;
 using EmailWorker.ApplicationCore.Interfaces;
 using MimeKit;
 
-namespace EmailWorker.ApplicationCore.DomainServices.EmailBoxProcessors.PublicIPGetterAggregate
+namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterAggregate
 {
     public class AnswerMessageBuilder
     {

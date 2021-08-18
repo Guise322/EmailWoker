@@ -10,12 +10,12 @@ namespace EmailWorker
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> logger;
-        private readonly IEmailBoxProcessorService emailBoxProcessorService;
+        private readonly IEntryPointService entryPointService;
         
-        public Worker(ILogger<Worker> logger, IEmailBoxProcessorService emailBoxProcessorService)
+        public Worker(ILogger<Worker> logger, IEntryPointService emailBoxProcessorService)
         {
             this.logger = logger;
-            this.emailBoxProcessorService = emailBoxProcessorService;
+            this.entryPointService = emailBoxProcessorService;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -24,7 +24,7 @@ namespace EmailWorker
             {
                 try
                 {
-                    await emailBoxProcessorService.ProcessEmailBoxAsync();
+                    await entryPointService.ExecuteAsync();
                 }
                 catch (Exception e)
                 {

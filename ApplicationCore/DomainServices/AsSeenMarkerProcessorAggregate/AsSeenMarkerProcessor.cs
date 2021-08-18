@@ -7,7 +7,7 @@ using EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxProcessorAggregate
 using MailKit;
 using MimeKit;
 
-namespace EmailWorker.ApplicationCore.DomainServices.EmailBoxProcessors.AsSeenMarkerAggregate
+namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerAggregate
 {
     public class AsSeenMarkerProcessor : IAsSeenMarkerProcessor
     {
@@ -26,18 +26,13 @@ namespace EmailWorker.ApplicationCore.DomainServices.EmailBoxProcessors.AsSeenMa
         public async Task<IList<UniqueId>> GetUnseenMessagesAsync(EmailCredentials emailCredentials)
         {
             ClientConnector.ConnectClient(emailCredentials);
-            IList<UniqueId> messages = await UnseenMessagesGetter
-                .GetUnseenMessagesAsync(emailCredentials);
-            ClientConnector.DisconnectClient();
-            return messages;
+            return await UnseenMessagesGetter.GetUnseenMessagesAsync(emailCredentials);
         }
         public virtual IList<UniqueId> ProcessMessages(IList<UniqueId> messages) =>
             MessagesProcessor.ProcessMessages(messages);
         public virtual (string emailText, string emailSubject) HandleProcessedMessages(
-            IList<UniqueId> messages)
-        {
-            return ProcessedMessagesHandler.HandleProcessedMessages(messages);
-        }
+            IList<UniqueId> messages) =>
+            ProcessedMessagesHandler.HandleProcessedMessages(messages);
         public virtual MimeMessage BuildAnswerMessage(
             EmailCredentials emailCredentials,
             string myEmail,

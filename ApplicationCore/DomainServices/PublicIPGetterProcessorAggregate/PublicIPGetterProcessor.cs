@@ -1,12 +1,13 @@
 using System.Collections.Generic;
-using EmailWorker.ApplicationCore.DomainServices.EmailBoxProcessors.AsSeenMarkerAggregate;
+using System.Threading.Tasks;
+using EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerAggregate;
 using EmailWorker.ApplicationCore.Interfaces;
 using EmailWorker.ApplicationCore.Interfaces.HandlersOfProcessedMessages;
 using EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxProcessorAggregate;
 using MailKit;
 using MimeKit;
 
-namespace EmailWorker.ApplicationCore.DomainServices.EmailBoxProcessors.PublicIPGetterAggregate
+namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterAggregate
 {
     public class PublicIPGetterProcessor : AsSeenMarkerProcessor, IPublicIPGetterProcessor
     {
@@ -43,9 +44,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.EmailBoxProcessors.PublicIP
             return null;
         }
         public override (string emailText, string emailSubject) HandleProcessedMessages(
-            IList<UniqueId> messages)
-        {
-            return PublicIPGetterMessagesHandler.HandleProcessedMessages(messages);
-        }
+            IList<UniqueId> messages) =>
+            PublicIPGetterMessagesHandler.HandleProcessedMessages(messages);
     }
 }

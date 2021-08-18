@@ -9,17 +9,17 @@ using MailKit;
 using Microsoft.Extensions.DependencyInjection;
 using MimeKit;
 
-namespace EmailWorker.ApplicationCore.DomainServices.EmailBoxProcessorService
+namespace EmailWorker.ApplicationCore.DomainServices
 {
-    public class EmailBoxProcessorService : IEmailBoxProcessorService
+    public class EntryPointService : IEntryPointService
     {
         private readonly string myEmail  = "guise322@yandex.ru";
         private readonly IServiceScopeFactory serviceScopeFactory;
-        public EmailBoxProcessorService(IServiceScopeFactory serviceScopeFactory)
+        public EntryPointService(IServiceScopeFactory serviceScopeFactory)
         {
             this.serviceScopeFactory = serviceScopeFactory;
         }
-        public async Task ProcessEmailBoxAsync()
+        public async Task ExecuteAsync()
         {
             List<EmailCredentials> emailCredentialsList = EmailCredentialsGetter
                 .GetEmailCredentials();
@@ -40,7 +40,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.EmailBoxProcessorService
                 if (processedMessages != null)
                 {
                     (string emailText, string emailSubject) = 
-                        emailBoxProcessor.HandleProcessedMessages(unseenMessages);
+                        emailBoxProcessor.HandleProcessedMessages(processedMessages);
 
                     MimeMessage answerMessage = emailBoxProcessor.BuildAnswerMessage(
                                                     emailCredentials,
