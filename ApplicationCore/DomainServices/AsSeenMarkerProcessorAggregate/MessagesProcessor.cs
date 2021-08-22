@@ -1,3 +1,4 @@
+using Ardalis.GuardClauses;
 using System.Collections.Generic;
 using MailKit;
 
@@ -7,6 +8,8 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerAggregate
     {
         public static IList<UniqueId> ProcessMessages(IList<UniqueId> messages)
         {
+            Guard.Against.Null(messages, nameof(messages));
+            
             int minimumAmount = 5;
             int maximumAmount = 1000;
 

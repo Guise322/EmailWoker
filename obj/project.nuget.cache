@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "JkGWDo/chHuNjoqtLwJ8jc9wur6O/kF/nHtR+aSf3EDoqYKi3yXnYNvnU9QuM97Dbvhe4uVv25kouw7+00RuJA==",
+  "dgSpecHash": "pqpd21WRG8kGsXY9Xr8uumEQAdWKYB1105MDMrto0Ti4g5PxxcsXofG2qRlJFl8GQPVwdwPjCkGPlzrVfptYGw==",
   "success": true,
   "projectFilePath": "/home/dmitry/code/EmailWorker/EmailWorker.csproj",
   "expectedPackageFiles": [
+    "/home/dmitry/.nuget/packages/ardalis.guardclauses/3.2.0/ardalis.guardclauses.3.2.0.nupkg.sha512",
+    "/home/dmitry/.nuget/packages/jetbrains.annotations/2021.1.0/jetbrains.annotations.2021.1.0.nupkg.sha512",
     "/home/dmitry/.nuget/packages/mailkit/2.12.0/mailkit.2.12.0.nupkg.sha512",
     "/home/dmitry/.nuget/packages/microsoft.extensions.configuration/5.0.0/microsoft.extensions.configuration.5.0.0.nupkg.sha512",
     "/home/dmitry/.nuget/packages/microsoft.extensions.configuration.abstractions/5.0.0/microsoft.extensions.configuration.abstractions.5.0.0.nupkg.sha512",
