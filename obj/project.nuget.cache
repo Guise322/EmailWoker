@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "pqpd21WRG8kGsXY9Xr8uumEQAdWKYB1105MDMrto0Ti4g5PxxcsXofG2qRlJFl8GQPVwdwPjCkGPlzrVfptYGw==",
+  "dgSpecHash": "zWQ5KK768DAyIBFpCcjI6a1fRBgRGJHw8hpUYHhV+zrDXa+1qKP1wbG3V6jd5ONF3EkUwyoNdP/yi6M5nYpwtg==",
   "success": true,
   "projectFilePath": "/home/dmitry/code/EmailWorker/EmailWorker.csproj",
   "expectedPackageFiles": [
@@ -36,6 +36,10 @@
     "/home/dmitry/.nuget/packages/microsoft.win32.registry/5.0.0/microsoft.win32.registry.5.0.0.nupkg.sha512",
     "/home/dmitry/.nuget/packages/mimekit/2.12.0/mimekit.2.12.0.nupkg.sha512",
     "/home/dmitry/.nuget/packages/portable.bouncycastle/1.8.10/portable.bouncycastle.1.8.10.nupkg.sha512",
+    "/home/dmitry/.nuget/packages/serilog/2.11.0-dev-01367/serilog.2.11.0-dev-01367.nupkg.sha512",
+    "/home/dmitry/.nuget/packages/serilog.extensions.hosting/4.1.2/serilog.extensions.hosting.4.1.2.nupkg.sha512",
+    "/home/dmitry/.nuget/packages/serilog.extensions.logging/3.0.1/serilog.extensions.logging.3.0.1.nupkg.sha512",
+    "/home/dmitry/.nuget/packages/serilog.sinks.file/5.0.0/serilog.sinks.file.5.0.0.nupkg.sha512",
     "/home/dmitry/.nuget/packages/system.buffers/4.5.1/system.buffers.4.5.1.nupkg.sha512",
     "/home/dmitry/.nuget/packages/system.diagnostics.eventlog/5.0.0/system.diagnostics.eventlog.5.0.0.nupkg.sha512",
     "/home/dmitry/.nuget/packages/system.reflection.typeextensions/4.4.0/system.reflection.typeextensions.4.4.0.nupkg.sha512",
