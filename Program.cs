@@ -9,6 +9,10 @@ using MailKit.Net.Imap;
 using EmailWorker.ApplicationCore.DomainServices;
 using EmailWorker.Infrastructure;
 using EmailWorker.Infrastructure.HandlersOfProcessedMessages;
+using Serilog;
+using Serilog.Events;
+using Serilog.Extensions.Hosting;
+using System;
 
 namespace EmailWorker
 {
@@ -16,28 +20,52 @@ namespace EmailWorker
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .Enrich.FromLogContext()
+                .WriteTo.File(@"/var/log/EmailWorkerLog.txt")
+                .CreateLogger();
+
+            try
+            {
+                Log.Information("Starting up the EmailWorker service.");
+                CreateHostBuilder(args).Build().Run();
+                return;
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "The service does not started.");
+                return;
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<Worker>()
-                        .AddTransient<IEntryPointService, EntryPointService>() 
+                    .AddTransient<IEntryPointService, EntryPointService>()
 
-                        .AddScoped<IAnswerSender, AnswerSender>()
-                        .AddScoped<IGetterOfUnseenMessages, GetterOfUnseenMessages>()
-                        .AddScoped<IHandlerOfAsSeenMarkerMessages, HandlerOfAsSeenMarkerMessages>()
-                        .AddScoped<IClientConnector, ClientConnector>()
+                    .AddScoped<IAnswerSender, AnswerSender>()
+                    .AddScoped<IGetterOfUnseenMessages, GetterOfUnseenMessages>()
+                    .AddScoped<IHandlerOfAsSeenMarkerMessages, HandlerOfAsSeenMarkerMessages>()
+                    .AddScoped<IClientConnector, ClientConnector>()
 
-                        .AddScoped<IHandlerOfPublicIPGetterMessages, HandlerOfPublicIpGetterMessages>()
-                        .AddScoped<IMessageGetter, MessageGetter>()
-                        
-                        .AddScoped<IAsSeenMarkerProcessor, AsSeenMarkerProcessor>()
-                        .AddScoped<IPublicIPGetterProcessor, PublicIPGetterProcessor>()
-                        
-                        .AddScoped<ImapClient>();
-                });
+                    .AddScoped<IHandlerOfPublicIPGetterMessages, HandlerOfPublicIpGetterMessages>()
+                    .AddScoped<IMessageGetter, MessageGetter>()
+
+                    .AddScoped<IAsSeenMarkerProcessor, AsSeenMarkerProcessor>()
+                    .AddScoped<IPublicIPGetterProcessor, PublicIPGetterProcessor>()
+
+                    .AddScoped<ImapClient>();
+                })
+                .UseSerilog();
+        }
     }
 }
