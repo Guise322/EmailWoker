@@ -4,9 +4,9 @@ using EmailWorker.ApplicationCore.Entities;
 using MailKit;
 using MimeKit;
 
-namespace EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxProcessorAggregate
+namespace EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxServiceAggregate
 {
-    public interface IEmailBoxProcessor
+    public interface IEmailBoxService
     {
         Task<IList<UniqueId>> GetUnseenMessagesAsync(EmailCredentials emailCredentials);
         IList<UniqueId> ProcessMessages(IList<UniqueId> messages);

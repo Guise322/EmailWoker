@@ -3,25 +3,29 @@ using System.Threading.Tasks;
 using EmailWorker.ApplicationCore.Entities;
 using EmailWorker.ApplicationCore.Interfaces;
 using EmailWorker.ApplicationCore.Interfaces.HandlersOfProcessedMessages;
-using EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxProcessorAggregate;
+using EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxServiceAggregate;
 using MailKit;
+using Microsoft.Extensions.Logging;
 using MimeKit;
 
-namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerAggregate
+namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregate
 {
-    public class AsSeenMarkerProcessor : IAsSeenMarkerProcessor
+    public class AsSeenMarkerService : IAsSeenMarkerService
     {
+        protected readonly ILogger _logger;
         private IAnswerSender AnswerSender { get; set; }
         private IGetterOfUnseenMessages UnseenMessagesGetter { get; set; }
         private IHandlerOfAsSeenMarkerMessages ProcessedMessagesHandler { get; set; }
         private IClientConnector ClientConnector { get; set; }
-        public AsSeenMarkerProcessor(
+        public AsSeenMarkerService(
+            ILogger<AsSeenMarkerService> logger,
             IAnswerSender answerSender,
             IGetterOfUnseenMessages unseenMessagesGetter,
             IHandlerOfAsSeenMarkerMessages processedMessagesHandler,
-            IClientConnector clientConnector) => 
-            (AnswerSender, UnseenMessagesGetter, ProcessedMessagesHandler, ClientConnector) = 
-            (answerSender, unseenMessagesGetter, processedMessagesHandler, clientConnector);
+            IClientConnector clientConnector) =>
+
+            (_logger, AnswerSender, UnseenMessagesGetter, ProcessedMessagesHandler, ClientConnector) = 
+            (logger, answerSender, unseenMessagesGetter, processedMessagesHandler, clientConnector);
 
         public async Task<IList<UniqueId>> GetUnseenMessagesAsync(EmailCredentials emailCredentials)
         {
@@ -29,7 +33,9 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerAggregate
             return await UnseenMessagesGetter.GetUnseenMessagesAsync(emailCredentials);
         }
         public virtual IList<UniqueId> ProcessMessages(IList<UniqueId> messages) =>
-            MessagesProcessor.ProcessMessages(messages);
+
+           MessagesProcessor.ProcessMessages(_logger, messages);
+            
         public virtual (string emailText, string emailSubject) HandleProcessedMessages(
             IList<UniqueId> messages) =>
             ProcessedMessagesHandler.HandleProcessedMessages(messages);
