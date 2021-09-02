@@ -2,9 +2,9 @@ using EmailWorker.ApplicationCore.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using EmailWorker.ApplicationCore.Interfaces.HandlersOfProcessedMessages;
-using EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxProcessorAggregate;
-using EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerAggregate;
-using EmailWorker.ApplicationCore.DomainServices.PublicIPGetterAggregate;
+using EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxServiceAggregate;
+using EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregate;
+using EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggregate;
 using MailKit.Net.Imap;
 using EmailWorker.ApplicationCore.DomainServices;
 using EmailWorker.Infrastructure;
@@ -13,6 +13,7 @@ using Serilog;
 using Serilog.Events;
 using Serilog.Extensions.Hosting;
 using System;
+using System.IO;
 
 namespace EmailWorker
 {
@@ -20,14 +21,21 @@ namespace EmailWorker
     {
         public static void Main(string[] args)
         {
+            string folderName = "logs";
+            string fileName = "EmailWorkerLog-.txt";
+
+            string logPath = Path.Combine(folderName, fileName);
+
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
-                .WriteTo.File(@"/var/log/EmailWorkerLog.txt")
+                .WriteTo.File(
+                    logPath, retainedFileCountLimit: 2,
+                    rollingInterval: RollingInterval.Day,
+                    retainedFileTimeLimit: TimeSpan.FromDays(1))
                 .CreateLogger();
-
-            try
+            try 
             {
                 Log.Information("Starting up the EmailWorker service.");
                 CreateHostBuilder(args).Build().Run();
@@ -47,6 +55,7 @@ namespace EmailWorker
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args)
+                .UseSerilog()
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<Worker>()
@@ -60,12 +69,11 @@ namespace EmailWorker
                     .AddScoped<IHandlerOfPublicIPGetterMessages, HandlerOfPublicIpGetterMessages>()
                     .AddScoped<IMessageGetter, MessageGetter>()
 
-                    .AddScoped<IAsSeenMarkerProcessor, AsSeenMarkerProcessor>()
-                    .AddScoped<IPublicIPGetterProcessor, PublicIPGetterProcessor>()
+                    .AddScoped<IAsSeenMarkerService, AsSeenMarkerService>()
+                    .AddScoped<IPublicIPGetterService, PublicIPGetterService>()
 
                     .AddScoped<ImapClient>();
-                })
-                .UseSerilog();
+                });
         }
     }
 }

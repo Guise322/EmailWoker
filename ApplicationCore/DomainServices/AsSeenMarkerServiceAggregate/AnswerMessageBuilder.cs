@@ -1,25 +1,25 @@
+using System.Collections.Generic;
 using EmailWorker.ApplicationCore.DomainServices.Shared;
 using EmailWorker.ApplicationCore.Entities;
-using EmailWorker.ApplicationCore.Interfaces;
 using MimeKit;
 
-namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterAggregate
+namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregate
 {
-    public class AnswerMessageBuilder
+    public static class AnswerMessageBuilder
     {
         public static MimeMessage BuildAnswerMessage(
-            EmailCredentials emailCredentials, 
-            string emailAddress,
+            EmailCredentials emailCredentials,
+            string emailAdress,
             string emailSubject,
             string messageText)
         {
-            MimeMessage messageWithFromTo = FromToBuilder.BuildFromTo(emailCredentials, emailAddress);
+            MimeMessage messageWithFromTo = FromToBuilder.BuildFromTo(emailCredentials, emailAdress);
             messageWithFromTo.Subject = emailSubject;
             messageWithFromTo.Body = new TextPart(MimeKit.Text.TextFormat.Plain)
             {
                 Text = string.Format(messageText)
             };
-            
+
             return messageWithFromTo;
         }
     }

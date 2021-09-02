@@ -1,4 +1,4 @@
-namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterAggregate
+namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggregate
 {
     public class EmailExtractor
     {

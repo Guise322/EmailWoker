@@ -1,12 +1,13 @@
 using Ardalis.GuardClauses;
 using System.Collections.Generic;
 using MailKit;
+using Microsoft.Extensions.Logging;
 
-namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerAggregate
+namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregate
 {
-    public class MessagesProcessor
+    public static class MessagesProcessor
     {
-        public static IList<UniqueId> ProcessMessages(IList<UniqueId> messages)
+        public static IList<UniqueId> ProcessMessages(ILogger logger, IList<UniqueId> messages)
         {
             Guard.Against.Null(messages, nameof(messages));
             
@@ -15,6 +16,8 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerAggregate
 
             if(messages.Count < minimumAmount)
             {
+                logger.LogInformation(
+                        "The service did not get the needed number of messages.");
                 return null;
             }
             
@@ -34,7 +37,8 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerAggregate
             {
                 processedMessages.Add(messages[i]);
             }
-
+            
+            logger.LogInformation("Getting of unseen messages succeeds.");
             return processedMessages;
         }
     }
