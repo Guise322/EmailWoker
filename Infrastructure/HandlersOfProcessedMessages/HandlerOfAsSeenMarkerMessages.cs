@@ -25,10 +25,17 @@ namespace EmailWorker.Infrastructure.HandlersOfProcessedMessages
             {
                 Client.Inbox.AddFlags(message, MessageFlags.Seen, true);
             }
-        
-            _logger.LogInformation("All the messages is marked as seen.");
+            
+            int maxNumberOfMessages = 1000;
 
-            return (messages.Count.ToString(), "The count of messages marked as seen");
+            if (messages.Count < maxNumberOfMessages)
+            {
+                _logger.LogInformation("All the messages is marked as seen.");
+
+                return (messages.Count.ToString(), "The count of messages marked as seen");    
+            }
+
+            return (null, null);
         }
     }
 }
