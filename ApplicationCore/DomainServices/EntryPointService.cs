@@ -51,12 +51,15 @@ namespace EmailWorker.ApplicationCore.DomainServices
                     (string emailText, string emailSubject) = 
                         emailBoxProcessor.HandleProcessedMessages(processedMessages);
 
-                    MimeMessage answerMessage = emailBoxProcessor.BuildAnswerMessage(
-                        emailCredentials,
-                        myEmail,
-                        emailSubject,
-                        emailText);
-                    emailBoxProcessor.SendAnswerBySmtp(answerMessage, emailCredentials);
+                    if(emailText != null)
+                    {
+                        MimeMessage answerMessage = emailBoxProcessor.BuildAnswerMessage(
+                            emailCredentials,
+                            myEmail,
+                            emailSubject,
+                            emailText);
+                        emailBoxProcessor.SendAnswerBySmtp(answerMessage, emailCredentials);
+                    }
                 }
             }
         }

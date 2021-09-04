@@ -11,10 +11,10 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
         {
             Guard.Against.Null(messages, nameof(messages));
             
-            int minimumAmount = 5;
-            int maximumAmount = 1000;
+            int minNumberOfMessages = 5;
+            int maxNumberOfMessages = 1000;
 
-            if(messages.Count < minimumAmount)
+            if(messages.Count < minNumberOfMessages)
             {
                 logger.LogInformation(
                         "The service did not get the needed number of messages.");
@@ -23,7 +23,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
             
             List<UniqueId> processedMessages = new();
 
-            if (messages.Count < maximumAmount)
+            if (messages.Count < maxNumberOfMessages)
             {
                 foreach (var message in messages)
                 {
@@ -33,12 +33,12 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
                 return processedMessages;
             }
 
-            for (int i = 0; i < maximumAmount; i++)
+            for (int i = 0; i < maxNumberOfMessages; i++)
             {
                 processedMessages.Add(messages[i]);
             }
             
-            logger.LogInformation("Getting of unseen messages succeeds.");
+            logger.LogInformation("Getting a chunk of unseen messages succeeds.");
             return processedMessages;
         }
     }
