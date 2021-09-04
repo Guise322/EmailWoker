@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregate;
 using EmailWorker.ApplicationCore.Entities;
@@ -34,18 +35,20 @@ namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggreg
             MessageGetter = messageGetter;
         public override IList<UniqueId> ProcessMessages(IList<UniqueId> messages)
         {
-            foreach (var message in messages)
+            UniqueId searchedMessageID = messages.FirstOrDefault(message => 
             {
                 MimeMessage messageFromBox = MessageGetter.GetMessage(message);
                 string rawEmailFrom = messageFromBox.From.ToString();
 
                 string emailFrom = EmailExtractor.ExtractEmail(rawEmailFrom);
 
-                if (emailFrom == SearchedEmail)
-                {
-                    _logger.LogInformation("The request is detected.");
-                    return new List<UniqueId>(1) { message };
-                }
+                return emailFrom == SearchedEmail;
+            });
+
+            if (searchedMessageID != default)
+            {
+                _logger.LogInformation("The request is detected.");
+                return new List<UniqueId>(1) { searchedMessageID };
             }
 
             _logger.LogInformation("The request is not detected.");

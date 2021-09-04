@@ -1,17 +1,21 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using EmailWorker.ApplicationCore.Interfaces.HandlersOfProcessedMessages;
 using MailKit;
 using MailKit.Net.Imap;
+using Microsoft.Extensions.Logging;
 
 namespace EmailWorker.Infrastructure.HandlersOfProcessedMessages
 {
     public class HandlerOfAsSeenMarkerMessages : IHandlerOfAsSeenMarkerMessages
     {
+        private readonly ILogger _logger;
         private ImapClient Client { get; }
-        public HandlerOfAsSeenMarkerMessages(ImapClient client)
+        public HandlerOfAsSeenMarkerMessages(
+            ILogger<HandlerOfAsSeenMarkerMessages> logger,
+            ImapClient client)
         {
+            _logger = logger;
             Client = client;
         }
         public (string emailText, string emailSubject) HandleProcessedMessages(
@@ -22,6 +26,8 @@ namespace EmailWorker.Infrastructure.HandlersOfProcessedMessages
                 Client.Inbox.AddFlags(message, MessageFlags.Seen, true);
             }
         
+            _logger.LogInformation("All the messages is marked as seen.");
+
             return (messages.Count.ToString(), "The count of messages marked as seen");
         }
     }

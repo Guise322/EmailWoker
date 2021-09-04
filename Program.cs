@@ -61,12 +61,14 @@ namespace EmailWorker
                     services.AddHostedService<Worker>()
                     .AddTransient<IEntryPointService, EntryPointService>()
 
+                    .AddTransient<EmailCredentialsGetter>()
+
                     .AddScoped<IAnswerSender, AnswerSender>()
                     .AddScoped<IGetterOfUnseenMessages, GetterOfUnseenMessages>()
                     .AddScoped<IHandlerOfAsSeenMarkerMessages, HandlerOfAsSeenMarkerMessages>()
                     .AddScoped<IClientConnector, ClientConnector>()
 
-                    .AddScoped<IHandlerOfPublicIPGetterMessages, HandlerOfPublicIpGetterMessages>()
+                    .AddScoped<IHandlerOfPublicIPGetterMessages, HandlerOfPublicIPGetterMessages>()
                     .AddScoped<IMessageGetter, MessageGetter>()
 
                     .AddScoped<IAsSeenMarkerService, AsSeenMarkerService>()

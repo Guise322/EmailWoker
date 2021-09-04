@@ -16,22 +16,23 @@ namespace EmailWorker.ApplicationCore.DomainServices
     public class EntryPointService : IEntryPointService
     {
         private readonly string myEmail  = "guise322@yandex.ru";
-        private readonly ILogger logger;
-        private readonly IServiceScopeFactory serviceScopeFactory;
+        private readonly ILogger _logger;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly EmailCredentialsGetter _emailCredentialsGetter; 
         public EntryPointService(
-            ILogger<EntryPointService> logger, IServiceScopeFactory serviceScopeFactory)
-        {
-            this.logger = logger;
-            this.serviceScopeFactory = serviceScopeFactory;
-        }
+            ILogger<EntryPointService> logger,
+            IServiceScopeFactory serviceScopeFactory,
+            EmailCredentialsGetter emailCredentialsGetter) =>
+        (_logger, _serviceScopeFactory, _emailCredentialsGetter) = 
+        (logger, serviceScopeFactory, emailCredentialsGetter);
         public async Task ExecuteAsync()
         {
-            logger.LogInformation($"Start execution at {DateTimeOffset.Now}");
+            _logger.LogInformation($"Start execution at {DateTimeOffset.Now}");
 
-            List<EmailCredentials> emailCredentialsList = EmailCredentialsGetter
+            List<EmailCredentials> emailCredentialsList = _emailCredentialsGetter
                 .GetEmailCredentials();
                 
-            using var serviceScope = serviceScopeFactory.CreateScope();
+            using var serviceScope = _serviceScopeFactory.CreateScope();
             foreach (var emailCredentials in emailCredentialsList)
             {
                 var emailBoxProcessor = emailCredentials.DedicatedWork switch
