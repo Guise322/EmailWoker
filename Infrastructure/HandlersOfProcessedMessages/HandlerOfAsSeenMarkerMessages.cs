@@ -9,7 +9,7 @@ namespace EmailWorker.Infrastructure.HandlersOfProcessedMessages
 {
     public class HandlerOfAsSeenMarkerMessages : IHandlerOfAsSeenMarkerMessages
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<HandlerOfAsSeenMarkerMessages> _logger;
         private ImapClient Client { get; }
         public HandlerOfAsSeenMarkerMessages(
             ILogger<HandlerOfAsSeenMarkerMessages> logger,

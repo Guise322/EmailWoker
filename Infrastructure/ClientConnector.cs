@@ -9,7 +9,7 @@ namespace EmailWorker.Infrastructure
 {
     public class ClientConnector : IClientConnector
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<ClientConnector> _logger;
         private ImapClient Client { get; }
         public ClientConnector(ILogger<ClientConnector> logger, ImapClient client)
         {

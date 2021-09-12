@@ -12,7 +12,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
 {
     public class AsSeenMarkerService : IAsSeenMarkerService
     {
-        protected readonly ILogger _logger;
+        protected readonly ILogger<AsSeenMarkerService> _logger;
         private IAnswerSender AnswerSender { get; set; }
         private IGetterOfUnseenMessages UnseenMessagesGetter { get; set; }
         private IHandlerOfAsSeenMarkerMessages ProcessedMessagesHandler { get; set; }

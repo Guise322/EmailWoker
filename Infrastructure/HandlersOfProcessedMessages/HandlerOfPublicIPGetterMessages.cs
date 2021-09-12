@@ -11,8 +11,8 @@ namespace EmailWorker.Infrastructure.HandlersOfProcessedMessages
     public class HandlerOfPublicIPGetterMessages : IHandlerOfPublicIPGetterMessages
     {
         private readonly string ipRequestAddress = "http://checkip.dyndns.org/";
-        private readonly ILogger _logger;
-        public HandlerOfPublicIPGetterMessages(ILogger<HandlerOfAsSeenMarkerMessages> logger)
+        private readonly ILogger<HandlerOfPublicIPGetterMessages> _logger;
+        public HandlerOfPublicIPGetterMessages(ILogger<HandlerOfPublicIPGetterMessages> logger)
         {
             _logger = logger;
         }

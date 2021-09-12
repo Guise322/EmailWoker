@@ -16,7 +16,7 @@ namespace EmailWorker.ApplicationCore.DomainServices
     public class EntryPointService : IEntryPointService
     {
         private readonly string myEmail  = "guise322@yandex.ru";
-        private readonly ILogger _logger;
+        private readonly ILogger<EntryPointService> _logger;
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly EmailCredentialsGetter _emailCredentialsGetter; 
         public EntryPointService(

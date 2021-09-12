@@ -8,7 +8,7 @@ namespace EmailWorker.Infrastructure
 {
     public class AnswerSender : IAnswerSender
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<AnswerSender> _logger;
         public AnswerSender(ILogger<AnswerSender> logger)
         {
             _logger = logger;
