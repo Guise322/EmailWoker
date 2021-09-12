@@ -9,7 +9,7 @@ namespace EmailWorker.Infrastructure
 {
     public class EmailCredentialsGetter
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<EmailCredentialsGetter> _logger;
         public EmailCredentialsGetter(ILogger<EmailCredentialsGetter> logger)
         {
             _logger = logger;

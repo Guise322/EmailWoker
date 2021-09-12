@@ -11,7 +11,7 @@ namespace EmailWorker.Infrastructure
 {
     public class GetterOfUnseenMessages : IGetterOfUnseenMessages
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<GetterOfUnseenMessages> _logger;
         private ImapClient Client { get; }
         public GetterOfUnseenMessages(ILogger<GetterOfUnseenMessages> logger, ImapClient client)
         {

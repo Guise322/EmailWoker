@@ -1,6 +1,5 @@
 using EmailWorker.ApplicationCore.DomainServices.Shared;
 using EmailWorker.ApplicationCore.Entities;
-using EmailWorker.ApplicationCore.Interfaces;
 using MimeKit;
 
 namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggregate
