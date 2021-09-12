@@ -34,7 +34,10 @@ namespace EmailWorker
                         _logger.LogInformation("Worker is over for an error at {time}", DateTimeOffset.Now);
                 }
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                await Task.Delay(1000, stoppingToken);
+
+                TimeSpan workerDelayPeriod = TimeSpan.FromMinutes(5);
+
+                await Task.Delay(workerDelayPeriod, stoppingToken);
             }
         }
     }   
