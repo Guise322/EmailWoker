@@ -8,15 +8,7 @@ namespace EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxServiceAggrega
 {
     public interface IEmailBoxService
     {
-        Task<IList<UniqueId>> GetUnseenMessagesAsync(EmailCredentials emailCredentials);
-        IList<UniqueId> ProcessMessages(IList<UniqueId> messages);
+        IList<UniqueId> AnalyzeMessages(IList<UniqueId> messages);
         (string emailText, string emailSubject) HandleProcessedMessages(IList<UniqueId> messages);
-        MimeMessage BuildAnswerMessage(
-            EmailCredentials emailCredentials,
-            string myEmail,
-            string emailSubject,
-            string messageText);
-        void SendAnswerBySmtp(
-            MimeMessage message, EmailCredentials emailCredentials);
     }
 }

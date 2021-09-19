@@ -21,7 +21,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggreg
         public PublicIPGetterService(
             ILogger<PublicIPGetterService> logger,
             IMessageGetter messageGetter,
-            IAnswerSender answerSender,
+            IReportSender answerSender,
             IGetterOfUnseenMessages unseenMessagesGetter,
             IHandlerOfPublicIPGetterMessages handlerOfProcessedMessages,
             IClientConnector clientConnector) :
@@ -33,7 +33,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggreg
                 clientConnector) =>
 
             MessageGetter = messageGetter;
-        public override IList<UniqueId> ProcessMessages(IList<UniqueId> messages)
+        public override IList<UniqueId> AnalyzeMessages(IList<UniqueId> messages)
         {
             UniqueId searchedMessageID = messages.FirstOrDefault(message => 
             {
@@ -59,13 +59,13 @@ namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggreg
 
             PublicIPGetterMessagesHandler.HandleProcessedMessages(messages);
 
-        public override MimeMessage BuildAnswerMessage(
+        public override MimeMessage BuildReportMessage(
             EmailCredentials emailCredentials,
             string myEmail,
             string emailSubject,
             string messageText) =>
 
-            AnswerMessageBuilder.BuildAnswerMessage(
+            ReportMessageBuilder.BuildReportMessage(
                 emailCredentials,
                 myEmail,
                 emailSubject,
