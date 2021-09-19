@@ -5,9 +5,9 @@ using MimeKit;
 
 namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregate
 {
-    public static class AnswerMessageBuilder
+    public static class ReportMessageBuilder
     {
-        public static MimeMessage BuildAnswerMessage(
+        public static MimeMessage BuildReportMessage(
             EmailCredentials emailCredentials,
             string emailAdress,
             string emailSubject,

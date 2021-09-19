@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 
 namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregate
 {
-    public static class MessagesProcessor
+    public static class MessagesAnalyzer
     {
-        public static IList<UniqueId> ProcessMessages(ILogger logger, IList<UniqueId> messages)
+        public static IList<UniqueId> AnalyzeMessages(ILogger logger, IList<UniqueId> messages)
         {
             Guard.Against.Null(messages, nameof(messages));
             

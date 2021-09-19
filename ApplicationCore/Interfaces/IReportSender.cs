@@ -4,8 +4,8 @@ using MimeKit;
 
 namespace EmailWorker.ApplicationCore.Interfaces
 {
-    public interface IAnswerSender
+    public interface IReportSender
     {
-        void SendAnswerBySmtp(MimeMessage message, EmailCredentials emailCredentials);
+        void SendReportViaSmtp(MimeMessage message, EmailCredentials emailCredentials);
     }
 }

@@ -6,14 +6,14 @@ using MimeKit;
 
 namespace EmailWorker.Infrastructure
 {
-    public class AnswerSender : IAnswerSender
+    public class ReportSender : IReportSender
     {
-        private readonly ILogger<AnswerSender> _logger;
-        public AnswerSender(ILogger<AnswerSender> logger)
+        private readonly ILogger<ReportSender> _logger;
+        public ReportSender(ILogger<ReportSender> logger)
         {
             _logger = logger;
         }
-        public void SendAnswerBySmtp(MimeMessage message, EmailCredentials emailCredentials)
+        public void SendReportViaSmtp(MimeMessage message, EmailCredentials emailCredentials)
         {
             int smtpPort = 465;
 

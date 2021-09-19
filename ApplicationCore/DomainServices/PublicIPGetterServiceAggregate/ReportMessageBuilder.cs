@@ -4,9 +4,9 @@ using MimeKit;
 
 namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggregate
 {
-    public class AnswerMessageBuilder
+    public class ReportMessageBuilder
     {
-        public static MimeMessage BuildAnswerMessage(
+        public static MimeMessage BuildReportMessage(
             EmailCredentials emailCredentials, 
             string emailAddress,
             string emailSubject,

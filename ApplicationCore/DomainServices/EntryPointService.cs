@@ -45,7 +45,7 @@ namespace EmailWorker.ApplicationCore.DomainServices
                 };
 
                 IList<UniqueId> unseenMessages = await emailBoxProcessor.GetUnseenMessagesAsync(emailCredentials);
-                IList<UniqueId> processedMessages = emailBoxProcessor.ProcessMessages(unseenMessages);
+                IList<UniqueId> processedMessages = emailBoxProcessor.AnalyzeMessages(unseenMessages);
                 if (processedMessages != null)
                 {
                     (string emailText, string emailSubject) = 

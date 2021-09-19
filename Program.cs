@@ -63,7 +63,7 @@ namespace EmailWorker
 
                     .AddTransient<EmailCredentialsGetter>()
 
-                    .AddScoped<IAnswerSender, AnswerSender>()
+                    .AddScoped<IReportSender, ReportSender>()
                     .AddScoped<IGetterOfUnseenMessages, GetterOfUnseenMessages>()
                     .AddScoped<IHandlerOfAsSeenMarkerMessages, HandlerOfAsSeenMarkerMessages>()
                     .AddScoped<IClientConnector, ClientConnector>()
