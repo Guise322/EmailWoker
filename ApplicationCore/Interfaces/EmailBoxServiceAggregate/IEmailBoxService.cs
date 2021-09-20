@@ -8,7 +8,9 @@ namespace EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxServiceAggrega
 {
     public interface IEmailBoxService
     {
-        IList<UniqueId> AnalyzeMessages(IList<UniqueId> messages);
-        (string emailText, string emailSubject) HandleProcessedMessages(IList<UniqueId> messages);
+        Task<IList<UniqueId>> AnalyzeMessages(EmailCredentials emailCredentials);
+        
+        (string emailText, string emailSubject) HandleProcessedMessages(
+            IList<UniqueId> messages);
     }
 }

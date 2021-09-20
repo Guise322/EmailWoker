@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregate;
+using EmailWorker.ApplicationCore.DomainServices.Shared.EmailCommunicationServiceAggregate;
 using EmailWorker.ApplicationCore.Entities;
 using EmailWorker.ApplicationCore.Interfaces;
 using EmailWorker.ApplicationCore.Interfaces.HandlersOfProcessedMessages;
@@ -12,36 +13,35 @@ using MimeKit;
 
 namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggregate
 {
-    public class PublicIPGetterService : AsSeenMarkerService, IPublicIPGetterService
+    public class PublicIPGetterService : EmailCommunicationService, IPublicIPGetterService
     {
+        private ILogger<PublicIPGetterService> _logger;
         private IMessageGetter MessageGetter { get; set; }
-        private IHandlerOfPublicIPGetterMessages PublicIPGetterMessagesHandler
-            { get; set; }
+        private IHandlerOfPublicIPGetterMessages HandlerOfProcessedMessages { get; set; }
         private string SearchedEmail { get; } = "guise322@ya.ru";
-        public PublicIPGetterService(
-            ILogger<PublicIPGetterService> logger,
+        public PublicIPGetterService(ILogger<PublicIPGetterService> logger,
             IMessageGetter messageGetter,
-            IReportSender answerSender,
-            IGetterOfUnseenMessages unseenMessagesGetter,
             IHandlerOfPublicIPGetterMessages handlerOfProcessedMessages,
+            IReportSender reportSender,
+            IGetterOfUnseenMessages getterOfUnseenMessages,
             IClientConnector clientConnector) :
-            base(
-                logger,
-                answerSender,
-                unseenMessagesGetter,
-                handlerOfProcessedMessages,
-                clientConnector) =>
+            base(clientConnector,
+            getterOfUnseenMessages,
+            reportSender) =>
 
-            MessageGetter = messageGetter;
-        public override IList<UniqueId> AnalyzeMessages(IList<UniqueId> messages)
+            (_logger, MessageGetter, HandlerOfProcessedMessages) =
+            (logger, messageGetter, handlerOfProcessedMessages);
+
+        public async Task<IList<UniqueId>> AnalyzeMessages(EmailCredentials emailCredentials)
         {
+            IList<UniqueId> messages = await GetUnseenMessagesAsync(emailCredentials);
+
+            //TO DO: extract the below code into an distinct method
             UniqueId searchedMessageID = messages.FirstOrDefault(message => 
             {
                 MimeMessage messageFromBox = MessageGetter.GetMessage(message);
                 string rawEmailFrom = messageFromBox.From.ToString();
-
                 string emailFrom = EmailExtractor.ExtractEmail(rawEmailFrom);
-
                 return emailFrom == SearchedEmail;
             });
 
@@ -54,21 +54,22 @@ namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggreg
             _logger.LogInformation("The request is not detected.");
             return null;
         }
-        public override (string emailText, string emailSubject) HandleProcessedMessages(
+        public (string emailText, string emailSubject) HandleProcessedMessages(
             IList<UniqueId> messages) =>
 
-            PublicIPGetterMessagesHandler.HandleProcessedMessages(messages);
+            HandlerOfProcessedMessages.HandleProcessedMessages(messages);
 
-        public override MimeMessage BuildReportMessage(
-            EmailCredentials emailCredentials,
-            string myEmail,
+        public void SendReportMessageViaEmail(EmailCredentials emailCredentials,
+            string emailAdress,
             string emailSubject,
-            string messageText) =>
-
-            ReportMessageBuilder.BuildReportMessage(
-                emailCredentials,
-                myEmail,
+            string messageText)
+        {
+            MimeMessage message = ReportMessageBuilder.BuildReportMessage(emailCredentials,
+                emailAdress,
                 emailSubject,
                 messageText);
+            
+            SendReportViaSmtp(message, emailCredentials);
         }
+    }
 }
