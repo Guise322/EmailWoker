@@ -13,19 +13,19 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
 {
     public class AsSeenMarkerService : EmailCommunicationService, IAsSeenMarkerService
     {
-        protected readonly ILogger<AsSeenMarkerService> _logger;
+        private readonly ILogger<AsSeenMarkerService> _logger;
         
         private IHandlerOfAsSeenMarkerMessages ProcessedMessagesHandler { get; set; }
         
         public AsSeenMarkerService(ILogger<AsSeenMarkerService> logger,
             IReportSender reportSender,
             IGetterOfUnseenMessages getterOfUnseenMessages,
-            IHandlerOfAsSeenMarkerMessages processedMessagesHandler,
+            IHandlerOfAsSeenMarkerMessages handlerOfProcessedMessages,
             IClientConnector clientConnector) : 
             base(clientConnector, getterOfUnseenMessages, reportSender) =>
 
             (_logger, ProcessedMessagesHandler) = 
-            (logger, processedMessagesHandler);
+            (logger, handlerOfProcessedMessages);
 
         
         public async Task<IList<UniqueId>> AnalyzeMessages(EmailCredentials emailCredentials)
@@ -33,8 +33,9 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
             IList<UniqueId> messages = await GetUnseenMessagesAsync(emailCredentials);
             return MessagesAnalyzer.AnalyzeMessages(_logger, messages);
         }    
-        public virtual (string emailText, string emailSubject) HandleProcessedMessages(
+        public (string emailText, string emailSubject) HandleProcessedMessages(
             IList<UniqueId> messages) =>
+            
             ProcessedMessagesHandler.HandleProcessedMessages(messages);
         
         public void SendReportMessageViaEmail(EmailCredentials emailCredentials,
@@ -42,11 +43,11 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
             string emailSubject,
             string messageText)
         {
-            MimeMessage message = 
-                ReportMessageBuilder.BuildReportMessage(emailCredentials,
-                    myEmail,
-                    emailSubject,
-                    messageText);
+            MimeMessage message = ReportMessageBuilder.BuildReportMessage(emailCredentials,
+                myEmail,
+                emailSubject,
+                messageText);
+
             SendReportViaSmtp(message, emailCredentials);
         }
     }

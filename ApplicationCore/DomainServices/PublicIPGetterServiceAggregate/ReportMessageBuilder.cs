@@ -6,8 +6,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggreg
 {
     public class ReportMessageBuilder
     {
-        public static MimeMessage BuildReportMessage(
-            EmailCredentials emailCredentials, 
+        public static MimeMessage BuildReportMessage(EmailCredentials emailCredentials, 
             string emailAddress,
             string emailSubject,
             string messageText)
