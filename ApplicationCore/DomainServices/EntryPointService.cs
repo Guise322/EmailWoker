@@ -33,9 +33,10 @@ namespace EmailWorker.ApplicationCore.DomainServices
             List<EmailCredentials> emailCredentialsList =
                 _emailCredentialsGetter.GetEmailCredentials();
                 
-            using var serviceScope = _serviceScopeFactory.CreateScope();
             foreach (var emailCredentials in emailCredentialsList)
             {
+                using var serviceScope = _serviceScopeFactory.CreateScope();
+                
                 var emailBoxProcessor = emailCredentials.DedicatedWork switch
                 {
                     DedicatedWorkType.MarkAsSeen =>
@@ -44,7 +45,7 @@ namespace EmailWorker.ApplicationCore.DomainServices
                         serviceScope.ServiceProvider.GetRequiredService<IPublicIPGetterService>(),
                     _ => null
                 };
-
+                
                 IList<UniqueId> processedMessages = await emailBoxProcessor.AnalyzeMessages(emailCredentials);
                 if (processedMessages != null)
                 {
