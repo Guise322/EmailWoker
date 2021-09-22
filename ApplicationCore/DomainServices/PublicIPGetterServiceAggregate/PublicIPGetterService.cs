@@ -15,7 +15,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggreg
 {
     public class PublicIPGetterService : EmailCommunicationService, IPublicIPGetterService
     {
-        private ILogger<PublicIPGetterService> _logger;
+        private readonly ILogger<PublicIPGetterService> _logger;
         private IMessageGetter MessageGetter { get; set; }
         private IHandlerOfPublicIPGetterMessages HandlerOfProcessedMessages { get; set; }
         private string SearchedEmail { get; } = "guise322@ya.ru";

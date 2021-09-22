@@ -27,7 +27,6 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
             (_logger, ProcessedMessagesHandler) = 
             (logger, handlerOfProcessedMessages);
 
-        
         public async Task<IList<UniqueId>> AnalyzeMessages(EmailCredentials emailCredentials)
         {
             IList<UniqueId> messages = await GetUnseenMessagesAsync(emailCredentials);

@@ -23,29 +23,29 @@ namespace EmailWorker.ApplicationCore.DomainServices
             ILogger<EntryPointService> logger,
             IServiceScopeFactory serviceScopeFactory,
             EmailCredentialsGetter emailCredentialsGetter) =>
+
         (_logger, _serviceScopeFactory, _emailCredentialsGetter) = 
         (logger, serviceScopeFactory, emailCredentialsGetter);
         public async Task ExecuteAsync()
         {
             _logger.LogInformation($"Start execution at {DateTimeOffset.Now}");
 
-            List<EmailCredentials> emailCredentialsList = _emailCredentialsGetter
-                .GetEmailCredentials();
+            List<EmailCredentials> emailCredentialsList =
+                _emailCredentialsGetter.GetEmailCredentials();
                 
             using var serviceScope = _serviceScopeFactory.CreateScope();
             foreach (var emailCredentials in emailCredentialsList)
             {
                 var emailBoxProcessor = emailCredentials.DedicatedWork switch
                 {
-                    DedicatedWorkType.MarkAsSeen => serviceScope.ServiceProvider
-                        .GetRequiredService<IAsSeenMarkerService>(),
-                    DedicatedWorkType.SearchRequest => serviceScope.ServiceProvider
-                        .GetRequiredService<IPublicIPGetterService>(),
+                    DedicatedWorkType.MarkAsSeen =>
+                        serviceScope.ServiceProvider.GetRequiredService<IAsSeenMarkerService>(),
+                    DedicatedWorkType.SearchRequest => 
+                        serviceScope.ServiceProvider.GetRequiredService<IPublicIPGetterService>(),
                     _ => null
                 };
 
-                IList<UniqueId> unseenMessages = await emailBoxProcessor.GetUnseenMessagesAsync(emailCredentials);
-                IList<UniqueId> processedMessages = emailBoxProcessor.AnalyzeMessages(unseenMessages);
+                IList<UniqueId> processedMessages = await emailBoxProcessor.AnalyzeMessages(emailCredentials);
                 if (processedMessages != null)
                 {
                     (string emailText, string emailSubject) = 
@@ -53,12 +53,10 @@ namespace EmailWorker.ApplicationCore.DomainServices
 
                     if(emailText != null)
                     {
-                        MimeMessage answerMessage = emailBoxProcessor.BuildAnswerMessage(
-                            emailCredentials,
+                        emailBoxProcessor.SendReportMessageViaEmail(emailCredentials,
                             myEmail,
                             emailSubject,
                             emailText);
-                        emailBoxProcessor.SendAnswerBySmtp(answerMessage, emailCredentials);
                     }
                 }
             }
