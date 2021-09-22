@@ -12,5 +12,10 @@ namespace EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxServiceAggrega
         
         (string emailText, string emailSubject) HandleProcessedMessages(
             IList<UniqueId> messages);
+
+        void SendReportMessageViaEmail(EmailCredentials emailCredentials,
+            string myEmail,
+            string emailSubject,
+            string messageText);
     }
 }
