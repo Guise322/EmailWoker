@@ -16,11 +16,12 @@ namespace EmailWorker.ApplicationCore.DomainServices
     public class EntryPointService : IEntryPointService
     {
         private readonly string myEmail  = "guise322@yandex.ru";
+        
         private readonly ILogger<EntryPointService> _logger;
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly EmailCredentialsGetter _emailCredentialsGetter; 
-        public EntryPointService(
-            ILogger<EntryPointService> logger,
+        
+        public EntryPointService(ILogger<EntryPointService> logger,
             IServiceScopeFactory serviceScopeFactory,
             EmailCredentialsGetter emailCredentialsGetter) =>
 

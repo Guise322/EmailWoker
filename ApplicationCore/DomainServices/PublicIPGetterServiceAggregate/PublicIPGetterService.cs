@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregate;
-using EmailWorker.ApplicationCore.DomainServices.Shared.EmailCommunicationServiceAggregate;
+using EmailWorker.ApplicationCore.DomainServices.Shared;
 using EmailWorker.ApplicationCore.Entities;
 using EmailWorker.ApplicationCore.Interfaces;
 using EmailWorker.ApplicationCore.Interfaces.HandlersOfProcessedMessages;
@@ -13,28 +12,35 @@ using MimeKit;
 
 namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggregate
 {
-    public class PublicIPGetterService : EmailCommunicationService, IPublicIPGetterService
+    public class PublicIPGetterService : IPublicIPGetterService
     {
         private readonly ILogger<PublicIPGetterService> _logger;
+        
+        private IReportSender ReportSender { get; set; }
         private IMessageGetter MessageGetter { get; set; }
+        private IGetterOfUnseenMessages GetterOfUnseenMessages { get; set; }
         private IHandlerOfPublicIPGetterMessages HandlerOfProcessedMessages { get; set; }
+        private IClientConnector ClientConnector { get; set; }
+        
         private string SearchedEmail { get; } = "guise322@ya.ru";
         public PublicIPGetterService(ILogger<PublicIPGetterService> logger,
             IMessageGetter messageGetter,
             IHandlerOfPublicIPGetterMessages handlerOfProcessedMessages,
             IReportSender reportSender,
             IGetterOfUnseenMessages getterOfUnseenMessages,
-            IClientConnector clientConnector) :
-            base(clientConnector,
-            getterOfUnseenMessages,
-            reportSender) =>
+            IClientConnector clientConnector) =>
 
-            (_logger, MessageGetter, HandlerOfProcessedMessages) =
-            (logger, messageGetter, handlerOfProcessedMessages);
+            (_logger, ReportSender, MessageGetter, GetterOfUnseenMessages,
+                HandlerOfProcessedMessages, ClientConnector) =
+            (logger, reportSender, messageGetter, getterOfUnseenMessages,
+                handlerOfProcessedMessages, clientConnector);
 
         public async Task<IList<UniqueId>> AnalyzeMessages(EmailCredentials emailCredentials)
         {
-            IList<UniqueId> messages = await GetUnseenMessagesAsync(emailCredentials);
+            IList<UniqueId> messages = 
+                await MessagesFromEmailGetter.GetMessagesFromEmail(ClientConnector,
+                    GetterOfUnseenMessages,
+                    emailCredentials);
 
             //TO DO: extract the below code into an distinct method
             UniqueId searchedMessageID = messages.FirstOrDefault(message => 
@@ -69,7 +75,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggreg
                 emailSubject,
                 messageText);
             
-            SendReportViaSmtp(message, emailCredentials);
+            ReportSender.SendReportViaSmtp(message, emailCredentials);
         }
     }
 }
