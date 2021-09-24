@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EmailWorker.ApplicationCore.DomainServices.Shared.EmailCommunicationServiceAggregate;
+using EmailWorker.ApplicationCore.DomainServices.Shared;
 using EmailWorker.ApplicationCore.Entities;
 using EmailWorker.ApplicationCore.Interfaces;
 using EmailWorker.ApplicationCore.Interfaces.HandlersOfProcessedMessages;
@@ -11,31 +11,40 @@ using MimeKit;
 
 namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregate
 {
-    public class AsSeenMarkerService : EmailCommunicationService, IAsSeenMarkerService
+    public class AsSeenMarkerService : IAsSeenMarkerService
     {
         private readonly ILogger<AsSeenMarkerService> _logger;
         
-        private IHandlerOfAsSeenMarkerMessages ProcessedMessagesHandler { get; set; }
-        
+        private IReportSender ReportSender { get; set; }
+        private IGetterOfUnseenMessages GetterOfUnseenMessages { get; set; }
+        private IHandlerOfAsSeenMarkerMessages HandlerOfProcessedMessages { get; set; }
+        private IClientConnector ClientConnector { get; set; }
+
         public AsSeenMarkerService(ILogger<AsSeenMarkerService> logger,
             IReportSender reportSender,
             IGetterOfUnseenMessages getterOfUnseenMessages,
             IHandlerOfAsSeenMarkerMessages handlerOfProcessedMessages,
-            IClientConnector clientConnector) : 
-            base(clientConnector, getterOfUnseenMessages, reportSender) =>
+            IClientConnector clientConnector) =>
 
-            (_logger, ProcessedMessagesHandler) = 
-            (logger, handlerOfProcessedMessages);
+            (_logger, ReportSender, GetterOfUnseenMessages, HandlerOfProcessedMessages,
+                ClientConnector) = 
+            (logger, reportSender, getterOfUnseenMessages, handlerOfProcessedMessages,
+                clientConnector);
 
         public async Task<IList<UniqueId>> AnalyzeMessages(EmailCredentials emailCredentials)
         {
-            IList<UniqueId> messages = await GetUnseenMessagesAsync(emailCredentials);
+            IList<UniqueId> messages = 
+                await MessagesFromEmailGetter.GetMessagesFromEmail(ClientConnector,
+                    GetterOfUnseenMessages,
+                    emailCredentials);
+
             return MessagesAnalyzer.AnalyzeMessages(_logger, messages);
-        }    
+        }
+
         public (string emailText, string emailSubject) HandleProcessedMessages(
             IList<UniqueId> messages) =>
             
-            ProcessedMessagesHandler.HandleProcessedMessages(messages);
+            HandlerOfProcessedMessages.HandleProcessedMessages(messages);
         
         public void SendReportMessageViaEmail(EmailCredentials emailCredentials,
             string myEmail,
@@ -47,7 +56,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
                 emailSubject,
                 messageText);
 
-            SendReportViaSmtp(message, emailCredentials);
+            ReportSender.SendReportViaSmtp(message, emailCredentials);
         }
     }
 }
