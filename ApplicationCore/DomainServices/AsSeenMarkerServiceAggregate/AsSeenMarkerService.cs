@@ -15,6 +15,8 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
     {
         private readonly ILogger<AsSeenMarkerService> _logger;
         
+        private readonly string myEmail  = "guise322@yandex.ru";
+
         private IReportSender ReportSender { get; set; }
         private IGetterOfUnseenMessages GetterOfUnseenMessages { get; set; }
         private IHandlerOfAsSeenMarkerMessages HandlerOfProcessedMessages { get; set; }
@@ -31,32 +33,29 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
             (logger, reportSender, getterOfUnseenMessages, handlerOfProcessedMessages,
                 clientConnector);
 
-        public async Task<IList<UniqueId>> AnalyzeMessages(EmailCredentials emailCredentials)
+        public async Task ProcessEmailInbox(EmailCredentials emailCredentials)
         {
+            //TO DO: add logging.
+
             IList<UniqueId> messages = 
                 await MessagesFromEmailGetter.GetMessagesFromEmail(ClientConnector,
                     GetterOfUnseenMessages,
                     emailCredentials);
 
-            return MessagesAnalyzer.AnalyzeMessages(_logger, messages);
-        }
+            IList<UniqueId> processedMessages = MessagesAnalyzer.AnalyzeMessages(_logger, messages);
 
-        public (string emailText, string emailSubject) HandleProcessedMessages(
-            IList<UniqueId> messages) =>
-            
-            HandlerOfProcessedMessages.HandleProcessedMessages(messages);
-        
-        public void SendReportMessageViaEmail(EmailCredentials emailCredentials,
-            string myEmail,
-            string emailSubject,
-            string messageText)
-        {
-            MimeMessage message = ReportMessageBuilder.BuildReportMessage(emailCredentials,
-                myEmail,
-                emailSubject,
-                messageText);
+            (string emailText, string emailSubject) =
+                HandlerOfProcessedMessages.HandleProcessedMessages(processedMessages);
 
-            ReportSender.SendReportViaSmtp(message, emailCredentials);
+            if(emailText != null)
+            {
+                MimeMessage message = ReportMessageBuilder.BuildReportMessage(emailCredentials,
+                    myEmail,
+                    emailSubject,
+                    emailText);
+
+                ReportSender.SendReportViaSmtp(message, emailCredentials);
+            }
         }
     }
 }

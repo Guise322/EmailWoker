@@ -15,8 +15,6 @@ namespace EmailWorker.ApplicationCore.DomainServices
 {
     public class EntryPointService : IEntryPointService
     {
-        private readonly string myEmail  = "guise322@yandex.ru";
-        
         private readonly ILogger<EntryPointService> _logger;
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly EmailCredentialsGetter _emailCredentialsGetter; 
@@ -38,7 +36,7 @@ namespace EmailWorker.ApplicationCore.DomainServices
             {
                 using var serviceScope = _serviceScopeFactory.CreateScope();
                 
-                var emailBoxProcessor = emailCredentials.DedicatedWork switch
+                IEmailBoxService emailBoxProcessor = emailCredentials.DedicatedWork switch
                 {
                     DedicatedWorkType.MarkAsSeen =>
                         serviceScope.ServiceProvider.GetRequiredService<IAsSeenMarkerService>(),
@@ -46,21 +44,8 @@ namespace EmailWorker.ApplicationCore.DomainServices
                         serviceScope.ServiceProvider.GetRequiredService<IPublicIPGetterService>(),
                     _ => null
                 };
-                
-                IList<UniqueId> processedMessages = await emailBoxProcessor.AnalyzeMessages(emailCredentials);
-                if (processedMessages != null)
-                {
-                    (string emailText, string emailSubject) = 
-                        emailBoxProcessor.HandleProcessedMessages(processedMessages);
 
-                    if(emailText != null)
-                    {
-                        emailBoxProcessor.SendReportMessageViaEmail(emailCredentials,
-                            myEmail,
-                            emailSubject,
-                            emailText);
-                    }
-                }
+                await emailBoxProcessor.ProcessEmailInbox(emailCredentials);
             }
         }
     }    

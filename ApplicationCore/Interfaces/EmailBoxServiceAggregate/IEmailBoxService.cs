@@ -8,14 +8,6 @@ namespace EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxServiceAggrega
 {
     public interface IEmailBoxService
     {
-        Task<IList<UniqueId>> AnalyzeMessages(EmailCredentials emailCredentials);
-        
-        (string emailText, string emailSubject) HandleProcessedMessages(
-            IList<UniqueId> messages);
-
-        void SendReportMessageViaEmail(EmailCredentials emailCredentials,
-            string myEmail,
-            string emailSubject,
-            string messageText);
+        Task ProcessEmailInbox(EmailCredentials emailCredentials);
     }
 }
