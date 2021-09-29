@@ -19,10 +19,6 @@ namespace EmailWorker.Infrastructure.HandlersOfProcessedMessages
         public (string emailText, string emailSubject) HandleProcessedMessages(
             IList<UniqueId> messages)
         {
-            if (messages == null)
-            {
-                return (null, null);
-            }
 
             //TO DO: getting a response by HTTPClient (HTTPFactory)
 

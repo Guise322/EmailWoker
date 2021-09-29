@@ -35,7 +35,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggreg
             (logger, reportSender, messageGetter, getterOfUnseenMessages,
                 handlerOfProcessedMessages, clientConnector);
 
-        public async Task<IList<UniqueId>> AnalyzeMessages(EmailCredentials emailCredentials)
+        public async Task ProcessEmailInbox(EmailCredentials emailCredentials)
         {
             IList<UniqueId> messages = 
                 await MessagesFromEmailGetter.GetMessagesFromEmail(ClientConnector,
@@ -51,29 +51,21 @@ namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggreg
                 return emailFrom == SearchedEmail;
             });
 
-            if (searchedMessageID != default)
+            if (searchedMessageID == default)
             {
-                _logger.LogInformation("The request is detected.");
-                return new List<UniqueId>(1) { searchedMessageID };
+                _logger.LogInformation("The request is not detected.");
+                return;       
             }
 
-            _logger.LogInformation("The request is not detected.");
-            return null;
-        }
-        public (string emailText, string emailSubject) HandleProcessedMessages(
-            IList<UniqueId> messages) =>
+            _logger.LogInformation("The request is detected.");
 
-            HandlerOfProcessedMessages.HandleProcessedMessages(messages);
+            (string emailText, string emailSubject) =
+                HandlerOfProcessedMessages.HandleProcessedMessages(messages);
 
-        public void SendReportMessageViaEmail(EmailCredentials emailCredentials,
-            string emailAdress,
-            string emailSubject,
-            string messageText)
-        {
             MimeMessage message = ReportMessageBuilder.BuildReportMessage(emailCredentials,
-                emailAdress,
+                SearchedEmail,
                 emailSubject,
-                messageText);
+                emailText);
             
             ReportSender.SendReportViaSmtp(message, emailCredentials);
         }
