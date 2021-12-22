@@ -14,9 +14,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
     public class AsSeenMarkerService : IAsSeenMarkerService
     {
         private readonly ILogger<AsSeenMarkerService> _logger;
-        
         private readonly string myEmail  = "guise322@yandex.ru";
-
         private IReportSender ReportSender { get; set; }
         private IGetterOfUnseenMessages GetterOfUnseenMessages { get; set; }
         private IHandlerOfAsSeenMarkerMessages HandlerOfProcessedMessages { get; set; }
@@ -42,7 +40,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
                     GetterOfUnseenMessages,
                     emailCredentials);
 
-            IList<UniqueId> processedMessages = MessagesAnalyzer.AnalyzeMessages(_logger, messages);
+            IList<UniqueId> processedMessages = AnalyzerOfMessages.AnalyzeMessages(_logger, messages);
 
             (string emailText, string emailSubject) =
                 HandlerOfProcessedMessages.HandleProcessedMessages(processedMessages);

@@ -31,11 +31,11 @@ namespace EmailWorker.ApplicationCore.DomainServices
 
             List<EmailCredentials> emailCredentialsList =
                 _emailCredentialsGetter.GetEmailCredentials();
-                
+
+            using var serviceScope = _serviceScopeFactory.CreateScope();
+
             foreach (var emailCredentials in emailCredentialsList)
-            {
-                using var serviceScope = _serviceScopeFactory.CreateScope();
-                
+            {                
                 IEmailBoxService emailBoxProcessor = emailCredentials.DedicatedWork switch
                 {
                     DedicatedWorkType.MarkAsSeen =>

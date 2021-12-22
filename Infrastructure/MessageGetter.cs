@@ -8,10 +8,8 @@ namespace EmailWorker.Infrastructure
     public class MessageGetter : IMessageGetter
     {
         private ImapClient Client { get; }
-        public MessageGetter(ImapClient client)
-        {
+        public MessageGetter(ImapClient client) =>
             Client = client;
-        }
         public MimeMessage GetMessage(UniqueId id)
         {
             return Client.Inbox.GetMessage(id);

@@ -9,11 +9,11 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
     {
         public static MimeMessage BuildReportMessage(
             EmailCredentials emailCredentials,
-            string emailAdress,
+            string emailAddress,
             string emailSubject,
             string messageText)
         {
-            MimeMessage messageWithFromTo = FromToBuilder.BuildFromTo(emailCredentials, emailAdress);
+            MimeMessage messageWithFromTo = FromToBuilder.BuildFromTo(emailCredentials, emailAddress);
             messageWithFromTo.Subject = emailSubject;
             messageWithFromTo.Body = new TextPart(MimeKit.Text.TextFormat.Plain)
             {

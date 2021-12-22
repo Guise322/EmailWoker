@@ -1,3 +1,6 @@
+//Some of the below lines of code is got from the site:
+//https://qawithexperts.com/article/c-sharp/get-ip-address-using-c-local-and-public-ip-example/374
+
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -12,10 +15,8 @@ namespace EmailWorker.Infrastructure.HandlersOfProcessedMessages
     {
         private readonly string ipRequestAddress = "http://checkip.dyndns.org/";
         private readonly ILogger<HandlerOfPublicIPGetterMessages> _logger;
-        public HandlerOfPublicIPGetterMessages(ILogger<HandlerOfPublicIPGetterMessages> logger)
-        {
+        public HandlerOfPublicIPGetterMessages(ILogger<HandlerOfPublicIPGetterMessages> logger) =>
             _logger = logger;
-        }
         public (string emailText, string emailSubject) HandleProcessedMessages(
             IList<UniqueId> messages)
         {

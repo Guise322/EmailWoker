@@ -10,12 +10,12 @@ namespace EmailWorker
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
-        private readonly IEntryPointService entryPointService;
+        private readonly IEntryPointService _entryPointService;
         
         public Worker(ILogger<Worker> logger, IEntryPointService emailBoxProcessorService)
         {
             _logger = logger;
-            this.entryPointService = emailBoxProcessorService;
+            _entryPointService = emailBoxProcessorService;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -24,16 +24,19 @@ namespace EmailWorker
             {
                 try
                 {
-                    await entryPointService.ExecuteAsync();
+                    await _entryPointService.ExecuteAsync();
                 }
                 catch (Exception e)
                 {
                     if(e != null)
+                    {
                         _logger.LogError(e.Message);
+                    }
                     else
+                    {
                         _logger.LogInformation("Worker is over for an error at {time}", DateTimeOffset.Now);
+                    }
                 }
-                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
 
                 TimeSpan workerDelayPeriod = TimeSpan.FromMinutes(5);
 

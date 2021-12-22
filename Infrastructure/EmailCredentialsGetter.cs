@@ -10,10 +10,8 @@ namespace EmailWorker.Infrastructure
     public class EmailCredentialsGetter
     {
         private readonly ILogger<EmailCredentialsGetter> _logger;
-        public EmailCredentialsGetter(ILogger<EmailCredentialsGetter> logger)
-        {
+        public EmailCredentialsGetter(ILogger<EmailCredentialsGetter> logger) =>
             _logger = logger;
-        }
         public List<EmailCredentials> GetEmailCredentials()
         {
             JsonStringEnumConverter stringEnumConverter = new();

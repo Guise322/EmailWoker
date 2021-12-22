@@ -11,11 +11,8 @@ namespace EmailWorker.Infrastructure
     {
         private readonly ILogger<ClientConnector> _logger;
         private ImapClient Client { get; }
-        public ClientConnector(ILogger<ClientConnector> logger, ImapClient client)
-        {
-            _logger = logger;
-            Client = client;
-        }
+        public ClientConnector(ILogger<ClientConnector> logger, ImapClient client) =>
+        (_logger, Client) = (logger, client);
         public void ConnectClient(EmailCredentials emailCredentials)
         {
             try
