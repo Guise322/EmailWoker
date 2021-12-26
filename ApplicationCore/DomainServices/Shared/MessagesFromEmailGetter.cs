@@ -6,14 +6,14 @@ using MailKit;
 
 namespace EmailWorker.ApplicationCore.DomainServices.Shared
 {
-    public static class MessagesFromEmailGetter
+    public static class MessageIDsFromEmailGetter
     {
-        public static Task<IList<UniqueId>> GetMessagesFromEmail(IClientConnector clientConnector,
-            IGetterOfUnseenMessages getterOfUnseenMessages,
+        public static Task<IList<UniqueId>> GetMessageIDsFromEmail(IClientConnector clientConnector,
+            IGetterOfUnseenMessageIDs getterOfUnseenMessageIDs,
             EmailCredentials emailCredentials)
         {
             clientConnector.ConnectClient(emailCredentials);
-            return getterOfUnseenMessages.GetUnseenMessagesAsync(emailCredentials);
+            return getterOfUnseenMessageIDs.GetUnseenMessageIDsAsync(emailCredentials);
         }
     }
 }

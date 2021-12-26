@@ -18,7 +18,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggreg
         
         private IReportSender ReportSender { get; set; }
         private IMessageGetter MessageGetter { get; set; }
-        private IGetterOfUnseenMessages GetterOfUnseenMessages { get; set; }
+        private IGetterOfUnseenMessageIDs GetterOfUnseenMessages { get; set; }
         private IHandlerOfPublicIPGetterMessages HandlerOfProcessedMessages { get; set; }
         private IClientConnector ClientConnector { get; set; }
         
@@ -27,7 +27,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggreg
             IMessageGetter messageGetter,
             IHandlerOfPublicIPGetterMessages handlerOfProcessedMessages,
             IReportSender reportSender,
-            IGetterOfUnseenMessages getterOfUnseenMessages,
+            IGetterOfUnseenMessageIDs getterOfUnseenMessages,
             IClientConnector clientConnector) =>
 
             (_logger, ReportSender, MessageGetter, GetterOfUnseenMessages,
@@ -37,19 +37,13 @@ namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggreg
 
         public async Task ProcessEmailInbox(EmailCredentials emailCredentials)
         {
-            IList<UniqueId> messages = 
-                await MessagesFromEmailGetter.GetMessagesFromEmail(ClientConnector,
+            IList<UniqueId> messageIDs = 
+                await MessageIDsFromEmailGetter.GetMessageIDsFromEmail(ClientConnector,
                     GetterOfUnseenMessages,
                     emailCredentials);
 
-            //TO DO: extract the below code into an distinct method
-            UniqueId searchedMessageID = messages.FirstOrDefault(message => 
-            {
-                MimeMessage messageFromBox = MessageGetter.GetMessage(message);
-                string rawEmailFrom = messageFromBox.From.ToString();
-                string emailFrom = EmailExtractor.ExtractEmail(rawEmailFrom);
-                return emailFrom == SearchedEmail;
-            });
+            UniqueId searchedMessageID = RequestMessageSearcher
+                .SearchRequestMessage(messageIDs, MessageGetter, SearchedEmail);
 
             if (searchedMessageID == default)
             {
@@ -60,7 +54,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggreg
             _logger.LogInformation("The request is detected.");
 
             (string emailText, string emailSubject) =
-                HandlerOfProcessedMessages.HandleProcessedMessages(messages);
+                HandlerOfProcessedMessages.HandleProcessedMessages(messageIDs);
 
             MimeMessage message = ReportMessageBuilder.BuildReportMessage(emailCredentials,
                 SearchedEmail,

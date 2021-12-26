@@ -16,13 +16,13 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
         private readonly ILogger<AsSeenMarkerService> _logger;
         private readonly string myEmail  = "guise322@yandex.ru";
         private IReportSender ReportSender { get; set; }
-        private IGetterOfUnseenMessages GetterOfUnseenMessages { get; set; }
+        private IGetterOfUnseenMessageIDs GetterOfUnseenMessages { get; set; }
         private IHandlerOfAsSeenMarkerMessages HandlerOfProcessedMessages { get; set; }
         private IClientConnector ClientConnector { get; set; }
 
         public AsSeenMarkerService(ILogger<AsSeenMarkerService> logger,
             IReportSender reportSender,
-            IGetterOfUnseenMessages getterOfUnseenMessages,
+            IGetterOfUnseenMessageIDs getterOfUnseenMessages,
             IHandlerOfAsSeenMarkerMessages handlerOfProcessedMessages,
             IClientConnector clientConnector) =>
 
@@ -36,7 +36,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
             //TO DO: add logging.
 
             IList<UniqueId> messages = 
-                await MessagesFromEmailGetter.GetMessagesFromEmail(ClientConnector,
+                await MessageIDsFromEmailGetter.GetMessageIDsFromEmail(ClientConnector,
                     GetterOfUnseenMessages,
                     emailCredentials);
 
