@@ -5,7 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using EmailWorker.ApplicationCore.Interfaces;
 
-namespace EmailWorker
+namespace EmailWorker.Worker
 {
     public class Worker : BackgroundService
     {

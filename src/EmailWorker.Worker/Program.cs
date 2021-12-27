@@ -15,7 +15,7 @@ using Serilog.Extensions.Hosting;
 using System;
 using System.IO;
 
-namespace EmailWorker
+namespace EmailWorker.Worker
 {
     public class Program
     {
