@@ -1,5 +1,4 @@
 using EmailWorker.ApplicationCore.Entities;
-using MailKit.Net.Imap;
 
 namespace EmailWorker.ApplicationCore.Interfaces
 {

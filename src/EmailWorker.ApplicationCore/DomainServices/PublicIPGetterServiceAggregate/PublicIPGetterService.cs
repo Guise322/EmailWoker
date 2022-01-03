@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using EmailWorker.ApplicationCore.DomainServices.Shared;
 using EmailWorker.ApplicationCore.Entities;

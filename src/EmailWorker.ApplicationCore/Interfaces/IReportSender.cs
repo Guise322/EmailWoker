@@ -1,4 +1,3 @@
-
 using EmailWorker.ApplicationCore.Entities;
 using MimeKit;
 

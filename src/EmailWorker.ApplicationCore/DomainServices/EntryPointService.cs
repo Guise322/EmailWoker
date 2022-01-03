@@ -5,10 +5,8 @@ using EmailWorker.ApplicationCore.Entities;
 using EmailWorker.ApplicationCore.Enums;
 using EmailWorker.ApplicationCore.Interfaces;
 using EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxServiceAggregate;
-using MailKit;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using MimeKit;
 
 namespace EmailWorker.ApplicationCore.DomainServices
 {

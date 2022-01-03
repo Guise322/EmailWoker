@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using EmailWorker.ApplicationCore.Entities;
 using EmailWorker.ApplicationCore.Interfaces;
 using MailKit.Net.Imap;

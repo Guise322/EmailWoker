@@ -11,7 +11,6 @@ using EmailWorker.Infrastructure;
 using EmailWorker.Infrastructure.HandlersOfProcessedMessages;
 using Serilog;
 using Serilog.Events;
-using Serilog.Extensions.Hosting;
 using System;
 using System.IO;
 
@@ -61,7 +60,7 @@ namespace EmailWorker.Worker
                     services.AddHostedService<Worker>()
                     .AddTransient<IEntryPointService, EntryPointService>()
 
-                    .AddTransient<EmailCredentialsGetter>()
+                    .AddTransient<IEmailCredentialsGetter, EmailCredentialsGetter>()
 
                     .AddScoped<IReportSender, ReportSender>()
                     .AddScoped<IGetterOfUnseenMessageIDs, GetterOfUnseenMessages>()

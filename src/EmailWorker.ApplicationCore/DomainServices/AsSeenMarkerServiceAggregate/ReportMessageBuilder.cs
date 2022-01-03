@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using EmailWorker.ApplicationCore.DomainServices.Shared;
 using EmailWorker.ApplicationCore.Entities;
 using MimeKit;
