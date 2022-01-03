@@ -3,11 +3,12 @@ using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using EmailWorker.ApplicationCore.Entities;
+using EmailWorker.ApplicationCore.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace EmailWorker.Infrastructure
 {
-    public class EmailCredentialsGetter
+    public class EmailCredentialsGetter : IEmailCredentialsGetter
     {
         private readonly ILogger<EmailCredentialsGetter> _logger;
         public EmailCredentialsGetter(ILogger<EmailCredentialsGetter> logger) =>
