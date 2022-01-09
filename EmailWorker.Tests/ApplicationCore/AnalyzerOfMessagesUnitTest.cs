@@ -9,7 +9,7 @@ namespace EmailWorker.Tests.ApplicationCore;
 public class AnalyzerOfMessagesUnitTest
 {
     [Fact]
-    public void AnalyzeMessages_MessagesUnderMinThreshold_Null()
+    public void AnalyzeMessages_MessagesUnderMinThreshold_ThrowsArgumentException()
     {
         var loggerStub = new LoggerStub();
         int valueUnderMinThreshold = 4;
@@ -20,8 +20,8 @@ public class AnalyzerOfMessagesUnitTest
             uniqueIdsStub.Add(new UniqueId(i+1));
         }
 
-        var actual = AnalyzerOfMessages.AnalyzeMessages(loggerStub, uniqueIdsStub);
-        Assert.Null(actual);
+        var ex = Record.Exception(() => AnalyzerOfMessages.AnalyzeMessages(loggerStub, uniqueIdsStub));
+        Assert.IsType<ArgumentException>(ex);
     }
 
     [Fact]

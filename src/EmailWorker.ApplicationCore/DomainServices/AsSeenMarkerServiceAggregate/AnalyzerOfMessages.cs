@@ -1,4 +1,5 @@
 using Ardalis.GuardClauses;
+using System;
 using System.Collections.Generic;
 using MailKit;
 using Microsoft.Extensions.Logging;
@@ -18,7 +19,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
             {
                 logger.LogInformation(
                         "The service did not get the needed number of messages.");
-                return null;
+                throw new ArgumentException("The given number of messages is too small.");
             }
             
             List<UniqueId> processedMessages = new();
