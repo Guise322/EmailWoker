@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using System;
 
-namespace EmailWorker.Tests.ApplicationCore;
+namespace EmailWorker.Tests.UnitTests.ApplicationCore;
 
 public class LoggerStub : ILogger
 {

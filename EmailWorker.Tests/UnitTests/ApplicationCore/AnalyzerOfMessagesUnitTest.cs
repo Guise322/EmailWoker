@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using MailKit;
 
-namespace EmailWorker.Tests.ApplicationCore;
+namespace EmailWorker.Tests.UnitTests.ApplicationCore;
 
 public class AnalyzerOfMessagesUnitTest
 {
