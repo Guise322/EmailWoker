@@ -3,6 +3,9 @@ using EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregate;
 using System;
 using System.Collections.Generic;
 using MailKit;
+using Moq;
+using EmailWorker.Tests.UnitTests.Shared;
+using Microsoft.Extensions.Logging;
 
 namespace EmailWorker.Tests.UnitTests.ApplicationCore;
 
@@ -12,17 +15,17 @@ public class AnalyzerOfMessagesUnitTest
     public void AnalyzeMessages_UniqueIDsUnderMinThreshold_ThrowsArgumentException()
     {
         int valueUnderMinThreshold = 4;
-        List<UniqueId> uniqueIdsShim = CreateUniqueIdsShim(valueUnderMinThreshold);
-        LoggerStub loggerStub = new();
-        var ex = Record.Exception(() => AnalyzerOfMessages.AnalyzeMessages(loggerStub, uniqueIdsShim));
+        List<UniqueId> uniqueIdsShim = UniqueIdsShim.Create(valueUnderMinThreshold);
+        Mock<ILogger> loggerStub = new();
+        var ex = Record.Exception(() => AnalyzerOfMessages.AnalyzeMessages(loggerStub.Object, uniqueIdsShim));
         Assert.IsType<ArgumentException>(ex);
     }
 
     [Fact]
     public void AnalyzeMessages_NullInput_ThrowsArgumentNullException()
     {
-        LoggerStub loggerStub = new();
-        var ex = Record.Exception(() => AnalyzerOfMessages.AnalyzeMessages(loggerStub, null));
+        Mock<ILogger> loggerStub = new();
+        var ex = Record.Exception(() => AnalyzerOfMessages.AnalyzeMessages(loggerStub.Object, null));
         Assert.IsType<ArgumentNullException>(ex);
     }
 
@@ -30,21 +33,9 @@ public class AnalyzerOfMessagesUnitTest
     public void AnalyzeMessages_AppropriateNumberOfUniqueIds_SameUniqueIDs()
     {
         int appropriateNumberOfMessages = 6;
-        List<UniqueId> uniqueIdsShim = CreateUniqueIdsShim(appropriateNumberOfMessages);
-        LoggerStub loggerStub = new();
-        var actual = AnalyzerOfMessages.AnalyzeMessages(loggerStub, uniqueIdsShim);
+        List<UniqueId> uniqueIdsShim = UniqueIdsShim.Create(appropriateNumberOfMessages);
+        Mock<ILogger> loggerStub = new();
+        var actual = AnalyzerOfMessages.AnalyzeMessages(loggerStub.Object, uniqueIdsShim);
         Assert.Equal(appropriateNumberOfMessages, actual.Count);
-    }
-
-    public static List<UniqueId> CreateUniqueIdsShim(int numberOfItems)
-    {
-        List<UniqueId> uniqueIdsShim = new(numberOfItems);
-
-        for (uint i = 0; i < numberOfItems; i++)
-        {
-            uniqueIdsShim.Add(new UniqueId(i+1));
-        }
-
-        return uniqueIdsShim;
     }
 }
