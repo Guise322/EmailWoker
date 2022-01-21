@@ -17,5 +17,6 @@
     </PackageReference>
     <PackageReference Include="Moq" Version="4.16.1"/>
     <ProjectReference Include="../src/EmailWorker.ApplicationCore/EmailWorker.ApplicationCore.csproj"/>
+    <ProjectReference Include="../src/EmailWorker.Infrastructure/EmailWorker.Infrastructure.csproj"/>
   </ItemGroup>
 </Project>

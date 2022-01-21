@@ -1,3 +1,4 @@
+using Ardalis.GuardClauses;
 using System.Collections.Generic;
 using EmailWorker.ApplicationCore.Interfaces.HandlersOfProcessedMessages;
 using MailKit;
@@ -9,14 +10,16 @@ namespace EmailWorker.Infrastructure.HandlersOfProcessedMessages
     public class HandlerOfAsSeenMarkerMessages : IHandlerOfAsSeenMarkerMessages
     {
         private readonly ILogger<HandlerOfAsSeenMarkerMessages> _logger;
-        private ImapClient Client { get; }
+        private IMailStore Client { get; }
         public HandlerOfAsSeenMarkerMessages(
             ILogger<HandlerOfAsSeenMarkerMessages> logger,
-            ImapClient client) =>
+            IMailStore client) =>
             (_logger, Client) = (logger, client);
         public (string emailText, string emailSubject) HandleProcessedMessages(
             IList<UniqueId> messages)
         {
+            Guard.Against.Null(messages, nameof(messages));
+
             foreach (var message in messages)
             {
                 Client.Inbox.AddFlags(message, MessageFlags.Seen, true);
