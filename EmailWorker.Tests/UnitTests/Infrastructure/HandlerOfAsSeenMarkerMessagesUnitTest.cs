@@ -19,4 +19,16 @@ public class HandlerOfAsSeenMarkerMessagesUnitTest
         var ex = Record.Exception(() => handler.HandleProcessedMessages(null));
         Assert.IsType<ArgumentNullException>(ex);
     }
+
+    [Fact]
+    public void HandlerProcessedMessages_NumberOfMessagesIDsAboveMaxLimit_NullNull()
+    {
+
+    }
+
+    [Fact]
+    public void HandlerProcessedMessages_NumberOfMessageIDsBelowMaxLimit_NumberOfProcessedMessaggesAndInfoString()
+    {
+
+    }
 }

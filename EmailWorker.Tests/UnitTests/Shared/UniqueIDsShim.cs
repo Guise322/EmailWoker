@@ -3,17 +3,17 @@ using MailKit;
 
 namespace EmailWorker.Tests.UnitTests.Shared;
 
-public class UniqueIdsShim
+public class UniqueIDsShim
 {
     public static List<UniqueId> Create(int numberOfItems)
     {
-        List<UniqueId> uniqueIdsShim = new(numberOfItems);
+        List<UniqueId> uniqueIDsShim = new(numberOfItems);
 
         for (uint i = 0; i < numberOfItems; i++)
         {
-            uniqueIdsShim.Add(new UniqueId(i+1));
+            uniqueIDsShim.Add(new UniqueId(i+1));
         }
 
-        return uniqueIdsShim;
+        return uniqueIDsShim;
     }
 }

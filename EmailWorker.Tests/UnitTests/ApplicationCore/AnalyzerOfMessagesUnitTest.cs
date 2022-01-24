@@ -12,17 +12,7 @@ namespace EmailWorker.Tests.UnitTests.ApplicationCore;
 public class AnalyzerOfMessagesUnitTest
 {
     [Fact]
-    public void AnalyzeMessages_UniqueIDsUnderMinThreshold_ThrowsArgumentException()
-    {
-        int valueUnderMinThreshold = 4;
-        List<UniqueId> uniqueIdsShim = UniqueIdsShim.Create(valueUnderMinThreshold);
-        Mock<ILogger> loggerStub = new();
-        var ex = Record.Exception(() => AnalyzerOfMessages.AnalyzeMessages(loggerStub.Object, uniqueIdsShim));
-        Assert.IsType<ArgumentException>(ex);
-    }
-
-    [Fact]
-    public void AnalyzeMessages_NullInput_ThrowsArgumentNullException()
+    public void AnalyzeMessages_Null_ThrowsArgumentNullException()
     {
         Mock<ILogger> loggerStub = new();
         var ex = Record.Exception(() => AnalyzerOfMessages.AnalyzeMessages(loggerStub.Object, null));
@@ -30,12 +20,32 @@ public class AnalyzerOfMessagesUnitTest
     }
 
     [Fact]
-    public void AnalyzeMessages_AppropriateNumberOfUniqueIds_SameUniqueIDs()
+    public void AnalyzeMessages_ListOfUniqueIDsBelowMinLimit_ThrowsArgumentException()
+    {
+        int numberBelowMinLimit = 4;
+        List<UniqueId> uniqueIDsShim = UniqueIDsShim.Create(numberBelowMinLimit);
+        Mock<ILogger> loggerStub = new();
+        var ex = Record.Exception(() => AnalyzerOfMessages.AnalyzeMessages(loggerStub.Object, uniqueIDsShim));
+        Assert.IsType<ArgumentException>(ex);
+    }
+
+    [Fact]
+    public void AnalyzeMessages_ListOfUniqueIDsAboveMaxLimit_ListOfMaxLimitNumberWithMessageIDs()
+    {
+        int numberAboveMaxLimit = 1000;
+        List<UniqueId> uniqueIDsShim = UniqueIDsShim.Create(numberAboveMaxLimit);
+        Mock<ILogger> loggerStub = new();
+        var actual = AnalyzerOfMessages.AnalyzeMessages(loggerStub.Object, uniqueIDsShim);
+        Assert.Equal(uniqueIDsShim, actual);
+    }
+
+    [Fact]
+    public void AnalyzeMessages_ListOfUniqueIdsBetweenLimits_ListWithSameUniqueIDs()
     {
         int appropriateNumberOfMessages = 6;
-        List<UniqueId> uniqueIdsShim = UniqueIdsShim.Create(appropriateNumberOfMessages);
+        List<UniqueId> uniqueIdsShim = UniqueIDsShim.Create(appropriateNumberOfMessages);
         Mock<ILogger> loggerStub = new();
         var actual = AnalyzerOfMessages.AnalyzeMessages(loggerStub.Object, uniqueIdsShim);
-        Assert.Equal(appropriateNumberOfMessages, actual.Count);
+        Assert.Equal(uniqueIdsShim, actual);
     }
 }
