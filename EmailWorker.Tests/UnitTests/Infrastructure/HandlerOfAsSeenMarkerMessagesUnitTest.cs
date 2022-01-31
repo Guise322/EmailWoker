@@ -48,7 +48,6 @@ public class HandlerOfAsSeenMarkerMessagesUnitTest
         (var actualEmailText, var actualEmailSubject) = handler.HandleProcessedMessages(uniqueIDsShim);
         Assert.Equal(
             (numberAboveMaxLimit.ToString(),"The count of messages marked as seen"),
-            (actualEmailText, actualEmailSubject)
-        );
+            (actualEmailText, actualEmailSubject));
     }
 }

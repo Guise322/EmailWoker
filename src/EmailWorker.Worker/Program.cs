@@ -58,6 +58,9 @@ namespace EmailWorker.Worker
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<Worker>()
+
+                    .AddHttpClient()
+
                     .AddTransient<IEntryPointService, EntryPointService>()
 
                     .AddTransient<IEmailCredentialsGetter, EmailCredentialsGetter>()

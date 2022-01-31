@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
+using System.Net.Http;
 using EmailWorker.ApplicationCore.Interfaces.HandlersOfProcessedMessages;
 using MailKit;
 using Microsoft.Extensions.Logging;
@@ -14,21 +14,19 @@ namespace EmailWorker.Infrastructure.HandlersOfProcessedMessages
     {
         private readonly string ipRequestAddress = "http://checkip.dyndns.org/";
         private readonly ILogger<HandlerOfPublicIPGetterMessages> _logger;
-        public HandlerOfPublicIPGetterMessages(ILogger<HandlerOfPublicIPGetterMessages> logger) =>
-            _logger = logger;
+        private readonly IHttpClientFactory _httpClientFactory;
+        public HandlerOfPublicIPGetterMessages(
+            ILogger<HandlerOfPublicIPGetterMessages> logger,
+            IHttpClientFactory httpClientFactory) =>
+            (_logger, _httpClientFactory) = (logger, httpClientFactory);
         public (string emailText, string emailSubject) HandleProcessedMessages(
             IList<UniqueId> messages)
         {
-
-            //TO DO: getting a response by HTTPClient (HTTPFactory)
-
             string address;
-            WebRequest request = WebRequest.Create(ipRequestAddress);
-            using (WebResponse response = request.GetResponse())
-            using (StreamReader stream = new(response.GetResponseStream()))
-            {
-                address = stream.ReadToEnd();
-            }
+            HttpRequestMessage request = new(HttpMethod.Get,ipRequestAddress);
+            HttpClient httpClient = _httpClientFactory.CreateClient();
+            HttpResponseMessage response = httpClient.Send(request);
+            address = response.Content.ToString();
 
             int first = address.IndexOf("Address: ") + 9;
             int last = address.LastIndexOf("</body>");
