@@ -22,12 +22,16 @@ namespace EmailWorker.Infrastructure.HandlersOfProcessedMessages
         public (string emailText, string emailSubject) HandleProcessedMessages(
             IList<UniqueId> messages)
         {
-            string address;
             HttpRequestMessage request = new(HttpMethod.Get,ipRequestAddress);
-            HttpClient httpClient = _httpClientFactory.CreateClient();
-            HttpResponseMessage response = httpClient.Send(request);
-            address = response.Content.ToString();
 
+            string httpClientName = "checkip";
+
+            //TO DO: add checking if the request was successful
+
+            HttpClient httpClient = _httpClientFactory.CreateClient(httpClientName);
+            HttpResponseMessage response = httpClient.Send(request);
+            string address = response.Content.ReadAsStringAsync().Result;
+            
             int first = address.IndexOf("Address: ") + 9;
             int last = address.LastIndexOf("</body>");
             address = address.Substring(first, last - first);
