@@ -14,12 +14,12 @@ public class HandlerOfPublicIPGetterMessagesIntegrationTest
     public void HandleProcessedMessages_HttpClientFactory_IPAddressAndInformationMessage()
     {
         Mock<ILogger<HandlerOfPublicIPGetterMessages>> loggerStub = new();
-        Mock<IHttpClientFactory> factoryShim = new();
+        Mock<IHttpClientFactory> factoryStub = new();
 
-        factoryShim.Setup(p => p.CreateClient(It.IsAny<string>()))
-            .Returns(() => new());
+        factoryStub.Setup(p => p.CreateClient(It.IsAny<string>()))
+            .Returns(() => new HttpClient());
 
-        HandlerOfPublicIPGetterMessages handler = new(loggerStub.Object, factoryShim.Object);
+        HandlerOfPublicIPGetterMessages handler = new(loggerStub.Object, factoryStub.Object);
         (string actualEmailText, string actualEmailSubject) = handler.HandleProcessedMessages(null);
         Assert.Matches(@"\d", actualEmailText);
     }

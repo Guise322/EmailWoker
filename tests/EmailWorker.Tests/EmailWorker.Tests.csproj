@@ -17,7 +17,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.2-mauipre.1.22054.8"/>
     <PackageReference Include="Moq" Version="4.16.1"/>
-    <ProjectReference Include="../src/EmailWorker.ApplicationCore/EmailWorker.ApplicationCore.csproj"/>
-    <ProjectReference Include="../src/EmailWorker.Infrastructure/EmailWorker.Infrastructure.csproj"/>
+    <ProjectReference Include="../../src/EmailWorker.ApplicationCore/EmailWorker.ApplicationCore.csproj"/>
+    <ProjectReference Include="../../src/EmailWorker.Infrastructure/EmailWorker.Infrastructure.csproj"/>
   </ItemGroup>
 </Project>
