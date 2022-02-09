@@ -8,7 +8,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
 {
     public static class AnalyzerOfMessages
     {
-        public static IList<UniqueId> AnalyzeMessages(ILogger logger, IList<UniqueId> messages)
+        public static IList<UniqueId> AnalyzeMessages(IList<UniqueId> messages)
         {
             Guard.Against.Null(messages, nameof(messages));
             
@@ -17,8 +17,6 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
 
             if(messages.Count < minNumberOfMessages)
             {
-                logger.LogInformation(
-                        "The service did not get the needed number of messages.");
                 throw new ArgumentException("The given number of messages is too small.");
             }
             
@@ -39,7 +37,6 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
                 processedMessages.Add(messages[i]);
             }
             
-            logger.LogInformation("Getting a chunk of unseen messages succeeds.");
             return processedMessages;
         }
     }

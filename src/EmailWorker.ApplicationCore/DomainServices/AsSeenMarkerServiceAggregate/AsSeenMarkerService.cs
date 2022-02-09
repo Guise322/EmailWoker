@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using EmailWorker.ApplicationCore.DomainServices.Shared;
@@ -13,7 +14,6 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
 {
     public class AsSeenMarkerService : IAsSeenMarkerService
     {
-        private readonly ILogger<AsSeenMarkerService> _logger;
         private readonly string myEmail  = "guise322@yandex.ru";
         private IReportSender ReportSender { get; set; }
         private IGetterOfUnseenMessageIDs GetterOfUnseenMessages { get; set; }
@@ -26,12 +26,12 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
             IHandlerOfAsSeenMarkerMessages handlerOfProcessedMessages,
             IClientConnector clientConnector) =>
 
-            (_logger, ReportSender, GetterOfUnseenMessages, HandlerOfProcessedMessages,
+            (ReportSender, GetterOfUnseenMessages, HandlerOfProcessedMessages,
                 ClientConnector) = 
-            (logger, reportSender, getterOfUnseenMessages, handlerOfProcessedMessages,
+            (reportSender, getterOfUnseenMessages, handlerOfProcessedMessages,
                 clientConnector);
 
-        public async Task ProcessEmailInbox(EmailCredentials emailCredentials)
+        public async Task<ServiceStatus> ProcessEmailInbox(EmailCredentials emailCredentials)
         {
             //TO DO: add logging.
 
@@ -39,21 +39,37 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
                 await MessageIDsFromEmailGetter.GetMessageIDsFromEmail(ClientConnector,
                     GetterOfUnseenMessages,
                     emailCredentials);
+            
+            IList<UniqueId> processedMessages;
 
-            IList<UniqueId> processedMessages = AnalyzerOfMessages.AnalyzeMessages(_logger, messages);
+            try
+            {
+                processedMessages = AnalyzerOfMessages.AnalyzeMessages(messages);
+            }
+            catch (ArgumentException)
+            {
+                return new ServiceStatus() 
+                { ServiceWorkMessage = "The service did not get the needed number of messages."};
+            }
 
             (string emailText, string emailSubject) =
                 HandlerOfProcessedMessages.HandleProcessedMessages(processedMessages);
 
-            if(emailText != null)
+            if(emailText == null)
             {
-                MimeMessage message = ReportMessageBuilder.BuildReportMessage(emailCredentials,
-                    myEmail,
-                    emailSubject,
-                    emailText);
-
-                ReportSender.SendReportViaSmtp(message, emailCredentials);
+                return new ServiceStatus() 
+                { ServiceWorkMessage = "Getting a chunk of unseen messages succeeds." };
             }
+
+            MimeMessage message = ReportMessageBuilder.BuildReportMessage(emailCredentials,
+                myEmail,
+                emailSubject,
+                emailText);
+
+            ReportSender.SendReportViaSmtp(message, emailCredentials);
+            
+            return new ServiceStatus() 
+            { ServiceWorkMessage = "All messages is marked as seen." };
         }
     }
 }

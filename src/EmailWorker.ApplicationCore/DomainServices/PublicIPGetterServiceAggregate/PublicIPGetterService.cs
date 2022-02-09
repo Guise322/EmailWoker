@@ -9,51 +9,50 @@ using MailKit;
 using Microsoft.Extensions.Logging;
 using MimeKit;
 
-namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggregate
-{
-    public class PublicIPGetterService : IPublicIPGetterService
+namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggregate;
+
+public class PublicIPGetterService : IPublicIPGetterService
+{        
+    private IReportSender ReportSender { get; set; }
+    private IMessageGetter MessageGetter { get; set; }
+    private IGetterOfUnseenMessageIDs GetterOfUnseenMessages { get; set; }
+    private IHandlerOfPublicIPGetterMessages HandlerOfProcessedMessages { get; set; }
+    private IClientConnector ClientConnector { get; set; }
+    
+    private string SearchedEmail { get; } = "guise322@ya.ru";
+    public PublicIPGetterService(IMessageGetter messageGetter,
+        IHandlerOfPublicIPGetterMessages handlerOfProcessedMessages,
+        IReportSender reportSender,
+        IGetterOfUnseenMessageIDs getterOfUnseenMessages,
+        IClientConnector clientConnector) =>
+
+        (ReportSender, MessageGetter, GetterOfUnseenMessages,
+            HandlerOfProcessedMessages, ClientConnector) =
+        (reportSender, messageGetter, getterOfUnseenMessages,
+            handlerOfProcessedMessages, clientConnector);
+
+    public async Task<ServiceStatus> ProcessEmailInbox(EmailCredentials emailCredentials)
     {
-        private readonly ILogger<PublicIPGetterService> _logger;
-        
-        private IReportSender ReportSender { get; set; }
-        private IMessageGetter MessageGetter { get; set; }
-        private IGetterOfUnseenMessageIDs GetterOfUnseenMessages { get; set; }
-        private IHandlerOfPublicIPGetterMessages HandlerOfProcessedMessages { get; set; }
-        private IClientConnector ClientConnector { get; set; }
-        
-        private string SearchedEmail { get; } = "guise322@ya.ru";
-        public PublicIPGetterService(ILogger<PublicIPGetterService> logger,
-            IMessageGetter messageGetter,
-            IHandlerOfPublicIPGetterMessages handlerOfProcessedMessages,
-            IReportSender reportSender,
-            IGetterOfUnseenMessageIDs getterOfUnseenMessages,
-            IClientConnector clientConnector) =>
+        IList<UniqueId> messageIDs = 
+            await MessageIDsFromEmailGetter.GetMessageIDsFromEmail(ClientConnector,
+                GetterOfUnseenMessages,
+                emailCredentials);
 
-            (_logger, ReportSender, MessageGetter, GetterOfUnseenMessages,
-                HandlerOfProcessedMessages, ClientConnector) =
-            (logger, reportSender, messageGetter, getterOfUnseenMessages,
-                handlerOfProcessedMessages, clientConnector);
+        UniqueId searchedMessageID = RequestMessageSearcher
+            .SearchRequestMessage(messageIDs, MessageGetter, SearchedEmail);
 
-        public async Task ProcessEmailInbox(EmailCredentials emailCredentials)
+        //TO DO: inspect the below statement
+        if (searchedMessageID == default)
         {
-            IList<UniqueId> messageIDs = 
-                await MessageIDsFromEmailGetter.GetMessageIDsFromEmail(ClientConnector,
-                    GetterOfUnseenMessages,
-                    emailCredentials);
+            return new ServiceStatus() { ServiceWorkMessage = "The request is not detected." };
+        }
+        
+        ServiceStatus currentStatus = new () { ServiceWorkMessage = "The request is detected." };
 
-            UniqueId searchedMessageID = RequestMessageSearcher
-                .SearchRequestMessage(messageIDs, MessageGetter, SearchedEmail);
-
-            if (searchedMessageID == default)
-            {
-                _logger.LogInformation("The request is not detected.");
-                return;       
-            }
-
-            _logger.LogInformation("The request is detected.");
-
+        try
+        {
             (string emailText, string emailSubject) =
-                HandlerOfProcessedMessages.HandleProcessedMessages(messageIDs);
+            HandlerOfProcessedMessages.HandleProcessedMessages(messageIDs);
 
             MimeMessage message = ReportMessageBuilder.BuildReportMessage(emailCredentials,
                 SearchedEmail,
@@ -61,6 +60,14 @@ namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggreg
                 emailText);
             
             ReportSender.SendReportViaSmtp(message, emailCredentials);
+
+            currentStatus.ServiceWorkMessage += " The current ip address is sent.";
         }
+        catch (System.Exception)
+        {
+            currentStatus.ServiceWorkMessage += " The current ip address is not sent.";
+        }
+
+        return currentStatus;
     }
 }

@@ -14,8 +14,7 @@ public class AnalyzerOfMessagesUnitTest
     [Fact]
     public void AnalyzeMessages_Null_ThrowsArgumentNullException()
     {
-        Mock<ILogger> loggerStub = new();
-        var ex = Record.Exception(() => AnalyzerOfMessages.AnalyzeMessages(loggerStub.Object, null));
+        var ex = Record.Exception(() => AnalyzerOfMessages.AnalyzeMessages(null));
         Assert.IsType<ArgumentNullException>(ex);
     }
 
@@ -24,8 +23,7 @@ public class AnalyzerOfMessagesUnitTest
     {
         int numberBelowMinLimit = 4;
         List<UniqueId> uniqueIDsShim = UniqueIDsShim.Create(numberBelowMinLimit);
-        Mock<ILogger> loggerStub = new();
-        var ex = Record.Exception(() => AnalyzerOfMessages.AnalyzeMessages(loggerStub.Object, uniqueIDsShim));
+        var ex = Record.Exception(() => AnalyzerOfMessages.AnalyzeMessages(uniqueIDsShim));
         Assert.IsType<ArgumentException>(ex);
     }
 
@@ -34,8 +32,7 @@ public class AnalyzerOfMessagesUnitTest
     {
         int numberAboveMaxLimit = 1000;
         List<UniqueId> uniqueIDsShim = UniqueIDsShim.Create(numberAboveMaxLimit);
-        Mock<ILogger> loggerStub = new();
-        var actual = AnalyzerOfMessages.AnalyzeMessages(loggerStub.Object, uniqueIDsShim);
+        var actual = AnalyzerOfMessages.AnalyzeMessages(uniqueIDsShim);
         Assert.Equal(uniqueIDsShim, actual);
     }
 
@@ -44,8 +41,7 @@ public class AnalyzerOfMessagesUnitTest
     {
         int appropriateNumberOfMessages = 6;
         List<UniqueId> uniqueIdsShim = UniqueIDsShim.Create(appropriateNumberOfMessages);
-        Mock<ILogger> loggerStub = new();
-        var actual = AnalyzerOfMessages.AnalyzeMessages(loggerStub.Object, uniqueIdsShim);
+        var actual = AnalyzerOfMessages.AnalyzeMessages(uniqueIdsShim);
         Assert.Equal(uniqueIdsShim, actual);
     }
 }

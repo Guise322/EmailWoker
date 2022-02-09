@@ -24,7 +24,7 @@ namespace EmailWorker.ApplicationCore.DomainServices
         (logger, serviceScopeFactory, emailCredentialsGetter);
         public async Task ExecuteAsync()
         {
-            _logger.LogInformation($"Start execution at {DateTimeOffset.Now}");
+            _logger.LogInformation("Start execution at {Now}", DateTimeOffset.Now);
 
             List<EmailCredentials> emailCredentialsList =
                 _emailCredentialsGetter.GetEmailCredentials();
@@ -42,7 +42,8 @@ namespace EmailWorker.ApplicationCore.DomainServices
                     _ => null
                 };
 
-                await emailBoxProcessor.ProcessEmailInbox(emailCredentials);
+                ServiceStatus status = await emailBoxProcessor.ProcessEmailInbox(emailCredentials);
+                _logger.LogInformation("ServiceWorkMessage", status.ServiceWorkMessage);
             }
         }
     }    

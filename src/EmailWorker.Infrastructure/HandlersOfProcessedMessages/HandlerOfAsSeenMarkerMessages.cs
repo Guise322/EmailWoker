@@ -9,12 +9,8 @@ namespace EmailWorker.Infrastructure.HandlersOfProcessedMessages
 {
     public class HandlerOfAsSeenMarkerMessages : IHandlerOfAsSeenMarkerMessages
     {
-        private readonly ILogger<HandlerOfAsSeenMarkerMessages> _logger;
         private IMailStore Client { get; }
-        public HandlerOfAsSeenMarkerMessages(
-            ILogger<HandlerOfAsSeenMarkerMessages> logger,
-            IMailStore client) =>
-            (_logger, Client) = (logger, client);
+        public HandlerOfAsSeenMarkerMessages(IMailStore client) => Client = client;
         public (string emailText, string emailSubject) HandleProcessedMessages(
             IList<UniqueId> messages)
         {
@@ -29,8 +25,6 @@ namespace EmailWorker.Infrastructure.HandlersOfProcessedMessages
 
             if (messages.Count < maxNumberOfMessages)
             {
-                _logger.LogInformation("All messages is marked as seen.");
-
                 return (messages.Count.ToString(), "The count of messages marked as seen");    
             }
 
