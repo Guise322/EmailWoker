@@ -1,10 +1,9 @@
+using EmailWorker.ApplicationCore.Entities;
 using EmailWorker.Infrastructure.HandlersOfProcessedMessages;
 using EmailWorker.Tests.UnitTests.Shared;
 using MailKit;
-using Microsoft.Extensions.Logging;
 using Moq;
 using System;
-using System.Collections.Generic;
 using Xunit;
 
 namespace EmailWorker.Tests.UnitTests.Infrastructure;
@@ -29,8 +28,8 @@ public class HandlerOfAsSeenMarkerMessagesUnitTest
         mailStoreStub.SetupGet(p => p.Inbox).Returns(inboxStub.Object);
         int numberAboveMaxLimit = 1000;
         var uniqueIDsShim = UniqueIDsShim.Create(numberAboveMaxLimit);
-        (var actualEmailText, var actualEmailSubject) = handler.HandleProcessedMessages(uniqueIDsShim);
-        Assert.Equal((null, null),(actualEmailText, actualEmailSubject));
+        EmailData actualEmailData = handler.HandleProcessedMessages(uniqueIDsShim);
+        Assert.Null(actualEmailData);
     }
 
     [Fact]
@@ -42,9 +41,9 @@ public class HandlerOfAsSeenMarkerMessagesUnitTest
         mailStoreStub.SetupGet(p => p.Inbox).Returns(inboxStub.Object);
         int numberAboveMaxLimit = 999;
         var uniqueIDsShim = UniqueIDsShim.Create(numberAboveMaxLimit);
-        (var actualEmailText, var actualEmailSubject) = handler.HandleProcessedMessages(uniqueIDsShim);
+        EmailData actualEmailData = handler.HandleProcessedMessages(uniqueIDsShim);
         Assert.Equal(
-            (numberAboveMaxLimit.ToString(),"The count of messages marked as seen"),
-            (actualEmailText, actualEmailSubject));
+            ("The count of messages marked as seen", numberAboveMaxLimit.ToString()),
+            (actualEmailData.EmailSubject, actualEmailData.EmailText));
     }
 }

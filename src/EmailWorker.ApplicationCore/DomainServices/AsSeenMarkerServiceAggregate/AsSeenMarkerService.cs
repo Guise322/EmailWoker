@@ -52,10 +52,10 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
                 { ServiceWorkMessage = "The service did not get the needed number of messages."};
             }
 
-            (string emailText, string emailSubject) =
+            EmailData emailData = 
                 HandlerOfProcessedMessages.HandleProcessedMessages(processedMessages);
 
-            if(emailText == null)
+            if(emailData == null)
             {
                 return new ServiceStatus() 
                 { ServiceWorkMessage = "Getting a chunk of unseen messages succeeds." };
@@ -63,8 +63,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
 
             MimeMessage message = ReportMessageBuilder.BuildReportMessage(emailCredentials,
                 myEmail,
-                emailSubject,
-                emailText);
+                emailData);
 
             ReportSender.SendReportViaSmtp(message, emailCredentials);
             

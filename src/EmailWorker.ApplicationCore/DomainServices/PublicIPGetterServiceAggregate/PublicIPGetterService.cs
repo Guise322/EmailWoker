@@ -51,13 +51,11 @@ public class PublicIPGetterService : IPublicIPGetterService
 
         try
         {
-            (string emailText, string emailSubject) =
-            HandlerOfProcessedMessages.HandleProcessedMessages(messageIDs);
+            EmailData emailData = HandlerOfProcessedMessages.HandleProcessedMessages(messageIDs);
 
             MimeMessage message = ReportMessageBuilder.BuildReportMessage(emailCredentials,
                 SearchedEmail,
-                emailSubject,
-                emailText);
+                emailData);
             
             ReportSender.SendReportViaSmtp(message, emailCredentials);
 

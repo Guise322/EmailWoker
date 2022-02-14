@@ -8,14 +8,13 @@ namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggreg
     {
         public static MimeMessage BuildReportMessage(EmailCredentials emailCredentials, 
             string emailAddress,
-            string emailSubject,
-            string messageText)
+            EmailData emailData)
         {
             MimeMessage messageWithFromTo = FromToBuilder.BuildFromTo(emailCredentials, emailAddress);
-            messageWithFromTo.Subject = emailSubject;
+            messageWithFromTo.Subject = emailData.EmailSubject;
             messageWithFromTo.Body = new TextPart(MimeKit.Text.TextFormat.Plain)
             {
-                Text = string.Format(messageText)
+                Text = string.Format(emailData.EmailText)
             };
             
             return messageWithFromTo;

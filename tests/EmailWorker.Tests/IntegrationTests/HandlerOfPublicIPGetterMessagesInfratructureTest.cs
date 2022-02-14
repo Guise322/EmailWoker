@@ -5,6 +5,7 @@ using Moq;
 using Serilog;
 using System.Net.Http;
 using Microsoft.Extensions.Logging;
+using EmailWorker.ApplicationCore.Entities;
 
 namespace EmailWorker.Tests.IntegrationTests;
 
@@ -19,7 +20,7 @@ public class HandlerOfPublicIPGetterMessagesIntegrationTest
             .Returns(() => new HttpClient());
 
         HandlerOfPublicIPGetterMessages handler = new(factoryStub.Object);
-        (string actualEmailText, string actualEmailSubject) = handler.HandleProcessedMessages(null);
-        Assert.Matches(@"\d", actualEmailText);
+        EmailData actualEmailData = handler.HandleProcessedMessages(null);
+        Assert.Matches(@"\d", actualEmailData.EmailText);
     }
 }

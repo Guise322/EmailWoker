@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using EmailWorker.ApplicationCore.Interfaces.HandlersOfProcessedMessages;
 using MailKit;
 using MailKit.Net.Imap;
-using Microsoft.Extensions.Logging;
+using EmailWorker.ApplicationCore.Entities;
 
 namespace EmailWorker.Infrastructure.HandlersOfProcessedMessages
 {
@@ -11,8 +11,7 @@ namespace EmailWorker.Infrastructure.HandlersOfProcessedMessages
     {
         private IMailStore Client { get; }
         public HandlerOfAsSeenMarkerMessages(IMailStore client) => Client = client;
-        public (string emailText, string emailSubject) HandleProcessedMessages(
-            IList<UniqueId> messages)
+        public EmailData HandleProcessedMessages(IList<UniqueId> messages)
         {
             Guard.Against.Null(messages, nameof(messages));
 
@@ -25,10 +24,14 @@ namespace EmailWorker.Infrastructure.HandlersOfProcessedMessages
 
             if (messages.Count < maxNumberOfMessages)
             {
-                return (messages.Count.ToString(), "The count of messages marked as seen");    
+                return new EmailData()
+                {
+                    EmailSubject = "The count of messages marked as seen",
+                    EmailText = messages.Count.ToString()
+                };    
             }
 
-            return (null, null);
+            return null;
         }
     }
 }

@@ -2,24 +2,20 @@ using EmailWorker.ApplicationCore.DomainServices.Shared;
 using EmailWorker.ApplicationCore.Entities;
 using MimeKit;
 
-namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregate
+namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregate;
+public static class ReportMessageBuilder
 {
-    public static class ReportMessageBuilder
+    public static MimeMessage BuildReportMessage(EmailCredentials emailCredentials,
+        string emailAddress,
+        EmailData emailData)
     {
-        public static MimeMessage BuildReportMessage(
-            EmailCredentials emailCredentials,
-            string emailAddress,
-            string emailSubject,
-            string messageText)
+        MimeMessage messageWithFromTo = FromToBuilder.BuildFromTo(emailCredentials, emailAddress);
+        messageWithFromTo.Subject = emailData.EmailSubject;
+        messageWithFromTo.Body = new TextPart(MimeKit.Text.TextFormat.Plain)
         {
-            MimeMessage messageWithFromTo = FromToBuilder.BuildFromTo(emailCredentials, emailAddress);
-            messageWithFromTo.Subject = emailSubject;
-            messageWithFromTo.Body = new TextPart(MimeKit.Text.TextFormat.Plain)
-            {
-                Text = string.Format(messageText)
-            };
+            Text = string.Format(emailData.EmailText)
+        };
 
-            return messageWithFromTo;
-        }
+        return messageWithFromTo;
     }
 }
