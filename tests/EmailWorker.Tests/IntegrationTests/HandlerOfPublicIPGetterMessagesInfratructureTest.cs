@@ -13,13 +13,12 @@ public class HandlerOfPublicIPGetterMessagesIntegrationTest
     [Fact]
     public void HandleProcessedMessages_HttpClientFactory_IPAddressAndInformationMessage()
     {
-        Mock<ILogger<HandlerOfPublicIPGetterMessages>> loggerStub = new();
         Mock<IHttpClientFactory> factoryStub = new();
 
         factoryStub.Setup(p => p.CreateClient(It.IsAny<string>()))
             .Returns(() => new HttpClient());
 
-        HandlerOfPublicIPGetterMessages handler = new(loggerStub.Object, factoryStub.Object);
+        HandlerOfPublicIPGetterMessages handler = new(factoryStub.Object);
         (string actualEmailText, string actualEmailSubject) = handler.HandleProcessedMessages(null);
         Assert.Matches(@"\d", actualEmailText);
     }

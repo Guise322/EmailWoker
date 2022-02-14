@@ -14,9 +14,8 @@ public class HandlerOfAsSeenMarkerMessagesUnitTest
     [Fact]
     public void HandleProcessedMessages_Null_ThrowsArgumentNullException()
     {
-        Mock<ILogger<HandlerOfAsSeenMarkerMessages>> loggerStub = new();
         Mock<IMailStore> mailStoreStub = new();
-        HandlerOfAsSeenMarkerMessages handler = new(loggerStub.Object, mailStoreStub.Object);
+        HandlerOfAsSeenMarkerMessages handler = new(mailStoreStub.Object);
         var ex = Record.Exception(() => handler.HandleProcessedMessages(null));
         Assert.IsType<ArgumentNullException>(ex);
     }
@@ -24,9 +23,8 @@ public class HandlerOfAsSeenMarkerMessagesUnitTest
     [Fact]
     public void HandlerProcessedMessages_NumberOfMessagesIDsAboveMaxLimit_NullNull()
     {
-        Mock<ILogger<HandlerOfAsSeenMarkerMessages>> loggerStub = new();
         Mock<IMailStore> mailStoreStub = new();
-        HandlerOfAsSeenMarkerMessages handler = new(loggerStub.Object, mailStoreStub.Object);
+        HandlerOfAsSeenMarkerMessages handler = new(mailStoreStub.Object);
         Mock<IMailFolder> inboxStub = new();
         mailStoreStub.SetupGet(p => p.Inbox).Returns(inboxStub.Object);
         int numberAboveMaxLimit = 1000;
@@ -38,9 +36,8 @@ public class HandlerOfAsSeenMarkerMessagesUnitTest
     [Fact]
     public void HandlerProcessedMessages_NumberOfMessageIDsBelowMaxLimit_NumberOfProcessedMessaggesAndInfoString()
     {
-        Mock<ILogger<HandlerOfAsSeenMarkerMessages>> loggerStub = new();
         Mock<IMailStore> mailStoreStub = new();
-        HandlerOfAsSeenMarkerMessages handler = new(loggerStub.Object, mailStoreStub.Object);
+        HandlerOfAsSeenMarkerMessages handler = new(mailStoreStub.Object);
         Mock<IMailFolder> inboxStub = new();
         mailStoreStub.SetupGet(p => p.Inbox).Returns(inboxStub.Object);
         int numberAboveMaxLimit = 999;
