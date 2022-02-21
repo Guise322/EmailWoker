@@ -3,7 +3,7 @@ using EmailWorker.ApplicationCore.Entities;
 
 namespace EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxServiceAggregate
 {
-    public interface IEmailBoxService
+    public interface IEmailInboxService
     {
         EmailCredentials EmailCredentials { get; set; }
         Task<ServiceStatus> ProcessEmailInbox();

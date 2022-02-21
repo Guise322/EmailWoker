@@ -1,9 +1,9 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using EmailWorker.ApplicationCore.Interfaces;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using EmailWorker.ApplicationCore.Interfaces;
 
 namespace EmailWorker.Worker
 {

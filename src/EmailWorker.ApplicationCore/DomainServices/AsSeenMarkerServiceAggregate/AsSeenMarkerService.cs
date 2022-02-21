@@ -1,70 +1,46 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using EmailWorker.ApplicationCore.DomainServices.Shared;
 using EmailWorker.ApplicationCore.Entities;
 using EmailWorker.ApplicationCore.Interfaces;
-using EmailWorker.ApplicationCore.Interfaces.HandlersOfProcessedMessages;
 using EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxServiceAggregate;
 using MailKit;
-using Microsoft.Extensions.Logging;
 using MimeKit;
 
 namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregate
 {
-    public class AsSeenMarkerService : IAsSeenMarkerService
+    public class AsSeenMarkerService : EmailInboxServiceBase, IAsSeenMarkerService
     {
-        public EmailCredentials EmailCredentials { get; set; }
-        private readonly string myEmail  = "guise322@yandex.ru";
-        private IReportSender ReportSender { get; set; }
-        private IGetterOfUnseenMessageIDs GetterOfUnseenMessages { get; set; }
-        private IHandlerOfAsSeenMarkerMessages HandlerOfProcessedMessages { get; set; }
-        private IClientConnector ClientConnector { get; set; }
+        private readonly string _emailToReport  = "guise322@yandex.ru";
+        private readonly IAsSeenMarker _asSeenMarker;
 
         public AsSeenMarkerService(
+            IAsSeenMarker AsSeenMarker,
             IReportSender reportSender,
-            IGetterOfUnseenMessageIDs getterOfUnseenMessages,
-            IHandlerOfAsSeenMarkerMessages handlerOfProcessedMessages,
-            IClientConnector clientConnector) =>
-
-            (ReportSender, GetterOfUnseenMessages, HandlerOfProcessedMessages,
-                ClientConnector) = 
-            (reportSender, getterOfUnseenMessages, handlerOfProcessedMessages,
-                clientConnector);
-
+            IGetterOfUnseenMessageIDs getterOfUnseenMessageIDs,
+            IClientConnector clientConnector
+        ) : base (reportSender, getterOfUnseenMessageIDs, clientConnector) =>
+            _asSeenMarker = AsSeenMarker;
         public async Task<ServiceStatus> ProcessEmailInbox()
         {
-            IList<UniqueId> messages = 
-                await MessageIDsFromEmailGetter.GetMessageIDsFromEmail(
-                    ClientConnector,
-                    GetterOfUnseenMessages,
-                    EmailCredentials);
+            IList<UniqueId> messages = await GetMessageIDsFromEmail();
             
-            IList<UniqueId> processedMessages;
-
-            try
-            {
-                processedMessages = AnalyzerOfMessages.AnalyzeMessages(messages);
-            }
-            catch (ArgumentException)
-            {
-                return new ServiceStatus() 
-                { ServiceWorkMessage = "The service did not get the needed number of messages."};
-            }
-
-            EmailData emailData = 
-                HandlerOfProcessedMessages.HandleProcessedMessages(processedMessages);
-
-            if(emailData == null)
+            bool analyzeResult = MessageAnalyser.AnalyseMessages(messages);
+            
+            if (!analyzeResult)
             {
                 return new ServiceStatus()
-                { ServiceWorkMessage = "Getting a chunk of unseen messages succeeds." };
+                { ServiceWorkMessage = "The given number of messages is too small." };
             }
 
-            MimeMessage message = ReportMessageFactory.CreateReportMessage(
-                EmailCredentials,
-                myEmail,
-                emailData);
+            EmailData emailData =
+                _asSeenMarker.MarkAsSeen(messages.ToList());
+
+            MimeMessage message = ReportMessage.CreateReportMessage(
+                EmailCredentials.Login,
+                _emailToReport,
+                emailData
+            );
 
             ReportSender.SendReportViaSmtp(message, EmailCredentials);
             

@@ -1,7 +1,5 @@
-namespace EmailWorker.ApplicationCore.Enums
+namespace EmailWorker.ApplicationCore.Enums;
+public enum DedicatedWorkType
 {
-    public enum DedicatedWorkType
-    {
-        SearchRequest, MarkAsSeen
-    }
+    SearchRequest, MarkAsSeen
 }

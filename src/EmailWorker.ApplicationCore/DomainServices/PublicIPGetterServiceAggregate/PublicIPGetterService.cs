@@ -1,75 +1,58 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EmailWorker.ApplicationCore.DomainServices.Shared;
 using EmailWorker.ApplicationCore.Entities;
 using EmailWorker.ApplicationCore.Interfaces;
-using EmailWorker.ApplicationCore.Interfaces.HandlersOfProcessedMessages;
 using EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxServiceAggregate;
 using MailKit;
-using Microsoft.Extensions.Logging;
 using MimeKit;
 
 namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggregate;
 
-public class PublicIPGetterService : IPublicIPGetterService
+public class PublicIPGetterService : EmailInboxServiceBase, IPublicIPGetterService
 {
-    public EmailCredentials EmailCredentials { get; set; }
-    private IReportSender ReportSender { get; set; }
-    private IMessageGetter MessageGetter { get; set; }
-    private IGetterOfUnseenMessageIDs GetterOfUnseenMessages { get; set; }
-    private IHandlerOfPublicIPGetterMessages HandlerOfProcessedMessages { get; set; }
-    private IClientConnector ClientConnector { get; set; }
-    
-    private string SearchedEmail { get; } = "guise322@ya.ru";
+    private readonly IPublicIPGetter _publicIPGetter;
+    private readonly IRequestMessageSearcher _requestMessageSearcher;
+    private readonly string _searchedEmail = "guise322@ya.ru";
     public PublicIPGetterService(
-        IMessageGetter messageGetter,
-        IHandlerOfPublicIPGetterMessages handlerOfProcessedMessages,
+        IPublicIPGetter publicIPGetter,
+        IRequestMessageSearcher requestMessageSearcher,
         IReportSender reportSender,
         IGetterOfUnseenMessageIDs getterOfUnseenMessages,
-        IClientConnector clientConnector) =>
-
-        (ReportSender, MessageGetter, GetterOfUnseenMessages,
-            HandlerOfProcessedMessages, ClientConnector) =
-        (reportSender, messageGetter, getterOfUnseenMessages,
-            handlerOfProcessedMessages, clientConnector);
+        IClientConnector clientConnector
+    ) : base (reportSender, getterOfUnseenMessages, clientConnector) =>
+        (_publicIPGetter, _requestMessageSearcher) = 
+        (publicIPGetter, requestMessageSearcher);
 
     public async Task<ServiceStatus> ProcessEmailInbox()
     {
-        IList<UniqueId> messageIDs = 
-            await MessageIDsFromEmailGetter.GetMessageIDsFromEmail(
-                ClientConnector,
-                GetterOfUnseenMessages,
-                EmailCredentials);
-
-        UniqueId searchedMessageID = RequestMessageSearcher
-            .SearchRequestMessage(messageIDs, MessageGetter, SearchedEmail);
-
-        //TO DO: inspect the below statement
-        if (searchedMessageID == default)
-        {
-            return new ServiceStatus() { ServiceWorkMessage = "The request is not detected." };
-        }
-        
-        ServiceStatus currentStatus = new () { ServiceWorkMessage = "The request is detected." };
+        IList<UniqueId> messageIDs = await GetMessageIDsFromEmail();
 
         try
         {
-            EmailData emailData = HandlerOfProcessedMessages.HandleProcessedMessages(messageIDs);
+            List<UniqueId> searchedMessageIDs =
+                _requestMessageSearcher.SearchRequestMessage(messageIDs, _searchedEmail);
 
-            MimeMessage message = ReportMessageFactory.CreateReportMessage(
-                EmailCredentials,
-                SearchedEmail,
-                emailData);
+            ServiceStatus currentStatus = new () { ServiceWorkMessage = "The request is detected." };
+
+            EmailData emailData = _publicIPGetter.GetPublicIP(searchedMessageIDs);
+
+            MimeMessage message = ReportMessage.CreateReportMessage(
+                EmailCredentials.Login,
+                _searchedEmail,
+                emailData
+            );
             
             ReportSender.SendReportViaSmtp(message, EmailCredentials);
 
             currentStatus.ServiceWorkMessage += " The current ip address is sent.";
-        }
-        catch (System.Exception)
-        {
-            currentStatus.ServiceWorkMessage += " The current ip address is not sent.";
-        }
 
-        return currentStatus;
+            return currentStatus;
+        }
+        catch (InvalidOperationException)
+        {
+            return new ServiceStatus
+            { ServiceWorkMessage = "The request is not found." };
+        }
     }
 }

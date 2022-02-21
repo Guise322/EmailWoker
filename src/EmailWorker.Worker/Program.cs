@@ -1,18 +1,11 @@
-using EmailWorker.ApplicationCore.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using EmailWorker.ApplicationCore.Interfaces.HandlersOfProcessedMessages;
-using EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxServiceAggregate;
-using EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregate;
-using EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggregate;
-using MailKit.Net.Imap;
-using EmailWorker.ApplicationCore.DomainServices;
 using EmailWorker.Infrastructure;
-using EmailWorker.Infrastructure.HandlersOfProcessedMessages;
 using Serilog;
 using Serilog.Events;
 using System;
 using System.IO;
+using EmailWorker.ApplicationCore;
 
 namespace EmailWorker.Worker
 {
@@ -60,25 +53,10 @@ namespace EmailWorker.Worker
                     services.AddHostedService<Worker>()
 
                     .AddHttpClient()
-
-                    .AddTransient<IEntryPointService, EntryPointService>()
-
-                    .AddTransient<IEmailCredentialsGetter, EmailCredentialsGetter>()
-
-                    .AddScoped<IReportSender, ReportSender>()
-                    .AddScoped<IGetterOfUnseenMessageIDs, GetterOfUnseenMessages>()
-                    .AddScoped<IHandlerOfAsSeenMarkerMessages, HandlerOfAsSeenMarkerMessages>()
-                    .AddScoped<IClientConnector, ClientConnector>()
-
-                    .AddScoped<IHandlerOfPublicIPGetterMessages, HandlerOfPublicIPGetterMessages>()
-                    .AddScoped<IMessageGetter, MessageGetter>()
                     
-                    .AddTransient<EmailBoxServicesFactory>()
+                    .AddApplicationCoreServices()
 
-                    .AddTransient<IAsSeenMarkerService, AsSeenMarkerService>()
-                    .AddTransient<IPublicIPGetterService, PublicIPGetterService>()
-
-                    .AddScoped<ImapClient>();
+                    .AddInfrastructureServices();
                 });
         }
     }

@@ -19,7 +19,7 @@ public class HandlerOfPublicIPGetterMessagesIntegrationTest
         factoryStub.Setup(p => p.CreateClient(It.IsAny<string>()))
             .Returns(() => new HttpClient());
 
-        HandlerOfPublicIPGetterMessages handler = new(factoryStub.Object);
+        PublicIPGetter handler = new(factoryStub.Object);
         EmailData actualEmailData = handler.HandleProcessedMessages(null);
         Assert.Matches(@"\d", actualEmailData.EmailText);
     }

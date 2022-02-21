@@ -9,12 +9,12 @@ using Microsoft.Extensions.Logging;
 
 namespace EmailWorker.Tests.UnitTests.ApplicationCore;
 
-public class AnalyzerOfMessagesUnitTest
+public class MessageAnalyserUnitTest
 {
     [Fact]
     public void AnalyzeMessages_Null_ThrowsArgumentNullException()
     {
-        var ex = Record.Exception(() => AnalyzerOfMessages.AnalyzeMessages(null));
+        var ex = Record.Exception(() => MessageAnalyser.AnalyseMessages(null));
         Assert.IsType<ArgumentNullException>(ex);
     }
 
@@ -23,7 +23,7 @@ public class AnalyzerOfMessagesUnitTest
     {
         int numberBelowMinLimit = 4;
         List<UniqueId> uniqueIDsShim = UniqueIDsShim.Create(numberBelowMinLimit);
-        var ex = Record.Exception(() => AnalyzerOfMessages.AnalyzeMessages(uniqueIDsShim));
+        var ex = Record.Exception(() => MessageAnalyser.AnalyseMessages(uniqueIDsShim));
         Assert.IsType<ArgumentException>(ex);
     }
 
@@ -32,7 +32,7 @@ public class AnalyzerOfMessagesUnitTest
     {
         int numberAboveMaxLimit = 1000;
         List<UniqueId> uniqueIDsShim = UniqueIDsShim.Create(numberAboveMaxLimit);
-        var actual = AnalyzerOfMessages.AnalyzeMessages(uniqueIDsShim);
+        var actual = MessageAnalyser.AnalyseMessages(uniqueIDsShim);
         Assert.Equal(uniqueIDsShim, actual);
     }
 
@@ -41,7 +41,7 @@ public class AnalyzerOfMessagesUnitTest
     {
         int appropriateNumberOfMessages = 6;
         List<UniqueId> uniqueIdsShim = UniqueIDsShim.Create(appropriateNumberOfMessages);
-        var actual = AnalyzerOfMessages.AnalyzeMessages(uniqueIdsShim);
+        var actual = MessageAnalyser.AnalyseMessages(uniqueIdsShim);
         Assert.Equal(uniqueIdsShim, actual);
     }
 }

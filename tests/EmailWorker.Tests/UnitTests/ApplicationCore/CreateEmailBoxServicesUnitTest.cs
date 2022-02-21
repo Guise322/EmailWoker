@@ -41,12 +41,12 @@ public class CreateEmailBoxServicesUnitTest
 
         ServiceProvider provider = services.BuildServiceProvider();
         
-        EmailBoxServicesFactory emailBoxServiceDataFactoryList = new(
+        EmailBoxServiceList emailBoxServiceDataFactoryList = new(
                 provider,
                 emailCredentialsGetterStub.Object
             );
-        List<IEmailBoxService> actualEmailBoxDataServiceList =
-            emailBoxServiceDataFactoryList.CreateEmailBoxServices();
+        List<IEmailInboxService> actualEmailBoxDataServiceList =
+            emailBoxServiceDataFactoryList.CreateEmailBoxServiceList();
 
         Assert.Equal(asSeenMarkerServiceStub.Object, actualEmailBoxDataServiceList[0]);
         Assert.Equal(publicIPGetterServiceStub.Object, actualEmailBoxDataServiceList[1]);

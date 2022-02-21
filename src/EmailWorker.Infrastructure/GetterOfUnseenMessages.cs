@@ -8,7 +8,6 @@ using EmailWorker.ApplicationCore.Interfaces;
 using MailKit;
 using MailKit.Net.Imap;
 using MailKit.Search;
-using Microsoft.Extensions.Logging;
 
 namespace EmailWorker.Infrastructure
 {
