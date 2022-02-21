@@ -15,18 +15,14 @@ namespace EmailWorker.Infrastructure
 
     public class GetterOfUnseenMessages : IGetterOfUnseenMessageIDs
     {
-        private readonly ILogger<GetterOfUnseenMessages> _logger;
         private ImapClient Client { get; }
-        public GetterOfUnseenMessages(ILogger<GetterOfUnseenMessages> logger, ImapClient client) =>
-            (_logger, Client) = (logger, client);
+        public GetterOfUnseenMessages(ImapClient client) =>
+            Client = client;
         public async Task<IList<UniqueId>> GetUnseenMessageIDsAsync(EmailCredentials emailCredentials)
         {
             Client.Inbox.Open(FolderAccess.ReadWrite);
             
             IList<UniqueId> unseenMessages = await Client.Inbox.SearchAsync(SearchQuery.NotSeen);
-
-            _logger.LogInformation(
-                $"The unseen messages is got from the {emailCredentials.Login} inbox.");
 
             return unseenMessages;
         }

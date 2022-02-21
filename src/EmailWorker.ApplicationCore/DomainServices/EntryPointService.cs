@@ -14,35 +14,25 @@ namespace EmailWorker.ApplicationCore.DomainServices
     {
         private readonly ILogger<EntryPointService> _logger;
         private readonly IServiceScopeFactory _serviceScopeFactory;
-        private readonly IEmailCredentialsGetter _emailCredentialsGetter; 
+        private readonly EmailBoxServicesFactory _factoryOfServices; 
         
         public EntryPointService(ILogger<EntryPointService> logger,
             IServiceScopeFactory serviceScopeFactory,
-            IEmailCredentialsGetter emailCredentialsGetter) =>
+            EmailBoxServicesFactory factoryOfServices) =>
 
-        (_logger, _serviceScopeFactory, _emailCredentialsGetter) = 
-        (logger, serviceScopeFactory, emailCredentialsGetter);
+        (_logger, _serviceScopeFactory, _factoryOfServices) = 
+        (logger, serviceScopeFactory, factoryOfServices);
         public async Task ExecuteAsync()
         {
             _logger.LogInformation("Start execution at {Now}", DateTimeOffset.Now);
 
-            List<EmailCredentials> emailCredentialsList =
-                _emailCredentialsGetter.GetEmailCredentials();
+            List<IEmailBoxService> emailBoxServices =
+                _factoryOfServices.CreateEmailBoxServices();
 
-            using var serviceScope = _serviceScopeFactory.CreateScope();
-
-            foreach (var emailCredentials in emailCredentialsList)
+            foreach (var emailBoxService in emailBoxServices)
             {                
-                IEmailBoxService emailBoxProcessor = emailCredentials.DedicatedWork switch
-                {
-                    DedicatedWorkType.MarkAsSeen =>
-                        serviceScope.ServiceProvider.GetRequiredService<IAsSeenMarkerService>(),
-                    DedicatedWorkType.SearchRequest => 
-                        serviceScope.ServiceProvider.GetRequiredService<IPublicIPGetterService>(),
-                    _ => null
-                };
-
-                ServiceStatus status = await emailBoxProcessor.ProcessEmailInbox(emailCredentials);
+                ServiceStatus status = 
+                    await emailBoxService.ProcessEmailInbox();
                 _logger.LogInformation("ServiceWorkMessage", status.ServiceWorkMessage);
             }
         }

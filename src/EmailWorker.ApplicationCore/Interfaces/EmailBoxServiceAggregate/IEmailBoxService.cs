@@ -5,6 +5,7 @@ namespace EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxServiceAggrega
 {
     public interface IEmailBoxService
     {
-        Task<ServiceStatus> ProcessEmailInbox(EmailCredentials emailCredentials);
+        EmailCredentials EmailCredentials { get; set; }
+        Task<ServiceStatus> ProcessEmailInbox();
     }
 }

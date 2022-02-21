@@ -9,8 +9,8 @@ namespace EmailWorker.Infrastructure.HandlersOfProcessedMessages
 {
     public class HandlerOfAsSeenMarkerMessages : IHandlerOfAsSeenMarkerMessages
     {
-        private IMailStore Client { get; }
-        public HandlerOfAsSeenMarkerMessages(IMailStore client) => Client = client;
+        private ImapClient Client { get; }
+        public HandlerOfAsSeenMarkerMessages(ImapClient client) => Client = client;
         public EmailData HandleProcessedMessages(IList<UniqueId> messages)
         {
             Guard.Against.Null(messages, nameof(messages));

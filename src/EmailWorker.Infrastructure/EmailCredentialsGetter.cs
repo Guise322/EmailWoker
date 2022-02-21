@@ -10,9 +10,6 @@ namespace EmailWorker.Infrastructure
 {
     public class EmailCredentialsGetter : IEmailCredentialsGetter
     {
-        private readonly ILogger<EmailCredentialsGetter> _logger;
-        public EmailCredentialsGetter(ILogger<EmailCredentialsGetter> logger) =>
-            _logger = logger;
         public List<EmailCredentials> GetEmailCredentials()
         {
             JsonStringEnumConverter stringEnumConverter = new();
@@ -21,7 +18,6 @@ namespace EmailWorker.Infrastructure
             string jsonString = File.ReadAllText("EmailCredentials.json");
             List<EmailCredentials> emailCredentials = 
                 JsonSerializer.Deserialize<List<EmailCredentials>>(jsonString, opts);
-            _logger.LogInformation("EmailCredentials is got.");
             return emailCredentials;
         }
     }

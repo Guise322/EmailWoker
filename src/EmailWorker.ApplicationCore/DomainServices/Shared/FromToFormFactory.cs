@@ -3,9 +3,9 @@ using MimeKit;
 
 namespace EmailWorker.ApplicationCore.DomainServices.Shared
 {
-    public class FromToBuilder
+    public class FromToFormFactory
     {
-        public static MimeMessage BuildFromTo(EmailCredentials emailCredentials, string emailAddress)
+        public static MimeMessage CreateFromToForm(EmailCredentials emailCredentials, string emailAddress)
         {
             MimeMessage message = new ();
             message.From.Add(new MailboxAddress("Worker", emailCredentials.Login));

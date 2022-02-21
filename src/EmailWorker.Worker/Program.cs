@@ -72,9 +72,11 @@ namespace EmailWorker.Worker
 
                     .AddScoped<IHandlerOfPublicIPGetterMessages, HandlerOfPublicIPGetterMessages>()
                     .AddScoped<IMessageGetter, MessageGetter>()
+                    
+                    .AddTransient<EmailBoxServicesFactory>()
 
-                    .AddScoped<IAsSeenMarkerService, AsSeenMarkerService>()
-                    .AddScoped<IPublicIPGetterService, PublicIPGetterService>()
+                    .AddTransient<IAsSeenMarkerService, AsSeenMarkerService>()
+                    .AddTransient<IPublicIPGetterService, PublicIPGetterService>()
 
                     .AddScoped<ImapClient>();
                 });

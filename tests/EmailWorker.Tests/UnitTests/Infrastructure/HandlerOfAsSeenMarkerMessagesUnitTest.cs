@@ -2,6 +2,7 @@ using EmailWorker.ApplicationCore.Entities;
 using EmailWorker.Infrastructure.HandlersOfProcessedMessages;
 using EmailWorker.Tests.UnitTests.Shared;
 using MailKit;
+using MailKit.Net.Imap;
 using Moq;
 using System;
 using Xunit;
@@ -13,7 +14,7 @@ public class HandlerOfAsSeenMarkerMessagesUnitTest
     [Fact]
     public void HandleProcessedMessages_Null_ThrowsArgumentNullException()
     {
-        Mock<IMailStore> mailStoreStub = new();
+        Mock<ImapClient> mailStoreStub = new();
         HandlerOfAsSeenMarkerMessages handler = new(mailStoreStub.Object);
         var ex = Record.Exception(() => handler.HandleProcessedMessages(null));
         Assert.IsType<ArgumentNullException>(ex);
@@ -22,7 +23,7 @@ public class HandlerOfAsSeenMarkerMessagesUnitTest
     [Fact]
     public void HandlerProcessedMessages_NumberOfMessagesIDsAboveMaxLimit_NullNull()
     {
-        Mock<IMailStore> mailStoreStub = new();
+        Mock<ImapClient> mailStoreStub = new();
         HandlerOfAsSeenMarkerMessages handler = new(mailStoreStub.Object);
         Mock<IMailFolder> inboxStub = new();
         mailStoreStub.SetupGet(p => p.Inbox).Returns(inboxStub.Object);
@@ -35,7 +36,7 @@ public class HandlerOfAsSeenMarkerMessagesUnitTest
     [Fact]
     public void HandlerProcessedMessages_NumberOfMessageIDsBelowMaxLimit_NumberOfProcessedMessaggesAndInfoString()
     {
-        Mock<IMailStore> mailStoreStub = new();
+        Mock<ImapClient> mailStoreStub = new();
         HandlerOfAsSeenMarkerMessages handler = new(mailStoreStub.Object);
         Mock<IMailFolder> inboxStub = new();
         mailStoreStub.SetupGet(p => p.Inbox).Returns(inboxStub.Object);

@@ -12,7 +12,8 @@ using MimeKit;
 namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggregate;
 
 public class PublicIPGetterService : IPublicIPGetterService
-{        
+{
+    public EmailCredentials EmailCredentials { get; set; }
     private IReportSender ReportSender { get; set; }
     private IMessageGetter MessageGetter { get; set; }
     private IGetterOfUnseenMessageIDs GetterOfUnseenMessages { get; set; }
@@ -20,7 +21,8 @@ public class PublicIPGetterService : IPublicIPGetterService
     private IClientConnector ClientConnector { get; set; }
     
     private string SearchedEmail { get; } = "guise322@ya.ru";
-    public PublicIPGetterService(IMessageGetter messageGetter,
+    public PublicIPGetterService(
+        IMessageGetter messageGetter,
         IHandlerOfPublicIPGetterMessages handlerOfProcessedMessages,
         IReportSender reportSender,
         IGetterOfUnseenMessageIDs getterOfUnseenMessages,
@@ -31,12 +33,13 @@ public class PublicIPGetterService : IPublicIPGetterService
         (reportSender, messageGetter, getterOfUnseenMessages,
             handlerOfProcessedMessages, clientConnector);
 
-    public async Task<ServiceStatus> ProcessEmailInbox(EmailCredentials emailCredentials)
+    public async Task<ServiceStatus> ProcessEmailInbox()
     {
         IList<UniqueId> messageIDs = 
-            await MessageIDsFromEmailGetter.GetMessageIDsFromEmail(ClientConnector,
+            await MessageIDsFromEmailGetter.GetMessageIDsFromEmail(
+                ClientConnector,
                 GetterOfUnseenMessages,
-                emailCredentials);
+                EmailCredentials);
 
         UniqueId searchedMessageID = RequestMessageSearcher
             .SearchRequestMessage(messageIDs, MessageGetter, SearchedEmail);
@@ -53,11 +56,12 @@ public class PublicIPGetterService : IPublicIPGetterService
         {
             EmailData emailData = HandlerOfProcessedMessages.HandleProcessedMessages(messageIDs);
 
-            MimeMessage message = ReportMessageBuilder.BuildReportMessage(emailCredentials,
+            MimeMessage message = ReportMessageFactory.CreateReportMessage(
+                EmailCredentials,
                 SearchedEmail,
                 emailData);
             
-            ReportSender.SendReportViaSmtp(message, emailCredentials);
+            ReportSender.SendReportViaSmtp(message, EmailCredentials);
 
             currentStatus.ServiceWorkMessage += " The current ip address is sent.";
         }

@@ -14,13 +14,14 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
 {
     public class AsSeenMarkerService : IAsSeenMarkerService
     {
+        public EmailCredentials EmailCredentials { get; set; }
         private readonly string myEmail  = "guise322@yandex.ru";
         private IReportSender ReportSender { get; set; }
         private IGetterOfUnseenMessageIDs GetterOfUnseenMessages { get; set; }
         private IHandlerOfAsSeenMarkerMessages HandlerOfProcessedMessages { get; set; }
         private IClientConnector ClientConnector { get; set; }
 
-        public AsSeenMarkerService(ILogger<AsSeenMarkerService> logger,
+        public AsSeenMarkerService(
             IReportSender reportSender,
             IGetterOfUnseenMessageIDs getterOfUnseenMessages,
             IHandlerOfAsSeenMarkerMessages handlerOfProcessedMessages,
@@ -31,14 +32,13 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
             (reportSender, getterOfUnseenMessages, handlerOfProcessedMessages,
                 clientConnector);
 
-        public async Task<ServiceStatus> ProcessEmailInbox(EmailCredentials emailCredentials)
+        public async Task<ServiceStatus> ProcessEmailInbox()
         {
-            //TO DO: add logging.
-
             IList<UniqueId> messages = 
-                await MessageIDsFromEmailGetter.GetMessageIDsFromEmail(ClientConnector,
+                await MessageIDsFromEmailGetter.GetMessageIDsFromEmail(
+                    ClientConnector,
                     GetterOfUnseenMessages,
-                    emailCredentials);
+                    EmailCredentials);
             
             IList<UniqueId> processedMessages;
 
@@ -57,15 +57,16 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
 
             if(emailData == null)
             {
-                return new ServiceStatus() 
+                return new ServiceStatus()
                 { ServiceWorkMessage = "Getting a chunk of unseen messages succeeds." };
             }
 
-            MimeMessage message = ReportMessageBuilder.BuildReportMessage(emailCredentials,
+            MimeMessage message = ReportMessageFactory.CreateReportMessage(
+                EmailCredentials,
                 myEmail,
                 emailData);
 
-            ReportSender.SendReportViaSmtp(message, emailCredentials);
+            ReportSender.SendReportViaSmtp(message, EmailCredentials);
             
             return new ServiceStatus() 
             { ServiceWorkMessage = "All messages is marked as seen." };
