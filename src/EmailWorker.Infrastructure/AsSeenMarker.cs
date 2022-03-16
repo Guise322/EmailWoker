@@ -10,7 +10,7 @@ namespace EmailWorker.Infrastructure
 {
     public class AsSeenMarker : SeenFlagAdder, IAsSeenMarker
     {
-        public AsSeenMarker(ImapClient client) : base(client) { }
+        public AsSeenMarker(IImapClient client) : base(client) { }
         public EmailData MarkAsSeen(List<UniqueId> messages)
         {
             AddSeenFlag(messages);
@@ -18,7 +18,7 @@ namespace EmailWorker.Infrastructure
             return new EmailData()
             {
                 EmailSubject = "Mark As Seen Service",
-                EmailText = "The count of messages marked as seen" +
+                EmailText = "The count of messages marked as seen " +
                     messages.Count.ToString()
             };
         }

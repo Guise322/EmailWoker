@@ -3,7 +3,7 @@ using MailKit;
 
 namespace EmailWorker.Tests.UnitTests.Shared;
 
-public class UniqueIDsShim
+public class UniqueIDListShim
 {
     public static List<UniqueId> Create(int numberOfItems)
     {

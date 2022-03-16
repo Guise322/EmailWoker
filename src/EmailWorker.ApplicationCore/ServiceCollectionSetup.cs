@@ -12,7 +12,7 @@ public static class ServiceCollectionSetup
 {
     public static IServiceCollection AddApplicationCoreServices(this IServiceCollection services) =>
         services.AddTransient<IEntryPointService, EntryPointService>()
-            .AddTransient<EmailBoxServiceList>()
+            .AddTransient<EmailInboxServiceList>()
             .AddTransient<IAsSeenMarkerService, AsSeenMarkerService>()
             .AddTransient<IPublicIPGetterService, PublicIPGetterService>()
             .AddTransient<IRequestMessageSearcher, RequestMessageSearcher>();

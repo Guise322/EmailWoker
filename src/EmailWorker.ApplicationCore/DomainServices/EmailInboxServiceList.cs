@@ -8,17 +8,17 @@ using EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxServiceAggregate;
 
 namespace EmailWorker.ApplicationCore.DomainServices;
 
-public class EmailBoxServiceList
+public class EmailInboxServiceList
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly IEmailCredentialsGetter _emailCredentialsGetter;
-    public EmailBoxServiceList(
+    public EmailInboxServiceList(
         IServiceProvider serviceProvider,
         IEmailCredentialsGetter emailCredentialsGetter
     ) =>
         (_serviceProvider, _emailCredentialsGetter) =
         (serviceProvider, emailCredentialsGetter);
-    public List<IEmailInboxService> CreateEmailBoxServiceList()
+    public List<IEmailInboxService> CreateEmailInboxServiceList()
     {   
         List<EmailCredentials> emailCredentialsList =
             _emailCredentialsGetter.GetEmailCredentials();

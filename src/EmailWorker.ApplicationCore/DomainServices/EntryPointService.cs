@@ -11,11 +11,11 @@ namespace EmailWorker.ApplicationCore.DomainServices
     public class EntryPointService : IEntryPointService
     {
         private readonly ILogger<EntryPointService> _logger;
-        private readonly EmailBoxServiceList _emailBoxServiceList; 
+        private readonly EmailInboxServiceList _emailBoxServiceList; 
         
         public EntryPointService(
             ILogger<EntryPointService> logger,
-            EmailBoxServiceList emailBoxServiceList
+            EmailInboxServiceList emailBoxServiceList
         ) =>
             (_logger, _emailBoxServiceList) = 
             (logger, emailBoxServiceList);
@@ -24,7 +24,7 @@ namespace EmailWorker.ApplicationCore.DomainServices
             _logger.LogInformation("Start execution at {Now}", DateTimeOffset.Now);
 
             List<IEmailInboxService> emailBoxServices =
-                _emailBoxServiceList.CreateEmailBoxServiceList();
+                _emailBoxServiceList.CreateEmailInboxServiceList();
 
             foreach (var emailBoxService in emailBoxServices)
             {                

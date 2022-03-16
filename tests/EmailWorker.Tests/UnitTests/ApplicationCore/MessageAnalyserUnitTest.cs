@@ -19,29 +19,20 @@ public class MessageAnalyserUnitTest
     }
 
     [Fact]
-    public void AnalyzeMessages_ListOfUniqueIDsBelowMinLimit_ThrowsArgumentException()
+    public void AnalyzeMessages_UniqueIDListBelowMinLimit_False()
     {
         int numberBelowMinLimit = 4;
-        List<UniqueId> uniqueIDsShim = UniqueIDsShim.Create(numberBelowMinLimit);
-        var ex = Record.Exception(() => MessageAnalyser.AnalyseMessages(uniqueIDsShim));
-        Assert.IsType<ArgumentException>(ex);
+        List<UniqueId> uniqueIDsShim = UniqueIDListShim.Create(numberBelowMinLimit);
+        bool actual = MessageAnalyser.AnalyseMessages(uniqueIDsShim);
+        Assert.False(actual);
     }
 
     [Fact]
-    public void AnalyzeMessages_ListOfUniqueIDsAboveMaxLimit_ListOfMaxLimitNumberWithMessageIDs()
-    {
-        int numberAboveMaxLimit = 1000;
-        List<UniqueId> uniqueIDsShim = UniqueIDsShim.Create(numberAboveMaxLimit);
-        var actual = MessageAnalyser.AnalyseMessages(uniqueIDsShim);
-        Assert.Equal(uniqueIDsShim, actual);
-    }
-
-    [Fact]
-    public void AnalyzeMessages_ListOfUniqueIdsBetweenLimits_ListWithSameUniqueIDs()
+    public void AnalyzeMessages_UniqueIdListAboveMinLimit_True()
     {
         int appropriateNumberOfMessages = 6;
-        List<UniqueId> uniqueIdsShim = UniqueIDsShim.Create(appropriateNumberOfMessages);
-        var actual = MessageAnalyser.AnalyseMessages(uniqueIdsShim);
-        Assert.Equal(uniqueIdsShim, actual);
+        List<UniqueId> uniqueIdsShim = UniqueIDListShim.Create(appropriateNumberOfMessages);
+        bool actual = MessageAnalyser.AnalyseMessages(uniqueIdsShim);
+        Assert.True(actual);
     }
 }
