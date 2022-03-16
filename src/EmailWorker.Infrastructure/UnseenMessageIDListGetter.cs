@@ -12,11 +12,10 @@ using MailKit.Search;
 namespace EmailWorker.Infrastructure
 {
 
-    public class GetterOfUnseenMessages : IGetterOfUnseenMessageIDs
+    public class UnseenMessageIDListGetter : IUnseenMessageIDListGetter
     {
-        private ImapClient Client { get; }
-        public GetterOfUnseenMessages(ImapClient client) =>
-            Client = client;
+        private IImapClient Client { get; }
+        public UnseenMessageIDListGetter(IImapClient client) => Client = client;
         public async Task<IList<UniqueId>> GetUnseenMessageIDsAsync(EmailCredentials emailCredentials)
         {
             Client.Inbox.Open(FolderAccess.ReadWrite);

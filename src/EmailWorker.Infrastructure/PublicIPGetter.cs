@@ -15,7 +15,7 @@ public class PublicIPGetter : SeenFlagAdder, IPublicIPGetter
     private readonly string ipRequestAddress = "http://checkip.dyndns.org/";
     
     private readonly IHttpClientFactory _httpClientFactory;
-    public PublicIPGetter(IHttpClientFactory httpClientFactory, ImapClient client) :
+    public PublicIPGetter(IHttpClientFactory httpClientFactory, IImapClient client) :
     base (client) =>
         _httpClientFactory = httpClientFactory;
     public EmailData GetPublicIP(List<UniqueId> messages)
@@ -33,7 +33,7 @@ public class PublicIPGetter : SeenFlagAdder, IPublicIPGetter
         HttpResponseMessage response = httpClient.Send(request);
         string responseString = response.Content.ReadAsStringAsync().Result;
 
-        string address = 
+        string address =
             AddressFromResponseExtractor.ExtractAddressFromResponse(responseString);
         
         

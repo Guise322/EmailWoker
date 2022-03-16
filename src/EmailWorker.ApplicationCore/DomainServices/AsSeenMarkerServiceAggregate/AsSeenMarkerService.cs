@@ -17,7 +17,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
         public AsSeenMarkerService(
             IAsSeenMarker AsSeenMarker,
             IReportSender reportSender,
-            IGetterOfUnseenMessageIDs getterOfUnseenMessageIDs,
+            IUnseenMessageIDListGetter getterOfUnseenMessageIDs,
             IClientConnector clientConnector
         ) : base (reportSender, getterOfUnseenMessageIDs, clientConnector) =>
             _asSeenMarker = AsSeenMarker;

@@ -5,7 +5,7 @@ using MailKit;
 
 namespace EmailWorker.ApplicationCore.Interfaces
 {
-    public interface IGetterOfUnseenMessageIDs
+    public interface IUnseenMessageIDListGetter
     {
         Task<IList<UniqueId>> GetUnseenMessageIDsAsync(EmailCredentials emailCredentials);
     }

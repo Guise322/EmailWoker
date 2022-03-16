@@ -7,8 +7,8 @@ namespace EmailWorker.Infrastructure;
 
 public class SeenFlagAdder
 {
-    protected ImapClient Client;
-    public SeenFlagAdder(ImapClient client) => Client = client;
+    protected IImapClient Client;
+    public SeenFlagAdder(IImapClient client) => Client = client;
     protected void AddSeenFlag(List<UniqueId> messages)
     {
         Guard.Against.Null(messages, nameof(messages));

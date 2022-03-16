@@ -11,11 +11,11 @@ public class EmailInboxServiceBase
 {
     public EmailCredentials EmailCredentials { get; set; }
     protected readonly IReportSender ReportSender;
-    protected readonly IGetterOfUnseenMessageIDs GetterOfUnseenMessageIDs;
+    protected readonly IUnseenMessageIDListGetter GetterOfUnseenMessageIDs;
     protected readonly IClientConnector ClientConnector;
     public EmailInboxServiceBase(
         IReportSender reportSender,
-        IGetterOfUnseenMessageIDs getterOfUnseenMessageIDs,
+        IUnseenMessageIDListGetter getterOfUnseenMessageIDs,
         IClientConnector clientConnector
     ) => 
     (ReportSender, GetterOfUnseenMessageIDs, ClientConnector) =

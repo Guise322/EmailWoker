@@ -1,5 +1,4 @@
 using EmailWorker.ApplicationCore.Interfaces;
-using EmailWorker.Infrastructure.HandlersOfProcessedMessages;
 using MailKit.Net.Imap;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,12 +11,12 @@ public static class ServiceCollectionSetup
 
             .AddScoped<IReportSender, ReportSender>()
 
-            .AddScoped<IGetterOfUnseenMessageIDs, GetterOfUnseenMessages>()
+            .AddScoped<IUnseenMessageIDListGetter, UnseenMessageIDListGetter>()
             .AddScoped<IAsSeenMarker, AsSeenMarker>()
             .AddScoped<IClientConnector, ClientConnector>()
 
             .AddScoped<IPublicIPGetter, PublicIPGetter>()
             .AddScoped<IMessageGetter, MessageGetter>()
                     
-            .AddTransient<ImapClient>();
+            .AddTransient<IImapClient, ImapClient>();
 }

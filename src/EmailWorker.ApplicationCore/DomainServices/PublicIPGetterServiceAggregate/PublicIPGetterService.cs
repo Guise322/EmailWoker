@@ -18,7 +18,7 @@ public class PublicIPGetterService : EmailInboxServiceBase, IPublicIPGetterServi
         IPublicIPGetter publicIPGetter,
         IRequestMessageSearcher requestMessageSearcher,
         IReportSender reportSender,
-        IGetterOfUnseenMessageIDs getterOfUnseenMessages,
+        IUnseenMessageIDListGetter getterOfUnseenMessages,
         IClientConnector clientConnector
     ) : base (reportSender, getterOfUnseenMessages, clientConnector) =>
         (_publicIPGetter, _requestMessageSearcher) = 
