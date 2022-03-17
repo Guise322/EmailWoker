@@ -36,6 +36,8 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
             EmailData emailData =
                 _asSeenMarker.MarkAsSeen(messages.ToList());
 
+            ClientConnector.DisconnectClient();
+
             MimeMessage message = ReportMessage.CreateReportMessage(
                 EmailCredentials.Login,
                 _emailToReport,

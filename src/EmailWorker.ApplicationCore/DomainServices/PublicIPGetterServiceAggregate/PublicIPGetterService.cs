@@ -37,6 +37,8 @@ public class PublicIPGetterService : EmailInboxServiceBase, IPublicIPGetterServi
 
             EmailData emailData = _publicIPGetter.GetPublicIP(searchedMessageIDs);
 
+            ClientConnector.DisconnectClient();
+
             MimeMessage message = ReportMessage.CreateReportMessage(
                 EmailCredentials.Login,
                 _searchedEmail,

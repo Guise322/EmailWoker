@@ -9,8 +9,8 @@ namespace EmailWorker.Infrastructure
     public class ClientConnector : IClientConnector
     {
         private readonly ILogger<ClientConnector> _logger;
-        private ImapClient Client { get; }
-        public ClientConnector(ILogger<ClientConnector> logger, ImapClient client) =>
+        private IImapClient Client { get; }
+        public ClientConnector(ILogger<ClientConnector> logger, IImapClient client) =>
         (_logger, Client) = (logger, client);
         public void ConnectClient(EmailCredentials emailCredentials)
         {
@@ -32,6 +32,7 @@ namespace EmailWorker.Infrastructure
         public void DisconnectClient()
         {
             Client.Disconnect(true);
+            Client.Dispose();
         }
     }
 }
