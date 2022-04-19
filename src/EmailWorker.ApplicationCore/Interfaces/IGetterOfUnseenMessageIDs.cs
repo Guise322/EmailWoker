@@ -3,10 +3,9 @@ using System.Threading.Tasks;
 using EmailWorker.ApplicationCore.Entities;
 using MailKit;
 
-namespace EmailWorker.ApplicationCore.Interfaces
+namespace EmailWorker.ApplicationCore.Interfaces;
+
+public interface IUnseenMessageIDListGetter
 {
-    public interface IUnseenMessageIDListGetter
-    {
-        Task<IList<UniqueId>> GetUnseenMessageIDsAsync(EmailCredentials emailCredentials);
-    }
+    Task<IList<UniqueId>> GetUnseenMessageIDsAsync(EmailCredentials emailCredentials);
 }

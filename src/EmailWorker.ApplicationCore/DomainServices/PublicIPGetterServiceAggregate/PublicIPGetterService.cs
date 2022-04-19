@@ -26,7 +26,7 @@ public class PublicIPGetterService : EmailInboxServiceBase, IPublicIPGetterServi
 
     public async Task<ServiceStatus> ProcessEmailInbox()
     {
-        IList<UniqueId> messageIDs = await GetMessageIDsFromEmail();
+        IList<UniqueId> messageIDs = await GetUnseenMessageIDsFromEmail();
 
         try
         {

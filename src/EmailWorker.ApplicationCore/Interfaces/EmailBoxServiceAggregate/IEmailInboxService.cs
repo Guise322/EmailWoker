@@ -1,11 +1,10 @@
 using System.Threading.Tasks;
 using EmailWorker.ApplicationCore.Entities;
 
-namespace EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxServiceAggregate
+namespace EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxServiceAggregate;
+
+public interface IEmailInboxService
 {
-    public interface IEmailInboxService
-    {
-        EmailCredentials EmailCredentials { get; set; }
-        Task<ServiceStatus> ProcessEmailInbox();
-    }
+    EmailCredentials EmailCredentials { get; set; }
+    Task<ServiceStatus> ProcessEmailInbox();
 }

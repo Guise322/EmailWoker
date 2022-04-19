@@ -1,7 +1,6 @@
-namespace EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxServiceAggregate
+namespace EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxServiceAggregate;
+
+public interface IAsSeenMarkerService : IEmailInboxService
 {
-    public interface IAsSeenMarkerService : IEmailInboxService
-    {
-        
-    }
+    
 }

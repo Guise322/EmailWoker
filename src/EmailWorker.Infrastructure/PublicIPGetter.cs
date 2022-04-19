@@ -13,11 +13,10 @@ namespace EmailWorker.Infrastructure;
 public class PublicIPGetter : SeenFlagAdder, IPublicIPGetter
 {
     private readonly string ipRequestAddress = "http://checkip.dyndns.org/";
-    
     private readonly IHttpClientFactory _httpClientFactory;
     public PublicIPGetter(IHttpClientFactory httpClientFactory, IImapClient client) :
-    base (client) =>
-        _httpClientFactory = httpClientFactory;
+        base (client) =>
+            _httpClientFactory = httpClientFactory;
     public EmailData GetPublicIP(List<UniqueId> messages)
     {
         AddSeenFlag(messages);

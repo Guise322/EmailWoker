@@ -1,10 +1,9 @@
 using MailKit;
 using MimeKit;
 
-namespace EmailWorker.ApplicationCore.Interfaces
+namespace EmailWorker.ApplicationCore.Interfaces;
+
+public interface IMessageGetter
 {
-    public interface IMessageGetter
-    {
-        MimeMessage GetMessage(UniqueId id);
-    }
+    MimeMessage GetMessage(UniqueId id);
 }

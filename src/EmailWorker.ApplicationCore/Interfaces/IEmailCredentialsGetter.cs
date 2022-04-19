@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using EmailWorker.ApplicationCore.Entities;
 
-namespace EmailWorker.ApplicationCore.Interfaces
+namespace EmailWorker.ApplicationCore.Interfaces;
+
+public interface IEmailCredentialsGetter
 {
-    public interface IEmailCredentialsGetter
-    {
-        List<EmailCredentials> GetEmailCredentials();
-    }
+    List<EmailCredentials> GetEmailCredentials();
 }

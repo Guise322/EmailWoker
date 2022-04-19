@@ -19,14 +19,14 @@ public class EmailInboxServiceList
         (_serviceProvider, _emailCredentialsGetter) =
         (serviceProvider, emailCredentialsGetter);
     public List<IEmailInboxService> CreateEmailInboxServiceList()
-    {   
+    {
         List<EmailCredentials> emailCredentialsList =
             _emailCredentialsGetter.GetEmailCredentials();
         List<IEmailInboxService> emailBoxServices = new();
         
         foreach (var emailCredentials in emailCredentialsList)
         {
-            IEmailInboxService service = GetEmailBoxService(emailCredentials.DedicatedWork);
+            IEmailInboxService service = GetEmailInboxService(emailCredentials.DedicatedWork);
             service.EmailCredentials = emailCredentials;
             emailBoxServices.Add(service);
         }
@@ -34,7 +34,7 @@ public class EmailInboxServiceList
         return emailBoxServices;
     }
 
-    private IEmailInboxService GetEmailBoxService(DedicatedWorkType workType) =>
+    private IEmailInboxService GetEmailInboxService(DedicatedWorkType workType) =>
         workType switch
         {
             DedicatedWorkType.MarkAsSeen =>

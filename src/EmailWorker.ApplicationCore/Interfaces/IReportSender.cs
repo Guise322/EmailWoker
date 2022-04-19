@@ -1,10 +1,9 @@
 using EmailWorker.ApplicationCore.Entities;
 using MimeKit;
 
-namespace EmailWorker.ApplicationCore.Interfaces
+namespace EmailWorker.ApplicationCore.Interfaces;
+
+public interface IReportSender
 {
-    public interface IReportSender
-    {
-        void SendReportViaSmtp(MimeMessage message, EmailCredentials emailCredentials);
-    }
+    void SendReportViaSmtp(MimeMessage message, EmailCredentials emailCredentials);
 }

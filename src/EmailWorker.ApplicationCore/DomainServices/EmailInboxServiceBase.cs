@@ -21,7 +21,7 @@ public class EmailInboxServiceBase
     (ReportSender, GetterOfUnseenMessageIDs, ClientConnector) =
     (reportSender, getterOfUnseenMessageIDs, clientConnector);
     
-    public Task<IList<UniqueId>> GetMessageIDsFromEmail()
+    public Task<IList<UniqueId>> GetUnseenMessageIDsFromEmail()
     {
         ClientConnector.ConnectClient(EmailCredentials);
         return GetterOfUnseenMessageIDs.GetUnseenMessageIDsAsync(EmailCredentials);

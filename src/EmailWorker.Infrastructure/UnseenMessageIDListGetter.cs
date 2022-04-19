@@ -9,20 +9,18 @@ using MailKit;
 using MailKit.Net.Imap;
 using MailKit.Search;
 
-namespace EmailWorker.Infrastructure
+namespace EmailWorker.Infrastructure;
+
+public class UnseenMessageIDListGetter : IUnseenMessageIDListGetter
 {
-
-    public class UnseenMessageIDListGetter : IUnseenMessageIDListGetter
+    private IImapClient Client { get; }
+    public UnseenMessageIDListGetter(IImapClient client) => Client = client;
+    public async Task<IList<UniqueId>> GetUnseenMessageIDsAsync(EmailCredentials emailCredentials)
     {
-        private IImapClient Client { get; }
-        public UnseenMessageIDListGetter(IImapClient client) => Client = client;
-        public async Task<IList<UniqueId>> GetUnseenMessageIDsAsync(EmailCredentials emailCredentials)
-        {
-            Client.Inbox.Open(FolderAccess.ReadWrite);
-            
-            IList<UniqueId> unseenMessages = await Client.Inbox.SearchAsync(SearchQuery.NotSeen);
+        Client.Inbox.Open(FolderAccess.ReadWrite);
 
-            return unseenMessages;
-        }
+        IList<UniqueId> unseenMessages = await Client.Inbox.SearchAsync(SearchQuery.NotSeen);
+
+        return unseenMessages;
     }
 }

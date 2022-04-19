@@ -23,7 +23,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
             _asSeenMarker = AsSeenMarker;
         public async Task<ServiceStatus> ProcessEmailInbox()
         {
-            IList<UniqueId> messages = await GetMessageIDsFromEmail();
+            IList<UniqueId> messages = await GetUnseenMessageIDsFromEmail();
             
             bool analyzeResult = MessageAnalyser.AnalyseMessages(messages);
             

@@ -12,7 +12,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.PublicIPGetterServiceAggreg
             if (first !> 0)
             {
                 emailFrom = rawString;
-                return emailFrom;    
+                return emailFrom;
             }
 
             emailFrom = rawString.Substring(first + 1, last - first - 1);

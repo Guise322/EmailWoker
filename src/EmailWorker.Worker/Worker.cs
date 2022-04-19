@@ -43,5 +43,8 @@ namespace EmailWorker.Worker
                 await Task.Delay(workerDelayPeriod, stoppingToken);
             }
         }
+
+        // TO DO: make the StopAsync method to gracefully stop the background service;
+        //          implement the IDisposable interface in all the appropriate classes
     }   
 }

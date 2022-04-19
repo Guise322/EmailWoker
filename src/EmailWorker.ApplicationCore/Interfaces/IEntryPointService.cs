@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
 
-namespace EmailWorker.ApplicationCore.Interfaces
+namespace EmailWorker.ApplicationCore.Interfaces;
+
+public interface IEntryPointService
 {
-    public interface IEntryPointService
-    {
-        Task ExecuteAsync();
-    }   
+    Task ExecuteAsync();
 }

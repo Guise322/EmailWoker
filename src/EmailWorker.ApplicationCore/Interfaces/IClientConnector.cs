@@ -1,10 +1,9 @@
 using EmailWorker.ApplicationCore.Entities;
 
-namespace EmailWorker.ApplicationCore.Interfaces
+namespace EmailWorker.ApplicationCore.Interfaces;
+
+public interface IClientConnector
 {
-    public interface IClientConnector
-    {
-        void ConnectClient(EmailCredentials emailCredentials);
-        void DisconnectClient();
-    }
+    void ConnectClient(EmailCredentials emailCredentials);
+    void DisconnectClient();
 }

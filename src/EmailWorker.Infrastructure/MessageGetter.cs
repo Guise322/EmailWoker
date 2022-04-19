@@ -3,15 +3,14 @@ using MailKit;
 using MailKit.Net.Imap;
 using MimeKit;
 
-namespace EmailWorker.Infrastructure
+namespace EmailWorker.Infrastructure;
+
+public class MessageGetter : IMessageGetter
 {
-    public class MessageGetter : IMessageGetter
+    private IImapClient Client { get; }
+    public MessageGetter(IImapClient client) => Client = client;
+    public MimeMessage GetMessage(UniqueId id)
     {
-        private IImapClient Client { get; }
-        public MessageGetter(IImapClient client) => Client = client;
-        public MimeMessage GetMessage(UniqueId id)
-        {
-            return Client.Inbox.GetMessage(id);
-        }
+        return Client.Inbox.GetMessage(id);
     }
 }
