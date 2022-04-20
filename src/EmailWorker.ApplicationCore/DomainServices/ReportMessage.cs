@@ -1,3 +1,4 @@
+using Ardalis.GuardClauses;
 using EmailWorker.ApplicationCore.Entities;
 using MimeKit;
 
@@ -10,6 +11,9 @@ public class ReportMessage
         EmailData emailData
     )
     {
+        Guard.Against.NullOrEmpty(login, nameof(login));
+        Guard.Against.NullOrEmpty(emailAddress, nameof(emailAddress));
+
         MimeMessage message = new ();
         message.From.Add(new MailboxAddress("Worker", login));
         message.To.Add(new MailboxAddress("Dmitry", emailAddress));

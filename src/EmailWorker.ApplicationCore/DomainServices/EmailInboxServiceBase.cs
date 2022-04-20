@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Ardalis.GuardClauses;
 using EmailWorker.ApplicationCore.Entities;
 using EmailWorker.ApplicationCore.Interfaces;
 using MailKit;
@@ -23,6 +24,7 @@ public class EmailInboxServiceBase
     
     public Task<IList<UniqueId>> GetUnseenMessageIDsFromEmail()
     {
+        Guard.Against.Null(EmailCredentials, nameof(EmailCredentials));
         ClientConnector.ConnectClient(EmailCredentials);
         return GetterOfUnseenMessageIDs.GetUnseenMessageIDsAsync(EmailCredentials);
     }

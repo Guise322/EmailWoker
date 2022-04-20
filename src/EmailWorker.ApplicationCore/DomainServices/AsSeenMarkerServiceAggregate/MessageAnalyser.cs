@@ -8,9 +8,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
     public static class MessageAnalyser
     {
         public static bool AnalyseMessages(IList<UniqueId> messages)
-        {
-            Guard.Against.Null(messages, nameof(messages));
-            
+        {            
             int minNumberOfMessages = 5;
 
             if(messages.Count < minNumberOfMessages)
