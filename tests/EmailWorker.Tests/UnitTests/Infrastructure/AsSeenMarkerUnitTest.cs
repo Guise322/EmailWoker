@@ -17,22 +17,23 @@ public class AsSeenMaarkerUnitTest
     {
         Mock<IImapClient> imapClientStub = new();
         AsSeenMarker asSeenMarker = new(imapClientStub.Object);
-        Assert.Throws<ArgumentNullException>(() => asSeenMarker.MarkAsSeen(null));
+        var exception = Record.Exception(() => asSeenMarker.MarkAsSeen(null));
+        Assert.IsType<NullReferenceException>(exception);
     }
 
     [Fact]
     public void MarkAsSeen_Messages_EmailData()
     {
-        Mock<IImapClient> imapClientStub = new();
-        imapClientStub.Setup(p => p.Inbox.Store(
+        Mock<IImapClient> imapClientShim = new();
+        imapClientShim.Setup(p => p.Inbox.Store(
             It.IsAny<UniqueId>(),
             It.IsAny<IStoreFlagsRequest>(),
             It.IsAny<CancellationToken>()
         )).Returns(true);
         int messageNumber = 2;
-        var uniqueIDsShim = UniqueIDListShim.Create(messageNumber);
-        AsSeenMarker asSeenMarker = new (imapClientStub.Object);
-        EmailData actualEmailData = asSeenMarker.MarkAsSeen(uniqueIDsShim);
+        var uniqueIDListShim = UniqueIDListShim.Create(messageNumber);
+        AsSeenMarker asSeenMarker = new (imapClientShim.Object);
+        EmailData actualEmailData = asSeenMarker.MarkAsSeen(uniqueIDListShim);
         Assert.Equal(
             ("Mark As Seen Service",
                 "The count of messages marked as seen " + messageNumber.ToString()),

@@ -17,19 +17,19 @@ public class PublicIPGetterIntegrationTest
     [Fact]
     public void GetPublicIP_UniqueIDList_IPAddressAndInformationMessage()
     {
-        Mock<IHttpClientFactory> factoryStub = new();
-        factoryStub.Setup(p => p.CreateClient(It.IsAny<string>()))
+        Mock<IHttpClientFactory> httpClientFactoryShim = new();
+        httpClientFactoryShim.Setup(p => p.CreateClient(It.IsAny<string>()))
             .Returns(() => new HttpClient());
 
-        Mock<IImapClient> imapClientStub = new();
-        imapClientStub.Setup(p => p.Inbox.Store(
+        Mock<IImapClient> imapClientShim = new();
+        imapClientShim.Setup(p => p.Inbox.Store(
             It.IsAny<UniqueId>(),
             It.IsAny<IStoreFlagsRequest>(),
             It.IsAny<CancellationToken>()
         )).Returns(true);
         List<UniqueId> uniqueIDListShim = UniqueIDListShim.Create(2);
 
-        PublicIPGetter publicIPGetter = new(factoryStub.Object, imapClientStub.Object);
+        PublicIPGetter publicIPGetter = new(httpClientFactoryShim.Object, imapClientShim.Object);
         EmailData actualEmailData = publicIPGetter.GetPublicIP(uniqueIDListShim);
         Assert.Matches(@"\d", actualEmailData.EmailText);
     }
@@ -37,9 +37,10 @@ public class PublicIPGetterIntegrationTest
     [Fact]
     public void GetPublicIP_Null_ThrowsArgumentNullException()
     {
-        Mock<IHttpClientFactory> factoryStub = new();
-        Mock<IImapClient> imapClientStub = new();
-        PublicIPGetter publicIPGetter = new(factoryStub.Object, imapClientStub.Object);
-        Assert.Throws<ArgumentNullException>(() => publicIPGetter.GetPublicIP(null));
+        Mock<IHttpClientFactory> httpClientFactoryShim = new();
+        Mock<IImapClient> imapClientShim = new();
+        PublicIPGetter publicIPGetter = new(httpClientFactoryShim.Object, imapClientShim.Object);
+        var exception = Record.Exception(() => publicIPGetter.GetPublicIP(null));
+        Assert.IsType<NullReferenceException>(exception);
     }
 }

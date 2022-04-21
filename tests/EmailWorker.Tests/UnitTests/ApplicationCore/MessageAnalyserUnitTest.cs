@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using MailKit;
 using Moq;
 using EmailWorker.Tests.UnitTests.Shared;
-using Microsoft.Extensions.Logging;
 
 namespace EmailWorker.Tests.UnitTests.ApplicationCore;
 
@@ -14,8 +13,8 @@ public class MessageAnalyserUnitTest
     [Fact]
     public void AnalyzeMessages_Null_ThrowsArgumentNullException()
     {
-        var ex = Record.Exception(() => MessageAnalyser.AnalyseMessages(null));
-        Assert.IsType<ArgumentNullException>(ex);
+        var exception = Record.Exception(() => MessageAnalyser.AnalyseMessages(null));
+        Assert.IsType<NullReferenceException>(exception);
     }
 
     [Fact]

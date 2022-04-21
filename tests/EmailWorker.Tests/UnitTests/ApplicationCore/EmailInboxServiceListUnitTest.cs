@@ -31,14 +31,14 @@ public class EmailInboxServiceListUnitTest
         services.AddTransient(s => asSeenMarkerServiceStub.Object);
         services.AddTransient(s => publicIPGetterServiceStub.Object);
 
-        ServiceProvider provider = services.BuildServiceProvider();
+        ServiceProvider providerShim = services.BuildServiceProvider();
         
-        EmailInboxServiceList emailBoxServiceList = new(
-                provider,
+        EmailInboxServiceList emailBoxServiceListStub = new(
+                providerShim,
                 emailCredentialsGetterStub.Object
             );
         List<IEmailInboxService> actualEmailInboxServiceList =
-            emailBoxServiceList.CreateEmailInboxServiceList();
+            emailBoxServiceListStub.CreateEmailInboxServiceList();
 
         Assert.Equal(asSeenMarkerServiceStub.Object, actualEmailInboxServiceList[0]);
         Assert.Equal(publicIPGetterServiceStub.Object, actualEmailInboxServiceList[1]);

@@ -7,13 +7,13 @@ public class UniqueIDListShim
 {
     public static List<UniqueId> Create(int numberOfItems)
     {
-        List<UniqueId> uniqueIDsShim = new(numberOfItems);
+        List<UniqueId> uniqueIDs = new(numberOfItems);
 
         for (uint i = 0; i < numberOfItems; i++)
         {
-            uniqueIDsShim.Add(new UniqueId(i+1));
+            uniqueIDs.Add(new UniqueId(i+1));
         }
 
-        return uniqueIDsShim;
+        return uniqueIDs;
     }
 }
