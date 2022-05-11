@@ -15,12 +15,12 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
         private readonly IAsSeenMarker _asSeenMarker;
 
         public AsSeenMarkerService(
-            IAsSeenMarker AsSeenMarker,
+            IAsSeenMarker asSeenMarker,
             IReportSender reportSender,
-            IUnseenMessageIDListGetter getterOfUnseenMessageIDs,
+            IUnseenMessageIDListGetter unseenMessageIDListGetter,
             IClientConnector clientConnector
-        ) : base (reportSender, getterOfUnseenMessageIDs, clientConnector) =>
-            _asSeenMarker = AsSeenMarker;
+        ) : base (reportSender, unseenMessageIDListGetter, clientConnector) =>
+            _asSeenMarker = asSeenMarker;
         public async Task<ServiceStatus> ProcessEmailInbox()
         {
             IList<UniqueId> messages = await GetUnseenMessageIDsFromEmail();
@@ -36,7 +36,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
             EmailData emailData =
                 _asSeenMarker.MarkAsSeen(messages.ToList());
 
-            ClientConnector.DisconnectClient();
+            _clientConnector.DisconnectClient();
 
             MimeMessage message = ReportMessage.CreateReportMessage(
                 EmailCredentials.Login,
@@ -44,7 +44,7 @@ namespace EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregat
                 emailData
             );
 
-            ReportSender.SendReportViaSmtp(message, EmailCredentials);
+            _reportSender.SendReportViaSmtp(message, EmailCredentials);
             
             return new ServiceStatus() 
             { ServiceWorkMessage = "All messages is marked as seen." };

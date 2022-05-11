@@ -6,11 +6,11 @@ using EmailWorker.Infrastructure;
 using MailKit.Net.Imap;
 using System.Collections.Generic;
 using MailKit;
-using EmailWorker.Tests.UnitTests.Shared;
+using EmailWorker.Tests.Unit.Shared;
 using System.Threading;
 using System;
 
-namespace EmailWorker.Tests.IntegrationTests;
+namespace EmailWorker.Tests.Integration;
 
 public class PublicIPGetterIntegrationTest
 {
@@ -27,7 +27,7 @@ public class PublicIPGetterIntegrationTest
             It.IsAny<IStoreFlagsRequest>(),
             It.IsAny<CancellationToken>()
         )).Returns(true);
-        List<UniqueId> uniqueIDListShim = UniqueIDListShim.Create(2);
+        List<UniqueId> uniqueIDListShim = UniqueIDList.Create(2);
 
         PublicIPGetter publicIPGetter = new(httpClientFactoryShim.Object, imapClientShim.Object);
         EmailData actualEmailData = publicIPGetter.GetPublicIP(uniqueIDListShim);

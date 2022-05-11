@@ -1,6 +1,6 @@
 using EmailWorker.ApplicationCore.Entities;
 using EmailWorker.Infrastructure;
-using EmailWorker.Tests.UnitTests.Shared;
+using EmailWorker.Tests.Unit.Shared;
 using MailKit;
 using MailKit.Net.Imap;
 using Moq;
@@ -8,7 +8,7 @@ using System;
 using System.Threading;
 using Xunit;
 
-namespace EmailWorker.Tests.UnitTests.Infrastructure;
+namespace EmailWorker.Tests.Unit.Infrastructure;
 
 public class AsSeenMaarkerUnitTest
 {
@@ -31,7 +31,7 @@ public class AsSeenMaarkerUnitTest
             It.IsAny<CancellationToken>()
         )).Returns(true);
         int messageNumber = 2;
-        var uniqueIDListShim = UniqueIDListShim.Create(messageNumber);
+        var uniqueIDListShim = UniqueIDList.Create(messageNumber);
         AsSeenMarker asSeenMarker = new (imapClientShim.Object);
         EmailData actualEmailData = asSeenMarker.MarkAsSeen(uniqueIDListShim);
         Assert.Equal(

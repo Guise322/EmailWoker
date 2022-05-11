@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using MailKit;
 
-namespace EmailWorker.Tests.UnitTests.Shared;
+namespace EmailWorker.Tests.Unit.Shared;
 
-public class UniqueIDListShim
+public class UniqueIDList
 {
     public static List<UniqueId> Create(int numberOfItems)
     {

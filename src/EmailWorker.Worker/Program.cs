@@ -52,11 +52,11 @@ namespace EmailWorker.Worker
                 {
                     services.AddHostedService<Worker>()
 
-                    .AddHttpClient()
+                        .AddHttpClient()
                     
-                    .AddApplicationCoreServices()
+                        .AddApplicationCoreServices()
 
-                    .AddInfrastructureServices();
+                        .AddInfrastructureServices();
                 });
         }
     }

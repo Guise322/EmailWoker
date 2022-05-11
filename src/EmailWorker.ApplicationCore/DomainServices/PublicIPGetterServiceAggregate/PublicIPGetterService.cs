@@ -18,9 +18,9 @@ public class PublicIPGetterService : EmailInboxServiceBase, IPublicIPGetterServi
         IPublicIPGetter publicIPGetter,
         IRequestMessageSearcher requestMessageSearcher,
         IReportSender reportSender,
-        IUnseenMessageIDListGetter getterOfUnseenMessages,
+        IUnseenMessageIDListGetter unseenMessageIDListGetter,
         IClientConnector clientConnector
-    ) : base (reportSender, getterOfUnseenMessages, clientConnector) =>
+    ) : base (reportSender, unseenMessageIDListGetter, clientConnector) =>
         (_publicIPGetter, _requestMessageSearcher) = 
         (publicIPGetter, requestMessageSearcher);
 
@@ -33,11 +33,15 @@ public class PublicIPGetterService : EmailInboxServiceBase, IPublicIPGetterServi
             List<UniqueId> searchedMessageIDs =
                 _requestMessageSearcher.SearchRequestMessage(messageIDs, _searchedEmail);
 
-            ServiceStatus currentStatus = new () { ServiceWorkMessage = "The request is detected." };
+            if (searchedMessageIDs.Count == 0)
+            {
+                return new ServiceStatus
+                { ServiceWorkMessage = "The request is not found." };
+            }
 
             EmailData emailData = _publicIPGetter.GetPublicIP(searchedMessageIDs);
 
-            ClientConnector.DisconnectClient();
+            _clientConnector.DisconnectClient();
 
             MimeMessage message = ReportMessage.CreateReportMessage(
                 EmailCredentials.Login,
@@ -45,16 +49,20 @@ public class PublicIPGetterService : EmailInboxServiceBase, IPublicIPGetterServi
                 emailData
             );
             
-            ReportSender.SendReportViaSmtp(message, EmailCredentials);
+            _reportSender.SendReportViaSmtp(message, EmailCredentials);
 
-            currentStatus.ServiceWorkMessage += " The current ip address is sent.";
-
-            return currentStatus;
+            return new ServiceStatus()
+            { ServiceWorkMessage = "The request is detected. The current ip address is sent." };
         }
-        catch (InvalidOperationException)
+        catch(FormatException)
         {
             return new ServiceStatus
-            { ServiceWorkMessage = "The request is not found." };
+            { ServiceWorkMessage = "The request message has the invalid format of its autor string." };
+        }
+        catch(ArgumentException)
+        {
+            return new ServiceStatus
+            { ServiceWorkMessage = "The response message has no or invalid address string." };
         }
     }
 }

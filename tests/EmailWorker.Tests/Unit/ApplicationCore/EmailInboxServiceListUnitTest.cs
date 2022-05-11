@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using EmailWorker.ApplicationCore.Interfaces.Services.EmailBoxServiceAggregate;
 using EmailWorker.ApplicationCore.DomainServices;
 
-namespace EmailWorker.Tests.UnitTests.ApplicationCore;
+namespace EmailWorker.Tests.Unit.ApplicationCore;
 
 public class EmailInboxServiceListUnitTest
 {

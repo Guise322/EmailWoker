@@ -11,21 +11,21 @@ namespace EmailWorker.ApplicationCore.DomainServices;
 public class EmailInboxServiceBase
 {
     public EmailCredentials EmailCredentials { get; set; }
-    protected readonly IReportSender ReportSender;
-    protected readonly IUnseenMessageIDListGetter GetterOfUnseenMessageIDs;
-    protected readonly IClientConnector ClientConnector;
+    protected readonly IReportSender _reportSender;
+    protected readonly IUnseenMessageIDListGetter _unseenMessageIDListGetter;
+    protected readonly IClientConnector _clientConnector;
     public EmailInboxServiceBase(
         IReportSender reportSender,
-        IUnseenMessageIDListGetter getterOfUnseenMessageIDs,
+        IUnseenMessageIDListGetter unseenMessageIDListGetter,
         IClientConnector clientConnector
     ) => 
-    (ReportSender, GetterOfUnseenMessageIDs, ClientConnector) =
-    (reportSender, getterOfUnseenMessageIDs, clientConnector);
+    (_reportSender, _unseenMessageIDListGetter, _clientConnector) =
+    (reportSender, unseenMessageIDListGetter, clientConnector);
     
-    public Task<IList<UniqueId>> GetUnseenMessageIDsFromEmail()
+    protected Task<IList<UniqueId>> GetUnseenMessageIDsFromEmail()
     {
         Guard.Against.Null(EmailCredentials, nameof(EmailCredentials));
-        ClientConnector.ConnectClient(EmailCredentials);
-        return GetterOfUnseenMessageIDs.GetUnseenMessageIDsAsync(EmailCredentials);
+        _clientConnector.ConnectClient(EmailCredentials);
+        return _unseenMessageIDListGetter.GetUnseenMessageIDsAsync(EmailCredentials);
     }
 }

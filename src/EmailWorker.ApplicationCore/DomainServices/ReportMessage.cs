@@ -13,6 +13,8 @@ public class ReportMessage
     {
         Guard.Against.NullOrEmpty(login, nameof(login));
         Guard.Against.NullOrEmpty(emailAddress, nameof(emailAddress));
+        Guard.Against.NullOrEmpty(emailData.EmailSubject, nameof(emailData.EmailSubject));
+        Guard.Against.NullOrEmpty(emailData.EmailText, nameof(emailData.EmailText));
 
         MimeMessage message = new ();
         message.From.Add(new MailboxAddress("Worker", login));

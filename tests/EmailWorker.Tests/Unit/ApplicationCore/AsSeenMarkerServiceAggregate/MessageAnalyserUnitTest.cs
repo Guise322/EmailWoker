@@ -3,10 +3,9 @@ using EmailWorker.ApplicationCore.DomainServices.AsSeenMarkerServiceAggregate;
 using System;
 using System.Collections.Generic;
 using MailKit;
-using Moq;
-using EmailWorker.Tests.UnitTests.Shared;
+using EmailWorker.Tests.Unit.Shared;
 
-namespace EmailWorker.Tests.UnitTests.ApplicationCore;
+namespace EmailWorker.Tests.Unit.ApplicationCore.AsSeenMarkerServiceAggregate;
 
 public class MessageAnalyserUnitTest
 {
@@ -21,7 +20,7 @@ public class MessageAnalyserUnitTest
     public void AnalyzeMessages_UniqueIDListBelowMinLimit_False()
     {
         int numberBelowMinLimit = 4;
-        List<UniqueId> uniqueIDsShim = UniqueIDListShim.Create(numberBelowMinLimit);
+        List<UniqueId> uniqueIDsShim = UniqueIDList.Create(numberBelowMinLimit);
         bool actual = MessageAnalyser.AnalyseMessages(uniqueIDsShim);
         Assert.False(actual);
     }
@@ -30,7 +29,7 @@ public class MessageAnalyserUnitTest
     public void AnalyzeMessages_UniqueIdListAboveMinLimit_True()
     {
         int appropriateNumberOfMessages = 6;
-        List<UniqueId> uniqueIdsShim = UniqueIDListShim.Create(appropriateNumberOfMessages);
+        List<UniqueId> uniqueIdsShim = UniqueIDList.Create(appropriateNumberOfMessages);
         bool actual = MessageAnalyser.AnalyseMessages(uniqueIdsShim);
         Assert.True(actual);
     }
