@@ -1,11 +1,11 @@
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using EmailWorker.Infrastructure;
 using Serilog;
 using Serilog.Events;
 using System;
 using System.IO;
-using EmailWorker.ApplicationCore;
+using EmailWorker.Application;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EmailWorker.Worker
 {
@@ -51,11 +51,7 @@ namespace EmailWorker.Worker
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<Worker>()
-
-                        .AddHttpClient()
-                    
-                        .AddApplicationCoreServices()
-
+                        .AddApplicationServices()
                         .AddInfrastructureServices();
                 });
         }

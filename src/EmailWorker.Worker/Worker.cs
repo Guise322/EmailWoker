@@ -1,20 +1,18 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using EmailWorker.ApplicationCore.Interfaces;
+using EmailWorker.Application.Interfaces;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace EmailWorker.Worker
 {
     public class Worker : BackgroundService
     {
-        private readonly ILogger<Worker> _logger;
-        private readonly IEntryPointService _entryPointService;
+        private readonly TimeSpan WorkerDelayPeriod = TimeSpan.FromMinutes(5);
+        private readonly IEmailInboxServiceCommand _entryPointService;
         
-        public Worker(ILogger<Worker> logger, IEntryPointService emailBoxProcessorService)
+        public Worker(IEmailInboxServiceCommand emailBoxProcessorService)
         {
-            _logger = logger;
             _entryPointService = emailBoxProcessorService;
         }
 
@@ -22,25 +20,9 @@ namespace EmailWorker.Worker
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                try
-                {
-                    await _entryPointService.ExecuteAsync();
-                }
-                catch (Exception e)
-                {
-                    if(e != null)
-                    {
-                        _logger.LogError(e.Message);
-                    }
-                    else
-                    {
-                        _logger.LogInformation("Worker is over for an error at {time}", DateTimeOffset.Now);
-                    }
-                }
+                await _entryPointService.ExecuteAsync();
 
-                TimeSpan workerDelayPeriod = TimeSpan.FromMinutes(5);
-
-                await Task.Delay(workerDelayPeriod, stoppingToken);
+                await Task.Delay(WorkerDelayPeriod, stoppingToken);
             }
         }
 

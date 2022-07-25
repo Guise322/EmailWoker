@@ -2,14 +2,15 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>dotnet-EmailWorker.Worker-68EA2746-36AE-4F09-B9AF-8AA6CDDC4053</UserSecretsId>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0"/>
-    <PackageReference Include="MailKit" Version="3.1.0"/>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1"/>
+    <PackageReference Include="MailKit" Version="3.3.0"/>
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.1-dev-00947"/>
     <PackageReference Include="Serilog" Version="2.11.0-dev-01377"/>
-    <PackageReference Include="Serilog.Extensions.Hosting" Version="4.2.0"/>
-    <ProjectReference Include="..\EmailWorker.ApplicationCore\EmailWorker.ApplicationCore.csproj"/>
-    <ProjectReference Include="..\EmailWorker.Infrastructure\EmailWorker.Infrastructure.csproj"/>
+    <PackageReference Include="Serilog.AspNetCore" Version="6.0.1"/>
+    <ProjectReference Include="..\Application\Application.csproj"/>
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj"/>
   </ItemGroup>
 </Project>
