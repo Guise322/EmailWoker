@@ -11,12 +11,12 @@ namespace EmailWorker.Worker
 {
     public class Program
     {
+        private const string _folderName = "logs";
+        private const string _fileName = "EmailWorkerLog-.txt";
+
         public static void Main(string[] args)
         {
-            string folderName = "logs";
-            string fileName = "EmailWorkerLog-.txt";
-
-            string logPath = Path.Combine(folderName, fileName);
+            string logPath = Path.Combine(_folderName, _fileName);
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()

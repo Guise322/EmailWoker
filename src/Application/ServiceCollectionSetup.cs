@@ -4,11 +4,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace EmailWorker.Application;
 
-internal static class ServiceCollectionSetup
+public static class ServiceCollectionSetup
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services) =>
-        services.AddScoped<IEmailInboxServiceCommand, EmailInboxServiceCommand>()
-            .AddScoped<IEmailInboxServiceFactory, EmailInboxServiceFactory>()
-            .AddScoped<IAsSeenMarkerService, AsSeenMarkerService>()
-            .AddScoped<IPublicIPGetterService, PublicIPGetterService>();
+        services.AddSingleton<IEmailInboxServiceCommand, EmailInboxServiceCommand>()
+            .AddSingleton<IEmailInboxServiceFactory, EmailInboxServiceFactory>()
+            .AddSingleton<IAsSeenMarkerService, AsSeenMarkerService>()
+            .AddSingleton<IPublicIPGetterService, PublicIPGetterService>();
 }

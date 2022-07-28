@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using EmailWorker.Application.Interfaces;
 using Microsoft.Extensions.Logging;
 
@@ -20,21 +21,29 @@ internal class EmailInboxServiceCommand : IEmailInboxServiceCommand
         _emailInboxServiceFactory = emailBoxServiceFactory;
     }
 
-    public async Task ExecuteAsync()
+    public async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         _logger.LogInformation("Start execution at {Now}", DateTimeOffset.Now);
 
-        List<EmailCredentials>? emailCredentialsList = _emailCredentialsGetter.GetEmailCredentialsList();
+        ReadOnlyCollection<EmailCredentials>? emailCredentialsCollection =
+            await _emailCredentialsGetter.GetEmailCredentialsCollection(stoppingToken);
 
-        if (emailCredentialsList is null)
+        if (emailCredentialsCollection is null)
         {
-            _logger.LogInformation("Cannot get email credentials from the file");
+            _logger.LogError("Cannot get email credentials from the file");
 
             return;
         }
 
-        foreach (var emailCredentials in emailCredentialsList)
+        foreach (var emailCredentials in emailCredentialsCollection)
         {
+            if (!EmailCredentialsValidator.Validate(emailCredentials))
+            {
+                _logger.LogError("Not all data presented in the email credentials file");
+
+                return;
+            }
+
             var emailBoxService =
                 _emailInboxServiceFactory.CreateEmailInboxService(emailCredentials.DedicatedWork);
             string status = await emailBoxService.ProcessEmailInbox(emailCredentials);

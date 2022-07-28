@@ -1,7 +1,6 @@
 using EmailWorker.Application.Interfaces;
 using EmailWorker.Application.Interfaces.EmailBoxServiceAggregate;
 using MailKit;
-using MimeKit;
 
 namespace EmailWorker.Application;
 

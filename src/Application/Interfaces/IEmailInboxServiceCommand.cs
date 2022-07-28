@@ -2,5 +2,5 @@ namespace EmailWorker.Application.Interfaces;
 
 public interface IEmailInboxServiceCommand
 {
-    Task ExecuteAsync();
+    Task ExecuteAsync(CancellationToken stoppingToken);
 }

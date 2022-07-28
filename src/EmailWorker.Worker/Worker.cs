@@ -20,7 +20,7 @@ namespace EmailWorker.Worker
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                await _entryPointService.ExecuteAsync();
+                await _entryPointService.ExecuteAsync(stoppingToken);
 
                 await Task.Delay(WorkerDelayPeriod, stoppingToken);
             }

@@ -1,6 +1,8 @@
+using System.Collections.ObjectModel;
+
 namespace EmailWorker.Application.Interfaces;
 
 public interface IEmailCredentialsGetter
 {
-    List<EmailCredentials>? GetEmailCredentialsList();
+    Task<ReadOnlyCollection<EmailCredentials>?> GetEmailCredentialsCollection(CancellationToken stoppingToken);
 }

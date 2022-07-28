@@ -8,17 +8,17 @@ public static class ServiceCollectionSetup
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services) =>
         services.AddHttpClient()
-            
-            .AddScoped<IEmailCredentialsGetter, EmailCredentialsGetter>()
 
-            .AddScoped<IReportSender, ReportSender>()
+            .AddSingleton<IEmailCredentialsGetter, EmailCredentialsGetter>()
 
-            .AddScoped<IUnseenMessageIdGetter, UnseenMessageIdGetter>()
-            .AddScoped<IAsSeenMarker, AsSeenMarker>()
-            .AddScoped<IClientConnector, ClientConnector>()
+            .AddSingleton<IReportSender, ReportSender>()
 
-            .AddScoped<IPublicIPGetter, PublicIPGetter>()
-            .AddScoped<IMessageGetter, MessageGetter>()
-                    
-            .AddScoped<IImapClient, ImapClient>();
+            .AddSingleton<IUnseenMessageIdGetter, UnseenMessageIdGetter>()
+            .AddSingleton<IAsSeenMarker, AsSeenMarker>()
+            .AddSingleton<IClientConnector, ClientConnector>()
+
+            .AddSingleton<IPublicIPGetter, PublicIPGetter>()
+            .AddSingleton<IMessageGetter, MessageGetter>()
+
+            .AddSingleton<IImapClient, ImapClient>();
 }
