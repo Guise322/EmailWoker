@@ -1,3 +1,4 @@
+using EmailWorker.Application.Exceptions;
 using EmailWorker.Application.Interfaces;
 using EmailWorker.Application.Interfaces.EmailBoxServiceAggregate;
 using EmailWorker.Domain;
@@ -37,7 +38,7 @@ internal class PublicIPGetterService : IPublicIPGetterService
     {
         try
         {
-            return await ProcessEmailInboxPrivate(emailCredentials);
+            return await PrivateProcessEmailInbox(emailCredentials);
         }
         catch(FormatException)
         {
@@ -45,7 +46,7 @@ internal class PublicIPGetterService : IPublicIPGetterService
         }
     }
 
-    private async Task<string> ProcessEmailInboxPrivate(EmailCredentials emailCredentials)
+    private async Task<string> PrivateProcessEmailInbox(EmailCredentials emailCredentials)
     {
         _clientConnector.ConnectClient(emailCredentials);
         IList<UniqueId> messageIds =

@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using EmailWorker.Application.Exceptions;
 using EmailWorker.Application.Interfaces;
 using Microsoft.Extensions.Logging;
 
@@ -22,6 +23,18 @@ internal class EmailInboxServiceCommand : IEmailInboxServiceCommand
     }
 
     public async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        try
+        {
+            await PrivateExecuteAsync(stoppingToken);
+        }
+        catch(EmailCredentialsGetterException e)
+        {
+            _logger.LogError("{message}", e.Message);
+        }
+    }
+
+    private async Task PrivateExecuteAsync(CancellationToken stoppingToken)
     {
         _logger.LogInformation("Start execution at {Now}", DateTimeOffset.Now);
 

@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using EmailWorker.Application;
+using EmailWorker.Application.Exceptions;
 using EmailWorker.Application.Interfaces;
 
 namespace EmailWorker.Infrastructure;
@@ -15,10 +16,13 @@ public class EmailCredentialsGetter : IEmailCredentialsGetter
             return await GetEmailCredentialsCollectionPrivate(stoppingToken);
         }
         //TO DO: add more exception catches
-        catch (JsonException)
+        catch (JsonException e)
         {
-            //TO DO: implement an application layer exception to process this exception
-            throw;
+            throw new EmailCredentialsGetterException("Cannot properly read the file with email credentials", e);
+        }
+        catch (FileNotFoundException e)
+        {
+            throw new EmailCredentialsGetterException("File not found", e);
         }
     }
 
