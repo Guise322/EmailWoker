@@ -10,7 +10,7 @@ namespace EmailWorker.Worker
     {
         private readonly TimeSpan WorkerDelayPeriod = TimeSpan.FromMinutes(5);
         private readonly IEmailInboxServiceCommand _entryPointService;
-        
+
         public Worker(IEmailInboxServiceCommand emailBoxProcessorService)
         {
             _entryPointService = emailBoxProcessorService;

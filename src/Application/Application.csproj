@@ -5,6 +5,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="EmailWorker.Tests"/>
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
     <PackageReference Include="MailKit" Version="3.3.0"/>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1"/>
     <PackageReference Include="Ardalis.GuardClauses" Version="4.0.1"/>

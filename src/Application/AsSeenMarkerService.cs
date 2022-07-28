@@ -7,7 +7,7 @@ namespace EmailWorker.Application;
 
 internal class AsSeenMarkerService : IAsSeenMarkerService
 {
-    private const string _emailToReport  = "guise322@yandex.ru";
+    private const string _emailToReport = "guise322@yandex.ru";
     private readonly IAsSeenMarker _asSeenMarker;
     private readonly IClientConnector _clientConnector;
     private readonly IUnseenMessageIdGetter _unseenMessageIdGetter;
@@ -33,12 +33,13 @@ internal class AsSeenMarkerService : IAsSeenMarkerService
         IList<UniqueId> messages =
             await _unseenMessageIdGetter.GetUnseenMessageIds();
 
-        bool analyzeResult =
+        bool result =
             MessageCountValidator.IsMessageCountValid(messages.Count);
 
-        if (!analyzeResult)
+        if (!result)
         {
-            return "The given number of messages is too small.";
+            _clientConnector.DisconnectClient();
+            return "The given number of messages is too small";
         }
 
         EmailData emailData =
@@ -46,14 +47,13 @@ internal class AsSeenMarkerService : IAsSeenMarkerService
 
         _clientConnector.DisconnectClient();
 
-        MimeMessage message = ReportMessage.CreateReportMessage(
-            emailCredentials.Login,
-            _emailToReport,
-            emailData
+        _reportSender.SendReportViaSmtp(
+            emailToReport: _emailToReport,
+            emailSubject: emailData.EmailSubject,
+            emailText: emailData.EmailText,
+            emailCredentials: emailCredentials
         );
 
-        _reportSender.SendReportViaSmtp(message, emailCredentials);
-
-        return "All messages is marked as seen.";
+        return "All messages is marked as seen";
     }
 }

@@ -1,13 +1,10 @@
 using System;
 using EmailWorker.Domain;
-using MailKit;
-using MimeKit;
-using Moq;
 using Xunit;
 
-namespace EmailWorker.Tests.UnitTests.Application.PublicIPGetterServiceAggregate;
+namespace EmailWorker.Tests.Unit.Domain;
 
-public class RequestMessageSearcherUnitTest
+public class RequestMessageSearcherTests
 {
     [Fact]
     public void IsRequestMessage_WrongStringFormat_FormatException()

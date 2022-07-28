@@ -24,7 +24,14 @@ internal class EmailInboxServiceCommand : IEmailInboxServiceCommand
     {
         _logger.LogInformation("Start execution at {Now}", DateTimeOffset.Now);
 
-        List<EmailCredentials> emailCredentialsList = _emailCredentialsGetter.GetEmailCredentialsList();
+        List<EmailCredentials>? emailCredentialsList = _emailCredentialsGetter.GetEmailCredentialsList();
+
+        if (emailCredentialsList is null)
+        {
+            _logger.LogInformation("Cannot get email credentials from the file");
+
+            return;
+        }
 
         foreach (var emailCredentials in emailCredentialsList)
         {

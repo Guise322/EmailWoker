@@ -17,12 +17,12 @@ internal class PublicIPGetterService : IPublicIPGetterService
     private readonly IClientConnector _clientConnector;
     
     public PublicIPGetterService(
-        IPublicIPGetter publicIPGetter,
+        IClientConnector clientConnector,
+        IUnseenMessageIdGetter unseenMessageIdGetter,
         IMessageGetter messageGetter,
         IAsSeenMarker asSeenMarker,
-        IReportSender reportSender,
-        IUnseenMessageIdGetter unseenMessageIdGetter,
-        IClientConnector clientConnector
+        IPublicIPGetter publicIPGetter,
+        IReportSender reportSender
     )
     {
         _publicIPGetter = publicIPGetter;
@@ -41,11 +41,7 @@ internal class PublicIPGetterService : IPublicIPGetterService
         }
         catch(FormatException)
         {
-            return "The request message has the invalid format of its autor string.";
-        }
-        catch(ArgumentException)
-        {
-            return "The response message has no or invalid address string.";
+            return "The request message has invalid format of its autor string";
         }
     }
 
@@ -68,21 +64,21 @@ internal class PublicIPGetterService : IPublicIPGetterService
 
         if (searchedMessageIDs.Count == 0)
         {
-            return "The request is not found.";
+            _clientConnector.DisconnectClient();
+            return "A request is not found";
         }
 
         EmailData emailData = _publicIPGetter.GetPublicIP();
         _asSeenMarker.MarkAsSeen(searchedMessageIDs);
         _clientConnector.DisconnectClient();
 
-        MimeMessage message = ReportMessage.CreateReportMessage(
-            emailCredentials.Login,
-            _searchedEmail,
-            emailData
+        _reportSender.SendReportViaSmtp(
+            emailToReport: _searchedEmail,
+            emailSubject: emailData.EmailSubject,
+            emailText: emailData.EmailText,
+            emailCredentials: emailCredentials
         );
 
-        _reportSender.SendReportViaSmtp(message, emailCredentials);
-
-        return "The request is detected. The current IP address is sent.";
+        return "A request is detected, and the current IP address is sent";
     }
 }

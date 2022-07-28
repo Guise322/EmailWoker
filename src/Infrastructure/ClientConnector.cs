@@ -1,7 +1,6 @@
 using EmailWorker.Application;
 using EmailWorker.Application.Interfaces;
 using MailKit.Net.Imap;
-using Microsoft.Extensions.Logging;
 
 namespace EmailWorker.Infrastructure;
 

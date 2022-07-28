@@ -11,7 +11,11 @@ namespace EmailWorker.Infrastructure;
 public class UnseenMessageIdGetter : IUnseenMessageIdGetter
 {
     private readonly IImapClient _client;
-    public UnseenMessageIdGetter(IImapClient client) => _client = client;
+    public UnseenMessageIdGetter(IImapClient client)
+    {
+        _client = client;
+    }
+    
     public async Task<IList<UniqueId>> GetUnseenMessageIds()
     {
         _client.Inbox.Open(FolderAccess.ReadWrite);

@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using MailKit;
 
-namespace EmailWorker.Tests.Unit;
+namespace EmailWorker.Tests.Integration;
 
-internal class UniqueIDFactory
+internal class UniqueIdFactory
 {
     public static List<UniqueId> Create(int numberOfItems)
     {
-        List<UniqueId> uniqueIDs = new(numberOfItems);
+        var uniqueIDs = new List<UniqueId> (numberOfItems);
 
         for (uint i = 0; i < numberOfItems; i++)
         {
